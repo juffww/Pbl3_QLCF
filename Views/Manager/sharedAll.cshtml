@@ -1,0 +1,64 @@
+﻿@{
+    Layout = null;
+}
+@{
+    // Get the current controller and action to determine which menu item should be active
+    string currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    string currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - pbl3_QLCF</title>
+    <link rel="stylesheet" type="text/css" href="~/css/Manager/magDashboard.css" />
+</head>
+<body>
+    <!-- Top Navigation Bar (horizontal menu) -->
+    <div class="top-navbar">
+        <div class="logo-container">
+            <div class="logo">AC</div>
+            <div class="brand-name">AromaCafé</div>
+        </div>
+        <ul class="menu">
+            <li class="menu-item @(currentAction == "magDashboard" ? "active" : "")">
+                <a asp-controller="Manager" asp-action="magDashboard">Dashboard</a>
+            </li>
+            <li class="menu-item @(currentAction == "DonHang" ? "active" : "")">
+                <a asp-controller="Manager" asp-action="DonHang">Đơn Hàng</a>
+            </li>
+            <li class="menu-item @(currentAction == "SanPham" ? "active" : "")">
+                <a asp-controller="Manager" asp-action="SanPham">Sản Phẩm</a>
+            </li>
+            <li class="menu-item @(currentAction == "KhachHang" ? "active" : "")">
+                <a asp-controller="Manager" asp-action="KhachHang">Khách Hàng</a>
+            </li>
+            <li class="menu-item @(currentAction == "NhanVien" ? "active" : "")">
+                <a asp-controller="Manager" asp-action="NhanVien">Nhân Viên</a>
+            </li>
+            <li class="menu-item @(currentAction == "KhoNguyenLieu" ? "active" : "")">
+                <a asp-controller="Manager" asp-action="KhoNguyenLieu">Kho Nguyên Liệu</a>
+            </li>
+            <li class="menu-item @(currentAction == "BaoCao" ? "active" : "")">
+                <a asp-controller="Manager" asp-action="BaoCao">Báo Cáo</a>
+            </li>
+            <li class="menu-item @(currentAction == "KhuyenMai" ? "active" : "")">
+                <a asp-controller="Manager" asp-action="KhuyenMai">Khuyến Mãi</a>
+            </li>
+        </ul>
+        <div class="right-section">
+            <div class="icons">
+                <div class="icon">🔔</div>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">QL</div>
+                <div>
+                    <div class="user-name">Hồ Quốc Bảo</div>
+                    <div class="user-role">Quản lý</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

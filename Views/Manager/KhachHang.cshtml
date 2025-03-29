@@ -1,0 +1,369 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AromaCafé - Quản lý Khách Hàng</title>
+    <style>
+        :root {
+            --primary: #7D5A50;
+            --secondary: #B4846C;
+            --light: #F2F2F2;
+            --accent: #5A9E6F;
+            --text: #442C2E;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #FDFAF6;
+            color: var(--text);
+        }
+
+        .content {
+            padding: 2rem;
+        }
+
+        .page-title {
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            color: var(--text);
+        }
+
+        .search-bar {
+            background: transparent;
+            display: flex;
+            margin-bottom: 1.5rem;
+            width: 160px !important; /* Explicitly set the width */
+            min-width: 100%; /* Ensure it takes at least the full width */
+            overflow: visible; /* Allow it to overflow if necessary */
+            background: none !important; /* Ghi đè màu nền */
+            border: none !important;
+        }
+
+        .search-input {
+            flex-grow: 1; /* Cho phép input chiếm phần còn lại của không gian */
+            padding: 0.7rem;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            font-size: 0.9rem;
+        }
+
+        .search-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0 1.5rem;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+
+        .filter-tabs {
+            display: flex;
+        }
+
+        .filter-tab {
+            padding: 0.7rem 1.5rem;
+            margin-right: 0.5rem;
+            background-color: #EFEFEF;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .filter-tab.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .add-button {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .add-button:before {
+            content: "+";
+            margin-right: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .customer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .customer-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .status-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: #E3F2E4;
+            color: var(--accent);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .customer-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .customer-info {
+            margin-bottom: 1rem;
+            color: #666;
+        }
+
+        .customer-info p {
+            margin: 0.3rem 0;
+        }
+
+        .loyalty-points {
+            background-color: #FFF8E9;
+            padding: 0.8rem;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .loyalty-label {
+            font-size: 0.9rem;
+        }
+
+        .loyalty-value {
+            font-weight: bold;
+            color: #F1A545;
+        }
+
+        .action-buttons {
+            display: flex;
+        }
+
+        .edit-button, .history-button {
+            flex: 1;
+            background-color: #F2F2F2;
+            border: none;
+            padding: 0.7rem;
+            margin-right: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            color: var(--text);
+        }
+
+        .edit-button:hover, .history-button:hover {
+            background-color: #E5E5E5;
+        }
+
+        .history-button {
+            margin-right: 0;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .page-button {
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 0.5rem 0.8rem;
+            margin: 0 0.2rem;
+            cursor: pointer;
+        }
+
+        .page-button.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    @{
+        Html.RenderPartial("~/Views/Manager/sharedAll.cshtml");
+    }
+    <!-- Main content -->
+    <div class="content">
+        <h1 class="page-title">Quản lý Khách Hàng</h1>
+
+        <!-- Search bar -->
+        <div class="search-bar">
+            <input type="text" class="search-input" placeholder="Tìm kiếm khách hàng...">
+            <button class="search-button">Tìm</button>
+        </div>
+
+        <!-- Action bar -->
+        <div class="action-bar">
+            <div class="filter-tabs">
+                <div class="filter-tab active">Tất cả</div>
+                <div class="filter-tab">Thường xuyên</div>
+                <div class="filter-tab">VIP</div>
+                <div class="filter-tab">Mới</div>
+                <div class="filter-tab">Không hoạt động</div>
+            </div>
+
+            <button class="add-button">Thêm Khách Hàng</button>
+        </div>
+
+        <!-- Customer grid -->
+        <div class="customer-grid">
+            <!-- Customer card 1 -->
+            <div class="customer-card">
+                <div class="status-badge">VIP</div>
+                <div class="customer-name">Nguyễn Văn An</div>
+                <div class="customer-info">
+                    <p>Mã KH: KH001</p>
+                    <p>SĐT: 0901234567</p>
+                    <p>Email: nguyenvanan@email.com</p>
+                    <p>Ngày sinh: 15/05/1985</p>
+                </div>
+                <div class="loyalty-points">
+                    <span class="loyalty-label">Điểm tích lũy:</span>
+                    <span class="loyalty-value">520</span>
+                </div>
+                <div class="action-buttons">
+                    <button class="edit-button">Chỉnh sửa</button>
+                    <button class="history-button">Lịch sử mua</button>
+                </div>
+            </div>
+
+            <!-- Customer card 2 -->
+            <div class="customer-card">
+                <div class="status-badge">Thường xuyên</div>
+                <div class="customer-name">Trần Thị Bình</div>
+                <div class="customer-info">
+                    <p>Mã KH: KH002</p>
+                    <p>SĐT: 0912345678</p>
+                    <p>Email: tranthib@email.com</p>
+                    <p>Ngày sinh: 20/08/1990</p>
+                </div>
+                <div class="loyalty-points">
+                    <span class="loyalty-label">Điểm tích lũy:</span>
+                    <span class="loyalty-value">320</span>
+                </div>
+                <div class="action-buttons">
+                    <button class="edit-button">Chỉnh sửa</button>
+                    <button class="history-button">Lịch sử mua</button>
+                </div>
+            </div>
+
+            <!-- Customer card 3 -->
+            <div class="customer-card">
+                <div class="status-badge">Mới</div>
+                <div class="customer-name">Lê Minh Cường</div>
+                <div class="customer-info">
+                    <p>Mã KH: KH003</p>
+                    <p>SĐT: 0978123456</p>
+                    <p>Email: leminhc@email.com</p>
+                    <p>Ngày sinh: 05/03/1992</p>
+                </div>
+                <div class="loyalty-points">
+                    <span class="loyalty-label">Điểm tích lũy:</span>
+                    <span class="loyalty-value">80</span>
+                </div>
+                <div class="action-buttons">
+                    <button class="edit-button">Chỉnh sửa</button>
+                    <button class="history-button">Lịch sử mua</button>
+                </div>
+            </div>
+
+            <!-- Customer card 4 -->
+            <div class="customer-card">
+                <div class="status-badge">Thường xuyên</div>
+                <div class="customer-name">Phạm Thị Dung</div>
+                <div class="customer-info">
+                    <p>Mã KH: KH004</p>
+                    <p>SĐT: 0936789123</p>
+                    <p>Email: phamthid@email.com</p>
+                    <p>Ngày sinh: 12/11/1988</p>
+                </div>
+                <div class="loyalty-points">
+                    <span class="loyalty-label">Điểm tích lũy:</span>
+                    <span class="loyalty-value">245</span>
+                </div>
+                <div class="action-buttons">
+                    <button class="edit-button">Chỉnh sửa</button>
+                    <button class="history-button">Lịch sử mua</button>
+                </div>
+            </div>
+
+            <!-- Customer card 5 -->
+            <div class="customer-card">
+                <div class="status-badge">Không hoạt động</div>
+                <div class="customer-name">Hoàng Văn Em</div>
+                <div class="customer-info">
+                    <p>Mã KH: KH005</p>
+                    <p>SĐT: 0945678912</p>
+                    <p>Email: hoangvane@email.com</p>
+                    <p>Ngày sinh: 25/07/1995</p>
+                </div>
+                <div class="loyalty-points">
+                    <span class="loyalty-label">Điểm tích lũy:</span>
+                    <span class="loyalty-value">140</span>
+                </div>
+                <div class="action-buttons">
+                    <button class="edit-button">Chỉnh sửa</button>
+                    <button class="history-button">Lịch sử mua</button>
+                </div>
+            </div>
+
+            <!-- Customer card 6 -->
+            <div class="customer-card">
+                <div class="status-badge">VIP</div>
+                <div class="customer-name">Vũ Thị Giang</div>
+                <div class="customer-info">
+                    <p>Mã KH: KH006</p>
+                    <p>SĐT: 0923456789</p>
+                    <p>Email: vuthig@email.com</p>
+                    <p>Ngày sinh: 18/02/1987</p>
+                </div>
+                <div class="loyalty-points">
+                    <span class="loyalty-label">Điểm tích lũy:</span>
+                    <span class="loyalty-value">750</span>
+                </div>
+                <div class="action-buttons">
+                    <button class="edit-button">Chỉnh sửa</button>
+                    <button class="history-button">Lịch sử mua</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            <button class="page-button">«</button>
+            <button class="page-button active">1</button>
+            <button class="page-button">2</button>
+            <button class="page-button">3</button>
+            <button class="page-button">»</button>
+        </div>
+    </div>
+</body>
+</html>

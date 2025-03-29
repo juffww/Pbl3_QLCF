@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập | Hệ thống quản lý quán cà phê</title>
+    <link rel="stylesheet" type="text/css" href="~/css/Login.css" />
+</head>
+<body>
+    <div>
+        @RenderBody()
+    </div>
+    <div class="container">
+        <div class="left-panel">
+            <div class="coffee-icon">☕</div>
+            <h1 class="app-title">AromaCafé</h1>
+            <p class="app-description">Hệ thống quản lý quán cà phê hiện đại, giúp bạn vận hành quán một cách hiệu quả</p>
+        </div>
+        <div class="right-panel">
+            <h2 class="login-title">Đăng nhập</h2>
+            <div class="tabs">
+                <div class="tab active">
+                    <span class="tab-icon">👤</span>
+                    <span>Nhân viên</span>
+                </div>
+                <div class="tab" style="margin-left: 15px;">
+                    <span class="tab-icon">👑</span>
+                    <span>Quản lý</span>
+                </div>
+            </div>
+            <form>
+                <div class="form-group">
+                    <label class="form-label">Tên đăng nhập</label>
+                    <input type="text" class="form-input" placeholder="Nhập tên đăng nhập">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mật khẩu</label>
+                    <input type="password" class="form-input" placeholder="Nhập mật khẩu">
+                </div>
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox">
+                        <span>Ghi nhớ đăng nhập</span>
+                    </label>
+                    <a href="#" class="forgot-password">Quên mật khẩu?</a>
+                </div>
+                <button type="submit" class="login-btn">Đăng nhập</button>
+            </form>
+        </div>
+    </div>
+    <script>
+    // Script để xử lý chuyển đổi giữa vai trò
+        document.addEventListener('DOMContentLoaded', function() {
+            const roleBtns = document.querySelectorAll('.tab');
+
+            roleBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Xóa lớp active từ tất cả các tab
+                    roleBtns.forEach(b => b.classList.remove('active'));
+                    // Thêm lớp active vào tab được nhấp
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

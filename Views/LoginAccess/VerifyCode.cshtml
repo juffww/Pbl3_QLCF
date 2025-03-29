@@ -1,0 +1,316 @@
+﻿@{
+    ViewData["Title"] = "Xác nhận mã";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác nhận mã | Hệ thống quản lý quán cà phê</title>
+    <style>
+        :root {
+            --primary-color: #8B4513; /* Nâu cà phê đậm */
+            --primary-light: #C4A484; /* Màu cà phê sữa */
+            --primary-gradient: linear-gradient(45deg, #8B4513, #D2B48C); /* Gradient từ nâu đậm đến caramel */
+            --text-color: #5D4037; /* Nâu sẫm cho text */
+            --light-text: #7D6E6A; /* Nâu nhạt hơn cho text phụ */
+            --background: #FFF8EA; /* Màu kem nhạt */
+            --white: #fff;
+            --shadow: 0 4px 12px rgba(139, 69, 19, 0.15);
+            --border-radius: 8px;
+            --success-color: #A06235; /* Màu nâu caramel cho completed */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            display: flex;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .form-box {
+            background: var(--white);
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .form-title {
+            color: var(--primary-color);
+            font-size: 28px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 80px;
+            margin-bottom: 15px;
+        }
+
+        .app-name {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #E9DCC9; /* Màu kem đậm hơn một chút */
+            color: var(--light-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .step.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .step.completed {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #E6DAC3; /* Màu viền sữa cà phê nhạt */
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 2px rgba(139, 69, 19, 0.1);
+        }
+
+        .verification-code {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .code-input {
+            flex: 1;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .back-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            color: var(--primary-light);
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #D32F2F; /* Màu đỏ cho lỗi */
+            font-size: 14px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-box">
+        <div class="logo-container">
+            <img src="~/images/coffee-cup.png" alt="CaféManager Logo" class="logo">
+            <h1 class="app-name">CaféManager</h1>
+        </div>
+
+        <h2 class="form-title">Khôi phục mật khẩu</h2>
+
+        <div class="step-indicator">
+            <div class="step completed" id="step-1">1</div>
+            <div class="step active" id="step-2">2</div>
+            <div class="step" id="step-3">3</div>
+        </div>
+
+        <!-- Step 2: Verification Code -->
+        <div class="form-step active">
+            <form asp-action="VerifyCode" asp-controller="LoginAccess" method="post" id="verifyForm">
+                @if (ViewBag.ErrorMessage != null)
+                {
+                        <div class="error-message">@ViewBag.ErrorMessage</div>
+                }
+                <div class="form-group">
+                    <label>Mã xác nhận</label>
+                    <p style="font-size: 14px; color: var(--light-text); margin-bottom: 15px;">
+                        Chúng tôi đã gửi mã xác nhận đến email <strong>@ViewBag.Email</strong>
+                    </p>
+                    <div class="verification-code">
+                        <input type="text" class="code-input" maxlength="1" oninput="moveToNext(this, 'code2')" id="code1">
+                        <input type="text" class="code-input" id="code2" maxlength="1" oninput="moveToNext(this, 'code3')">
+                        <input type="text" class="code-input" id="code3" maxlength="1" oninput="moveToNext(this, 'code4')">
+                        <input type="text" class="code-input" id="code4" maxlength="1" oninput="moveToNext(this, 'code5')">
+                        <input type="text" class="code-input" id="code5" maxlength="1" oninput="moveToNext(this, 'code6')">
+                        <input type="text" class="code-input" id="code6" maxlength="1" oninput="completeInputs()">
+                    </div>
+                    <input type="hidden" name="code" id="fullCode">
+                </div>
+                <div class="text-center" style="margin: 15px 0; font-size: 14px;">
+                    <span id="timer">Gửi lại mã sau <b>60</b> giây</span>
+                    <a href="#" id="resendLink" style="display: none; color: var(--primary-color);" onclick="resendCode(event)">Gửi lại mã</a>
+                </div>
+                <button type="submit" class="btn">Xác nhận</button>
+                <div class="text-center">
+                    <a href="@Url.Action("ForgotPassword", "LoginAccess")" class="back-link">Quay lại</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Start timer when page loads
+        window.onload = function() {
+            startTimer();
+            document.getElementById('code1').focus();
+        };
+
+        function moveToNext(current, nextId) {
+            if (current.value.length === current.maxLength) {
+                if (nextId) {
+                    document.getElementById(nextId).focus();
+                }
+            }
+        }
+
+        function completeInputs() {
+            // Combine all digits into one code
+            const code1 = document.getElementById('code1').value;
+            const code2 = document.getElementById('code2').value;
+            const code3 = document.getElementById('code3').value;
+            const code4 = document.getElementById('code4').value;
+            const code5 = document.getElementById('code5').value;
+            const code6 = document.getElementById('code6').value;
+
+            const fullCode = code1 + code2 + code3 + code4 + code5 + code6;
+            document.getElementById('fullCode').value = fullCode;
+        }
+
+        function startTimer() {
+            let timeLeft = 60;
+            const timerElement = document.getElementById('timer');
+            const resendLink = document.getElementById('resendLink');
+
+            timerElement.style.display = 'inline';
+            resendLink.style.display = 'none';
+
+            const interval = setInterval(() => {
+                timeLeft--;
+                timerElement.innerHTML = `Gửi lại mã sau <b>${timeLeft}</b> giây`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(interval);
+                    timerElement.style.display = 'none';
+                    resendLink.style.display = 'inline';
+                }
+            }, 1000);
+        }
+
+        function resendCode(e) {
+            e.preventDefault();
+
+            // Submit form to resend code action
+            fetch('@Url.Action("SendVerificationCode", "LoginAccess")', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Reset timer and inputs
+                    startTimer();
+                    document.querySelectorAll('.code-input').forEach(input => {
+                        input.value = '';
+                    });
+                    document.getElementById('code1').focus();
+                }
+            });
+        }
+
+        // Before submitting the form, combine all code inputs
+        document.getElementById('verifyForm').addEventListener('submit', function(e) {
+            completeInputs();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CaféManager - Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="~/css/Manager/magDashboard.css" />
+</head>
+<body>
+    @{
+        Html.RenderPartial("~/Views/Manager/sharedAll.cshtml");
+    }
+    <div class="main-content">
+        <div class="dashboard-header">
+            <h1 class="page-title">Dashboard</h1>
+            <input type="text" class="search-bar" placeholder="Tìm kiếm...">
+        </div>
+        <div class="dashboard-grid">
+            <div class="card">
+                <div class="card-title">Doanh thu hôm nay</div>
+                <div class="card-value">6.4M <span class="card-unit">VND</span></div>
+                <div class="card-trend">↑ 12% so với hôm qua</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Đơn hàng hôm nay</div>
+                <div class="card-value">42 <span class="card-unit">đơn</span></div>
+                <div class="card-trend">↑ 8% so với hôm qua</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Khách hàng mới</div>
+                <div class="card-value">15 <span class="card-unit">người</span></div>
+                <div class="card-trend">↑ 25% so với tuần trước</div>
+            </div>
+            <div class="card graph-card">
+                <div class="card-title">Xu hướng doanh thu</div>
+                <svg class="chart" viewBox="0 0 500 250">
+                    <polyline class="chart-line" points="
+                        50,200
+                        100,150
+                        150,180
+                        200,130
+                        250,80
+                        300,100
+                        350,70
+                        400,50
+                        450,30
+                    "></polyline>
+                    <text x="50" y="220" fill="#888" font-size="10">T2</text>
+                    <text x="100" y="220" fill="#888" font-size="10">T3</text>
+                    <text x="150" y="220" fill="#888" font-size="10">T4</text>
+                    <text x="200" y="220" fill="#888" font-size="10">T5</text>
+                    <text x="250" y="220" fill="#888" font-size="10">T6</text>
+                    <text x="300" y="220" fill="#888" font-size="10">T7</text>
+                    <text x="350" y="220" fill="#888" font-size="10">CN</text>
+                    <text x="400" y="220" fill="#888" font-size="10">T2</text>
+                    <text x="450" y="220" fill="#888" font-size="10">T3</text>
+                </svg>
+            </div>
+            <div class="card product-card">
+                <div class="card-title">Sản phẩm bán chạy</div>
+                <div class="product-list">
+                    <div class="product-item">
+                        <div class="product-name">Cà phê sữa</div>
+                        <div class="product-quantity">150</div>
+                    </div>
+                    <div class="product-item">
+                        <div class="product-name">Americano</div>
+                        <div class="product-quantity">140</div>
+                    </div>
+                    <div class="product-item">
+                        <div class="product-name">Cappuccino</div>
+                        <div class="product-quantity">120</div>
+                    </div>
+                    <div class="product-item">
+                        <div class="product-name">Trà đào</div>
+                        <div class="product-quantity">100</div>
+                    </div>
+                    <div class="product-item">
+                        <div class="product-name">Bánh sô-cô-la</div>
+                        <div class="product-quantity">80</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card orders-card">
+                <div class="card-title">Đơn hàng gần đây</div>
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>Mã đơn</th>
+                            <th>Khách hàng</th>
+                            <th>Tổng tiền</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#1025</td>
+                            <td>Nguyễn Văn A</td>
+                            <td>320,000 VND</td>
+                            <td>Hoàn thành</td>
+                        </tr>
+                        <tr>
+                            <td>#1024</td>
+                            <td>Trần Thị B</td>
+                            <td>175,000 VND</td>
+                            <td>Đang xử lý</td>
+                        </tr>
+                        <tr>
+                            <td>#1023</td>
+                            <td>Lê Văn C</td>
+                            <td>420,000 VND</td>
+                            <td>Hoàn thành</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    var items = document.querySelectorAll('.menu-item');
+
+    // Loop through the buttons and add click event listeners
+    items.forEach(function(item) {
+        item.addEventListener('click', function() {
+            // Remove 'active' class from all buttons
+            items.forEach(btn => btn.classList.remove('active'));
+
+            // Add 'active' class to the clicked button
+            this.classList.add('active');
+        });
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using pbl3_QLCF.Data;
+using pbl3_QLCF.Models;
+using System.Configuration;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<Pbl3Context>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("CafeLink"));
+});
+builder.Services.AddSession();
+
+builder.Services.AddControllersWithViews();
+// Các cấu hình khác...
+builder.Services.AddControllersWithViews();
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseAuthorization();
+app.UseSession();
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=LoginAccess}/{action=Login}/{id?}");
+
+app.Run();

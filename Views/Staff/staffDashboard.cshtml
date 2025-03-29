@@ -1,0 +1,123 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CaféManager - Dashboard</title>
+  <link rel="stylesheet" type="text/css" href="~/css/Staff/Dashboard.css" />
+</head>
+<body>
+    @{
+        Html.RenderPartial("~/Views/Staff/sharedAll.cshtml");
+    }
+  <div class="main-content">
+    <!-- Stats Cards -->
+    <div class="stats-container">
+      <div class="stat-card">
+        <div class="stat-header stat-blue">Đơn hàng hôm nay</div>
+        <div class="stat-content">
+          <div class="stat-value">24</div>
+          <div class="stat-unit">đơn</div>
+        </div>
+        <div class="indicator">
+          <span class="indicator-up">↑</span>
+        </div>
+      </div>
+      @* cyan *@
+      <div class="stat-card">
+        <div class="stat-header stat-blue">Đơn hàng đã hoàn thành</div>
+        <div class="stat-content">
+          <div class="stat-value">19</div>
+          <div class="stat-unit">đơn</div>
+        </div>
+        <div class="indicator">
+          <span class="indicator-up">↑</span>
+        </div>
+      </div>
+      @* orange *@
+      <div class="stat-card">
+        <div class="stat-header stat-blue">Đơn đang xử lý</div>
+        <div class="stat-content">
+          <div class="stat-value">5</div>
+          <div class="stat-unit">đơn</div>
+        </div>
+        <div class="indicator">
+          <span class="indicator-warning">!</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid Layout for Order Processing and Actions -->
+    <div class="grid">
+      <div class="card">
+        <div class="card-title">Đơn hàng đang xử lý</div>
+        <div class="tabs">
+          <div class="tab active">Tất cả</div>
+          <div class="tab">Mới</div>
+          <div class="tab">Đang xử lý</div>
+        </div>
+        <div class="order-list">
+          <div class="order-item">
+            <div class="order-name">#1010 - Nguyễn Văn A</div>
+            <div class="order-details">Americano (x1), Cappuccino (x1)</div>
+            <div class="order-time">09:30 - Hôm nay</div>
+            <div class="order-status status-new">Mới</div>
+          </div>
+          <div class="order-item">
+            <div class="order-name">#1011 - Trần Thị B</div>
+            <div class="order-details">Latte (x2), Bánh chocolate (x1)</div>
+            <div class="order-time">09:45 - Hôm nay</div>
+            <div class="order-status status-processing">Đang làm</div>
+          </div>
+          <div class="order-item">
+            <div class="order-name">#1012 - Lê Văn C</div>
+            <div class="order-details">Cà phê đen (x1), Cà phê sữa (x1)</div>
+            <div class="order-time">10:05 - Hôm nay</div>
+            <div class="order-status status-new">Mới</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="card-title">Thao tác nhanh</div>
+          <div class="quick-actions">
+            <button class="action-btn btn-primary">Tạo đơn hàng mới</button>
+            <button class="action-btn btn-info">Quản lý khách hàng</button>
+            <button class="action-btn btn-success">Báo cáo ca làm</button>
+          </div>
+        </div>
+
+        <div class="card notifications">
+          <div class="card-title">Thông báo</div>
+          <div class="notification-item">
+            <div class="notification-icon icon-warning">!</div>
+            <div class="notification-text">Sữa tươi sắp hết</div>
+            <div class="notification-time">10 phút trước</div>
+          </div>
+          <div class="notification-item">
+            <div class="notification-icon icon-info">i</div>
+            <div class="notification-text">Khuyến mãi mới được áp dụng</div>
+            <div class="notification-time">1 giờ trước</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Info Section -->
+    <div class="card">
+      <div class="user-section">
+        <div class="user-avatar">NV</div>
+        <div class="user-info">
+          <div class="user-name">Nguyễn Văn A</div>
+          <div class="user-role">Nhân viên</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,197 @@
+﻿:root {
+    --primary-color: #6F4E37; /* Coffee brown - primary color */
+    --secondary-color: #B87333; /* Copper/caramel - secondary color */
+    --gradient-start: #855E42; /* Medium brown - gradient start */
+    --gradient-end: #A67B5B; /* Light brown - gradient end */
+    --light-color: #FFF8EA; /* Cream color - light background */
+    --text-color: #3A2718; /* Dark brown for text */
+    --white: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--light-color);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    display: flex;
+    width: 80%;
+    max-width: 1000px;
+    height: 600px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.left-panel {
+    width: 50%;
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    padding: 40px;
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.coffee-icon {
+    font-size: 80px;
+    margin-bottom: 20px;
+}
+
+.logo-container {
+    margin-bottom: 30px;
+}
+
+.logo-img {
+    width: 100px;
+    height: 100px;
+}
+
+.app-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.app-description {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.right-panel {
+    width: 50%;
+    background-color: var(--light-color);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+    .right-panel h2 {
+        font-size: 28px;
+        text-align: center;
+        margin: 20px 20px;
+    }
+
+.tabs {
+    display: flex;
+    margin-bottom: 30px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.tab {
+    flex: 1;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0;
+}
+
+    .tab.active {
+        background-color: var(--primary-color);
+        color: var(--white);
+    }
+
+    .tab:not(.active) {
+        color: var(--text-color);
+    }
+
+.tab-icon {
+    font-size: 1.2rem;
+}
+
+.login-title {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #D2B48C; /* Coffee with milk color for input borders */
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border 0.3s ease;
+}
+
+    .form-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+    }
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-color);
+}
+
+.forgot-password {
+    color: var(--secondary-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+    .forgot-password:active, .forgot-password:hover {
+        text-decoration: underline;
+        color: var(--primary-color);
+    }
+
+.login-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    color: var(--white);
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+    .login-btn:hover {
+        background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(111, 78, 55, 0.4);
+    }

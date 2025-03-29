@@ -1,0 +1,418 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AromaCafé - Quản lý Đơn Hàng</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f8f8f8;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: white;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-right: 30px;
+        }
+
+        .logo-circle {
+            width: 50px;
+            height: 50px;
+            background-color: #6d4c41;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #6d4c41;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-grow: 1;
+        }
+
+        .nav-menu a {
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .nav-menu a.active {
+            background-color: #6d4c41;
+            color: white;
+            border-radius: 4px;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .notification-icon {
+            margin-right: 15px;
+            font-size: 20px;
+            color: #6d4c41;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            background-color: #6d4c41;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 50px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #6d4c41;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .user-role {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            color: #6d4c41;
+            margin-bottom: 20px;
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .search-bar {
+            display: flex;
+            flex-grow: 1;
+            margin-right: 20px;
+            background-color: transparent !important;
+            border: none !important;
+        }
+
+        .search-input {
+            flex-grow: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            font-size: 16px;
+        }
+
+        .search-button {
+            background-color: #8d6e63;
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-weight: bold;
+            border: nont !important;
+        }
+
+        .add-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .add-button i {
+            margin-right: 8px;
+        }
+
+        .filter-bar {
+            display: flex;
+            margin-bottom: 20px;
+            background-color: #fff;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .filter-option {
+            padding: 12px 20px;
+            cursor: pointer;
+            background-color: white;
+            border: none;
+            font-weight: bold;
+        }
+
+        .filter-option.active {
+            background-color: #6d4c41;
+            color: white;
+        }
+
+        .filter-option:not(.active) {
+            background-color: #f1f1f1;
+        }
+
+        .filter-option:first-child {
+            border-radius: 4px 0 0 4px;
+        }
+
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .orders-table th {
+            background-color: #8B6D5A !important;
+            color: white !important;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .orders-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .orders-table tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .status-new {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status-processing {
+            background-color: #fff8e1;
+            color: #ffa000;
+        }
+
+        .status-completed {
+            background-color: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .status-cancelled {
+            background-color: #ffebee;
+            color: #d32f2f;
+        }
+
+        .action-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 5px;
+            font-weight: bold;
+        }
+
+        .view-btn {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+
+        .edit-btn {
+            background-color: #8d6e63;
+            color: white;
+        }
+
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination-btn {
+            padding: 8px 15px;
+            margin: 0 5px;
+            border: 1px solid #ddd;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .pagination-btn.active {
+            background-color: #6d4c41;
+            color: white;
+            border-color: #6d4c41;
+        }
+    </style>
+</head>
+<body>
+    @{
+        Html.RenderPartial("~/Views/Manager/sharedAll.cshtml");
+    }
+
+    <main class="content">
+        <h1 class="page-title">Quản lý Đơn Hàng</h1>
+
+        <div class="action-bar">
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="Tìm kiếm theo mã đơn, khách hàng...">
+                <button class="search-button">Tìm</button>
+            </div>
+            <button class="add-button"><i>+</i> Thêm Đơn Hàng</button>
+        </div>
+
+        <div class="filter-bar">
+            <button class="filter-option active">Tất cả</button>
+            <button class="filter-option">Mới</button>
+            <button class="filter-option">Đang xử lý</button>
+            <button class="filter-option">Hoàn thành</button>
+            <button class="filter-option">Đã hủy</button>
+        </div>
+
+        <table class="orders-table">
+            <thead>
+                <tr>
+                    <th>Mã ĐH</th>
+                    <th>Mã KH</th>
+                    <th>Mã NV</th>
+                    <th>Mã Bàn</th>
+                    <th>Thời Gian Đặt</th>
+                    <th>Tổng Tiền</th>
+                    <th>Thanh Toán</th>
+                    <th>Trạng Thái</th>
+                    <th>Thao Tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>DH001</td>
+                    <td>KH023</td>
+                    <td>NV002</td>
+                    <td>B05</td>
+                    <td>29/03/2025 08:15</td>
+                    <td>320,000 đ</td>
+                    <td>Đã thanh toán</td>
+                    <td><span class="status status-completed">Hoàn thành</span></td>
+                    <td>
+                        <button class="action-btn view-btn">Xem</button>
+                        <button class="action-btn edit-btn">Sửa</button>
+                        <button class="action-btn delete-btn">Xóa</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>DH002</td>
+                    <td>KH045</td>
+                    <td>NV001</td>
+                    <td>B12</td>
+                    <td>29/03/2025 08:30</td>
+                    <td>195,000 đ</td>
+                    <td>Chưa thanh toán</td>
+                    <td><span class="status status-processing">Đang xử lý</span></td>
+                    <td>
+                        <button class="action-btn view-btn">Xem</button>
+                        <button class="action-btn edit-btn">Sửa</button>
+                        <button class="action-btn delete-btn">Xóa</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>DH003</td>
+                    <td>KH011</td>
+                    <td>NV003</td>
+                    <td>B07</td>
+                    <td>29/03/2025 08:42</td>
+                    <td>420,000 đ</td>
+                    <td>Đã thanh toán</td>
+                    <td><span class="status status-new">Mới</span></td>
+                    <td>
+                        <button class="action-btn view-btn">Xem</button>
+                        <button class="action-btn edit-btn">Sửa</button>
+                        <button class="action-btn delete-btn">Xóa</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>DH004</td>
+                    <td>KH032</td>
+                    <td>NV001</td>
+                    <td>B03</td>
+                    <td>29/03/2025 09:10</td>
+                    <td>155,000 đ</td>
+                    <td>Đã thanh toán</td>
+                    <td><span class="status status-cancelled">Đã hủy</span></td>
+                    <td>
+                        <button class="action-btn view-btn">Xem</button>
+                        <button class="action-btn edit-btn">Sửa</button>
+                        <button class="action-btn delete-btn">Xóa</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>DH005</td>
+                    <td>KH019</td>
+                    <td>NV004</td>
+                    <td>B01</td>
+                    <td>29/03/2025 09:25</td>
+                    <td>290,000 đ</td>
+                    <td>Đã thanh toán</td>
+                    <td><span class="status status-completed">Hoàn thành</span></td>
+                    <td>
+                        <button class="action-btn view-btn">Xem</button>
+                        <button class="action-btn edit-btn">Sửa</button>
+                        <button class="action-btn delete-btn">Xóa</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            <button class="pagination-btn">«</button>
+            <button class="pagination-btn active">1</button>
+            <button class="pagination-btn">2</button>
+            <button class="pagination-btn">3</button>
+            <button class="pagination-btn">»</button>
+        </div>
+    </main>
+</body>
+</html>

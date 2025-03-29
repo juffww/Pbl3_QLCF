@@ -1,0 +1,744 @@
+﻿@using pbl3_QLCF.Data
+@{
+    Layout = null;
+}
+@model IEnumerable<ThucDon>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AromaCafé - Quản lý Sản Phẩm</title>
+    <link rel="stylesheet" type="text/css" href="~/css/Manager/magDashboard.css" />
+    <style>
+        :root {
+            --primary-color: #8B6D5A;
+            --secondary-color: #D2B48C;
+            --light-color: #F5F5DC;
+            --dark-color: #5D4037;
+            --success-color: #4CAF50;
+            --danger-color: #F44336;
+            --warning-color: #FF9800;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-color);
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 770px; /* Khoảng cách giữa tiêu đề và nút */
+        }
+
+        .header {
+            background-color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background-color: #6F4E37; /* Coffee brown */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .brand-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #6F4E37; /* Coffee brown */
+        }
+
+        .nav {
+            display: flex;
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .nav-item.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .notification {
+            margin-right: 20px;
+            font-size: 20px;
+        }
+
+        .user {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: var(--dark-color);
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: var(--dark-color);
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .search-bar {
+    width: 120px !important; /* Explicitly set the width */
+            min-width: 100%; /* Ensure it takes at least the full width */
+            overflow: visible; /* Allow it to overflow if necessary */
+    display: flex;
+    align-items: center; /* Căn giữa các phần tử theo chiều dọc */
+    background-color: transparent; /* Loại bỏ nền */
+    border-radius: 4px;
+    padding: 5px 10px;
+    border: none !important; /* Loại bỏ viền */
+    background: none !important;
+}
+
+        .search-input {
+    flex-grow: 1; /* Chiếm phần còn lại của không gian */
+    border: none;
+    padding: 8px;
+    outline: none; /* Loại bỏ viền khi focus */
+    border-radius: 4px 0 0 4px; /* Bo góc bên trái */
+}
+
+        .buttons {
+            display: flex;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .category-filter {
+            display: flex;
+            margin-bottom: 20px;
+            background-color: white;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .category-item {
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        .category-item.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .product-image {
+            height: 180px;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            overflow: hidden;
+        }
+        .product-image img {
+            max-width: 100%;             /* Scale image to fit horizontally */
+            max-height: 100%;            /* Scale image to fit vertically */
+            object-fit: cover;           /* Ensure the image covers the space without distortion */
+        }
+        .product-details {
+            padding: 15px;
+        }
+
+        .product-name {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .product-price {
+            font-size: 16px;
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .product-info {
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .product-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background-color: #E8F5E9;
+            color: var(--success-color);
+        }
+
+        .status-inactive {
+            background-color: #FFEBEE;
+            color: var(--danger-color);
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .page-item {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 5px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .page-item.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: white;
+            width: 500px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .modal-close {
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .modal-footer {
+            padding: 15px;
+            display: flex;
+            justify-content: flex-end;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    @{
+        Html.RenderPartial("~/Views/Manager/sharedAll.cshtml");
+    }
+
+     @* <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Quản lý Sản Phẩm</h1>
+            <div class="buttons">
+                <button class="btn btn-success" id="add-product-btn">+ Thêm Sản Phẩm</button>
+            </div>
+        </div>
+        <div class="action-bar">
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="Tìm kiếm sản phẩm...">
+                <button class="btn btn-primary">Tìm</button>
+            </div>
+        </div>
+
+        <div class="category-filter">
+            <div class="category-item active">Tất cả</div>
+            <div class="category-item">Cà phê</div>
+            <div class="category-item">Trà</div>
+            <div class="category-item">Đồ uống đá xay</div>
+            <div class="category-item">Bánh ngọt</div>
+            <div class="category-item">Đồ ăn nhẹ</div>
+        </div>
+
+        <div class="products-grid">
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://png.pngtree.com/png-clipart/20231020/original/pngtree-iced-coffee-png-png-image_13381334.png" alt="Cà phê sữa">
+                </div>
+                <div class="product-details">
+                    <div class="product-name">Cà phê sữa</div>
+                    <div class="product-price">35.000 VNĐ</div>
+                    <div class="product-info">
+                        <span>Mã: CF001</span>
+                        <span class="status-badge status-active">Đang bán</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn btn-primary">Chỉnh sửa</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://khothietke.net/wp-content/uploads/2021/03/taifree1407-ly-ca-phe-den.png" alt="Cà phê đen">
+                </div>
+                <div class="product-details">
+                    <div class="product-name">Cà phê đen</div>
+                    <div class="product-price">29.000 VNĐ</div>
+                    <div class="product-info">
+                        <span>Mã: CF002</span>
+                        <span class="status-badge status-active">Đang bán</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn btn-primary">Chỉnh sửa</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="http://pngimg.com/uploads/cappuccino/cappuccino_PNG61.png" alt="Cappuccino">
+                </div>
+                <div class="product-details">
+                    <div class="product-name">Cappuccino</div>
+                    <div class="product-price">45.000 VNĐ</div>
+                    <div class="product-info">
+                        <span>Mã: CF003</span>
+                        <span class="status-badge status-active">Đang bán</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn btn-primary">Chỉnh sửa</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://static.vecteezy.com/system/resources/thumbnails/023/438/445/small_2x/espresso-coffee-cutout-free-png.png" alt="Americano">
+                </div>
+                <div class="product-details">
+                    <div class="product-name">Americano</div>
+                    <div class="product-price">40.000 VNĐ</div>
+                    <div class="product-info">
+                        <span>Mã: CF004</span>
+                        <span class="status-badge status-active">Đang bán</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn btn-primary">Chỉnh sửa</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://png.pngtree.com/png-clipart/20231018/original/pngtree-iced-peach-tea-in-plastic-glass-watercolor-png-image_13342496.png" alt="Trà đào">
+                </div>
+                <div class="product-details">
+                    <div class="product-name">Trà đào</div>
+                    <div class="product-price">38.000 VNĐ</div>
+                    <div class="product-info">
+                        <span>Mã: TR001</span>
+                        <span class="status-badge status-active">Đang bán</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn btn-primary">Chỉnh sửa</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="~/css/Manager/TSTC.png" alt="Trà sữa trân châu">
+                </div>
+                <div class="product-details">
+                    <div class="product-name">Trà sữa trân châu</div>
+                    <div class="product-price">45.000 VNĐ</div>
+                    <div class="product-info">
+                        <span>Mã: TR002</span>
+                        <span class="status-badge status-active">Đang bán</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn btn-primary">Chỉnh sửa</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://purepng.com/public/uploads/large/purepng.com-cakefood-chocolate-slice-cake-sweet-tasty-piece-eat-delicious-9415246166160hbsv.png" alt="Bánh sô-cô-la">
+                </div>
+                <div class="product-details">
+                    <div class="product-name">Bánh sô-cô-la</div>
+                    <div class="product-price">35.000 VNĐ</div>
+                    <div class="product-info">
+                        <span>Mã: BK001</span>
+                        <span class="status-badge status-active">Đang bán</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn btn-primary">Chỉnh sửa</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://static.vecteezy.com/system/resources/previews/032/069/302/non_2x/classic-italian-tiramisu-cake-isolated-on-transparent-background-ai-generative-free-png.png" alt="Bánh tiramisu">
+                </div>
+                <div class="product-details">
+                    <div class="product-name">Bánh tiramisu</div>
+                    <div class="product-price">40.000 VNĐ</div>
+                    <div class="product-info">
+                        <span>Mã: BK002</span>
+                        <span class="status-badge status-inactive">Hết hàng</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn btn-primary">Chỉnh sửa</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pagination">
+            <div class="page-item active">1</div>
+            <div class="page-item">2</div>
+            <div class="page-item">3</div>
+            <div class="page-item">></div>
+        </div>
+    </div>
+
+    <div class="modal" id="add-product-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Thêm Sản Phẩm Mới</div>
+                <div class="modal-close">&times;</div>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Tên sản phẩm</label>
+                    <input type="text" class="form-input" placeholder="Nhập tên sản phẩm">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mã sản phẩm</label>
+                    <input type="text" class="form-input" placeholder="Nhập mã sản phẩm">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Giá bán (VNĐ)</label>
+                    <input type="number" class="form-input" placeholder="Nhập giá bán">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Danh mục</label>
+                    <select class="form-select">
+                        <option value="">Chọn danh mục</option>
+                        <option value="coffee">Cà phê</option>
+                        <option value="tea">Trà</option>
+                        <option value="blended">Đồ uống đá xay</option>
+                        <option value="cake">Bánh ngọt</option>
+                        <option value="food">Đồ ăn nhẹ</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mô tả</label>
+                    <textarea class="form-input" rows="3" placeholder="Nhập mô tả sản phẩm"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Hình ảnh</label>
+                    <input type="file" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Trạng thái</label>
+                    <select class="form-select">
+                        <option value="active">Đang bán</option>
+                        <option value="inactive">Ngừng bán</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn">Hủy</button>
+                <button class="btn btn-success">Lưu</button>
+            </div>
+        </div>
+    </div> *@
+
+<div class="container">
+    <div class="page-header">
+        <h1 class="page-title">Quản lý Sản Phẩm</h1>
+        <div class="buttons">
+            <button class="btn btn-success" id="add-product-btn">+ Thêm Sản Phẩm</button>
+        </div>
+    </div>
+
+    <!-- Phần tìm kiếm và lọc -->
+    <div class="action-bar">
+        <div class="search-bar">
+            <input type="text" class="search-input" placeholder="Tìm kiếm sản phẩm..." 
+                   value="@ViewBag.SearchString">
+            <button class="btn btn-primary" id="search-btn">Tìm</button>
+        </div>
+    </div>
+
+    <!-- Danh mục -->
+    <div class="category-filter">
+        <div class="category-item @(ViewBag.CurrentCategory == "all" ? "active" : "")" 
+             data-category="all">Tất cả</div>
+        <div class="category-item @(ViewBag.CurrentCategory == "Cà phê" ? "active" : "")" 
+             data-category="Cà phê">Cà phê</div>
+        <div class="category-item @(ViewBag.CurrentCategory == "Trà" ? "active" : "")" 
+             data-category="Trà">Trà</div>
+        <!-- Thêm các danh mục khác -->
+    </div>
+
+    <!-- Danh sách sản phẩm -->
+    <div class="products-grid">
+            @foreach (var product in Model)
+            {
+                    <div class="product-card">
+                        <!-- Hiển thị thông tin sản phẩm -->
+                        <div class="product-name">@product.TenMon</div>
+                        <div class="product-price">@product.GiaSp</div>
+                        <!-- Các thông tin khác -->
+                    </div>
+            }
+    </div>
+
+    <!-- Phân trang -->
+    <div class="pagination">
+            @if (ViewBag.CurrentPage > 1)
+            {
+                    <a href="@Url.Action("SanPham", new { page = ViewBag.CurrentPage - 1, category = ViewBag.CurrentCategory, search = ViewBag.SearchString })">
+                        &lt;
+                    </a>
+            }
+
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                    <a class="@(i == ViewBag.CurrentPage ? "active" : "")" 
+                       href="@Url.Action("SanPham", new { page = i, category = ViewBag.CurrentCategory, search = ViewBag.SearchString })">
+                    @i
+                    </a>
+            }
+
+            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+            {
+                    <a href="@Url.Action("SanPham", new { page = ViewBag.CurrentPage + 1, category = ViewBag.CurrentCategory, search = ViewBag.SearchString })">
+                        &gt;
+                    </a>
+            }
+    </div>
+</div>
+    <div class="modal" id="add-product-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Thêm Sản Phẩm Mới</div>
+                <div class="modal-close">&times;</div>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Tên sản phẩm</label>
+                    <input type="text" class="form-input" placeholder="Nhập tên sản phẩm">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mã sản phẩm</label>
+                    <input type="text" class="form-input" placeholder="Nhập mã sản phẩm">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Giá bán (VNĐ)</label>
+                    <input type="number" class="form-input" placeholder="Nhập giá bán">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Danh mục</label>
+                    <select class="form-select">
+                        <option value="">Chọn danh mục</option>
+                        <option value="coffee">Cà phê</option>
+                        <option value="tea">Trà</option>
+                        <option value="blended">Đồ uống đá xay</option>
+                        <option value="cake">Bánh ngọt</option>
+                        <option value="food">Đồ ăn nhẹ</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mô tả</label>
+                    <textarea class="form-input" rows="3" placeholder="Nhập mô tả sản phẩm"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Hình ảnh</label>
+                    <input type="file" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Trạng thái</label>
+                    <select class="form-select">
+                        <option value="active">Đang bán</option>
+                        <option value="inactive">Ngừng bán</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn">Hủy</button>
+                <button class="btn btn-success">Lưu</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('add-product-btn').addEventListener('click', function() {
+            document.getElementById('add-product-modal').style.display = 'flex';
+        });
+
+        document.querySelector('.modal-close').addEventListener('click', function() {
+            document.getElementById('add-product-modal').style.display = 'none';
+        });
+
+        // Xử lý tìm kiếm
+        document.getElementById('search-btn').addEventListener('click', function() {
+            const searchValue = document.querySelector('.search-input').value;
+            const category = document.querySelector('.category-item.active').dataset.category;
+            window.location.href = '@Url.Action("SanPham")' + 
+                `?search=${encodeURIComponent(searchValue)}&category=${category}`;
+        });
+
+        // Xử lý lọc danh mục
+        document.querySelectorAll('.category-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const category = this.dataset.category;
+                const searchValue = document.querySelector('.search-input').value;
+                window.location.href = '@Url.Action("SanPham")' + 
+                    `?search=${encodeURIComponent(searchValue)}&category=${category}`;
+            });
+        });
+    </script>
+</body>
+</html>

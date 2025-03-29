@@ -1,0 +1,38 @@
+﻿@{
+    Layout = null;
+}
+@{
+    // Get the current controller and action to determine which menu item should be active
+    string currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    string currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - pbl3_QLCF</title>
+    <link rel="stylesheet" type="text/css" href="~/css/Staff/Dashboard.css" />
+</head>
+<body>
+    <!-- Top Navbar instead of Side Menu -->
+    <nav class="top-navbar">
+      <div class="logo-section">
+        <div class="brand-logo">AC</div>
+        <div class="brand-name">AromaCafé</div>
+      </div>
+      <div class="top-menu">
+        <a asp-controller="Staff" asp-action="Dashboard">Dashboard</a>
+        <a asp-controller="Staff" asp-action="DonHang">Đơn hàng</a>
+        <a asp-controller="Staff" asp-action="SanPham">Sản phẩm</a>
+        <a asp-controller="Staff" asp-action="KhachHang">Khách hàng</a>
+        <a asp-controller="Staff" asp-action="KhuyenMai">Khuyến mãi</a>
+        <a asp-controller="Staff" asp-action="BaoCao">Báo cáo</a>
+      </div>
+      <div class="search-section">
+        <input type="text" class="search-box" placeholder="Tìm kiếm...">
+        <div>?</div>
+      </div>
+    </nav>
+</body>
+</html>
