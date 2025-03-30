@@ -35,7 +35,7 @@
         .page-header {
             display: flex;
             align-items: center;
-            gap: 770px; /* Khoảng cách giữa tiêu đề và nút */
+            gap: 500px; /* Reduce the gap to allow more space for search */
         }
 
         .header {
@@ -68,7 +68,7 @@
 
         .brand-name {
             font-size: 18px;
-            font-weight: bold;
+            font-weight: normal; /* Change from bold to normal */
             color: #6F4E37; /* Coffee brown */
         }
 
@@ -81,7 +81,7 @@
             padding: 10px 20px;
             text-decoration: none;
             color: #333;
-            font-weight: 500;
+            font-weight: normal;
         }
 
         .nav-item.active {
@@ -125,43 +125,47 @@
             font-size: 28px;
             margin-bottom: 20px;
             color: var(--dark-color);
+            font-weight: bold;
         }
 
         .action-bar {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          width: 100%;
-          margin-bottom: 15px;
-          padding: 0 15px;
-        }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 15px;
+    gap: 15px; /* Thêm khoảng cách giữa thanh tìm kiếm và nút */
+}
 
-        .search-bar {
-          display: flex;
-          align-items: center;
-          background-color: transparent;
-          border-radius: 4px;
-          padding: 5px 0;
-          border: none !important;
-          background: none !important;
-          flex-grow: 1;
-          max-width: 100%;
-        }
+.search-bar {
+    display: flex;
+    align-items: center;
+    flex-grow: 1; /* Cho phép thanh tìm kiếm mở rộng */
+    max-width: 1000px; /* Giới hạn chiều dài tối đa nếu cần */
+    background: none !important;
+    border: none !important;
+}
 
-        .search-input {
-          flex-grow: 1;
-          border: 1px solid #ccc;
-          padding: 13px;
-          outline: none;
-          border-radius: 4px 0 0 4px;
-          width: 100%;
-          min-width: 300px;
-        }
+.search-input {
+    flex-grow: 1;
+    border: 1px solid #ccc;
+    padding: 13px 20px;
+    outline: none;
+    border-radius: 4px 0 0 4px;
+    min-width: 300px; /* Đặt chiều rộng tối thiểu */
+}
 
-        .buttons {
-          display: flex;
-          margin-left: 15px;
-        }
+        #search-btn {
+    border-radius: 0 4px 4px 0;
+    margin-left: 0;
+    padding: 13px 20px; /* Điều chỉnh padding cho cân đối */
+    white-space: nowrap; /* Ngăn chữ bị xuống dòng */
+}
+
+.buttons {
+    display: flex;
+    flex-shrink: 0; /* Ngăn nút bị co lại */
+}
 
         .btn {
           padding: 8px 16px;
@@ -171,11 +175,7 @@
           font-weight: 500;
         }
 
-        #search-btn {
-          border-radius: 0 4px 4px 0;
-          margin-left: 0;
-          padding: 13px;
-        }
+        
 
         #add-product-btn {
           white-space: nowrap;
@@ -208,13 +208,24 @@
         .category-item {
             padding: 10px 20px;
             cursor: pointer;
+            text-decoration: none;
+            color: black; /* Màu chữ mặc định là đen */
         }
 
         .category-item.active {
             background-color: var(--primary-color);
             color: white;
         }
-
+        /* Đảm bảo màu sắc ổn định trong mọi trạng thái */
+.category-item:link,
+.category-item:visited,
+.category-item:hover,
+.category-item:active,
+.category-item:focus {
+    text-decoration: none;
+    outline: none;
+}
+       
         .products-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -431,12 +442,14 @@
         </div>
 
         <!-- Phần tìm kiếm và lọc -->
-        <div class="action-bar new-layout">
-            <div class="search-bar">
-                <input type="text" class="search-input" placeholder="Tìm kiếm sản phẩm..." 
+        <div class="action-bar">
+            <form method="get" action="@Url.Action("SanPham")" class="search-bar">
+                <input type="text" name="search" class="search-input" placeholder="Tìm kiếm sản phẩm..." 
                        value="@ViewBag.SearchString">
-                <button class="btn btn-primary" id="search-btn">Tìm</button>
-            </div>
+                <input type="hidden" name="category" value="@ViewBag.CurrentCategory">
+                <input type="hidden" name="page" value="1">
+                <button type="submit" class="btn btn-primary" id="search-btn">Tìm</button>
+            </form>
             <div class="buttons">
                 <button class="btn btn-success" id="add-product-btn">+ Thêm Sản Phẩm</button>
             </div>
@@ -444,21 +457,19 @@
 
         <!-- Danh mục -->
         <div class="category-filter">
-            <div class="category-item @(ViewBag.CurrentCategory == "all" ? "active" : "")" 
-                 data-category="all">Tất cả</div>
-            <div class="category-item @(ViewBag.CurrentCategory == "Cà phê" ? "active" : "")" 
-                 data-category="Cà phê">Cà phê</div>
-            <div class="category-item @(ViewBag.CurrentCategory == "Trà" ? "active" : "")" 
-                 data-category="Trà & Đồ uống">Trà & Đồ uống khác</div>
-            <div class="category-item @(ViewBag.CurrentCategory == "Đồ uống đá xay" ? "active" : "")" 
-                 data-category="Đồ uống đá xay">Đồ uống đá xay</div>
-            <div class="category-item @(ViewBag.CurrentCategory == "Bánh ngọt" ? "active" : "")" 
-                 data-category="Bánh ngọt">Bánh ngọt</div>
-            <div class="category-item @(ViewBag.CurrentCategory == "Đồ ăn nhẹ" ? "active" : "")" 
-                 data-category="Đồ ăn nhẹ">Đồ ăn nhẹ</div>
-            <!-- Thêm các danh mục khác -->
+            <a class="category-item @(ViewBag.CurrentCategory == "all" ? "active" : "")" 
+               href="@Url.Action("SanPham", new { category = "all", search = ViewBag.SearchString, page = 1 })">Tất cả</a>
+            <a class="category-item @(ViewBag.CurrentCategory == "Cà phê" ? "active" : "")" 
+               href="@Url.Action("SanPham", new { category = "Cà phê", search = ViewBag.SearchString, page = 1 })">Cà phê</a>
+            <a class="category-item @(ViewBag.CurrentCategory == "Trà" ? "active" : "")" 
+               href="@Url.Action("SanPham", new { category = "Trà", search = ViewBag.SearchString, page = 1 })">Trà & Đồ uống khác</a>
+            <a class="category-item @(ViewBag.CurrentCategory == "Đồ uống đá xay" ? "active" : "")" 
+               href="@Url.Action("SanPham", new { category = "Đồ uống đá xay", search = ViewBag.SearchString, page = 1 })">Đồ uống đá xay</a>
+            <a class="category-item @(ViewBag.CurrentCategory == "Bánh ngọt" ? "active" : "")" 
+               href="@Url.Action("SanPham", new { category = "Bánh ngọt", search = ViewBag.SearchString, page = 1 })">Bánh ngọt</a>
+            <a class="category-item @(ViewBag.CurrentCategory == "Đồ ăn nhẹ" ? "active" : "")" 
+               href="@Url.Action("SanPham", new { category = "Đồ ăn nhẹ", search = ViewBag.SearchString, page = 1 })">Đồ ăn nhẹ</a>
         </div>
-
     
         <!-- Product List -->
         <div class="products-grid">
@@ -523,13 +534,13 @@
         </div>
     </div>
     <div class="modal" id="add-product-modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title">Thêm Sản Phẩm Mới</div>
-                <div class="modal-close">&times;</div>
-            </div>
-            
-            <div class="modal-body">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-title">Thêm Sản Phẩm Mới</div>
+            <div class="modal-close">&times;</div>
+        </div>
+
+        <div class="modal-body">
                 @Html.AntiForgeryToken()
             <div class="form-group">
                 <label class="form-label">Tên sản phẩm</label>
@@ -570,10 +581,11 @@
             <button class="btn" id="cancel-btn">Hủy</button>
             <button class="btn btn-success" id="save-product-btn">Lưu</button>
         </div>
-        </div>
     </div>
+</div>
 
-    <script>
+<script>
+    // Modal controls - only JavaScript for showing/hiding the modal
     document.getElementById('add-product-btn').addEventListener('click', function() {
         document.getElementById('add-product-modal').style.display = 'flex';
     });
@@ -586,77 +598,46 @@
         document.getElementById('add-product-modal').style.display = 'none';
     });
 
-    // Xử lý tìm kiếm
-        document.getElementById('search-btn').addEventListener('click', function() {
-            const searchValue = document.querySelector('.search-input').value;
-            const category = document.querySelector('.category-item.active').dataset.category;
-            window.location.href = '@Url.Action("SanPham")' + 
-                `?search=${encodeURIComponent(searchValue)}&category=${category}`;
-        });
+    // Save product - minimal JavaScript for form submission
+    document.getElementById('save-product-btn').addEventListener('click', function() {
+        // Collect form data
+        const productData = {
+            MaMon: document.getElementById('product-code').value,
+            TenMon: document.getElementById('product-name').value,
+            GiaSp: document.getElementById('product-price').value,
+            TenLoai: document.getElementById('product-category').value,
+            HinhAnh: document.getElementById('product-image').value,
+            TinhTrang: document.getElementById('product-status').value === 'true'
+        };
 
-        // Xử lý lọc danh mục
-        document.querySelectorAll('.category-item').forEach(item => {
-            item.addEventListener('click', function() {
-                const category = this.dataset.category;
-                const searchValue = document.querySelector('.search-input').value;
-                window.location.href = '@Url.Action("SanPham")' + 
-                    `?search=${encodeURIComponent(searchValue)}&category=${category}`;
-            });
-        });
+        // Send data to server using fetch API
+        fetch('@Url.Action("AddProduct", "Manager")', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+            },
+            body: JSON.stringify(productData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Close the modal
+            document.getElementById('add-product-modal').style.display = 'none';
 
-    document.querySelectorAll('.category-item').forEach(item => {
-        item.addEventListener('click', function() {
-            const category = this.dataset.category;
-            const searchValue = document.querySelector('.search-input').value;
-            window.location.href = '@Url.Action("SanPham")' + 
-                `?search=${encodeURIComponent(searchValue)}&category=${category}`;
+            if (data.success) {
+                // Show success message and reload
+                alert(data.message || 'Thêm sản phẩm thành công');
+                window.location.reload();
+            } else {
+                // Show error message
+                alert(data.message || 'Đã xảy ra lỗi khi thêm sản phẩm');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Đã xảy ra lỗi khi thêm sản phẩm');
         });
     });
-
-    // Add this to your existing script section
-document.getElementById('save-product-btn').addEventListener('click', function() {
-    // Collect form data
-    const productData = {
-        MaMon: document.getElementById('product-code').value,
-        TenMon: document.getElementById('product-name').value,
-        GiaSp: document.getElementById('product-price').value,
-        TenLoai: document.getElementById('product-category').value,
-        HinhAnh: document.getElementById('product-image').value,
-        TinhTrang: document.getElementById('product-status').value === 'true'
-    };
-
-    // Send data to server using fetch API
-    fetch('@Url.Action("AddProduct", "Manager")', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-        },
-        body: JSON.stringify(productData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        // Close the modal
-        document.getElementById('add-product-modal').style.display = 'none';
-
-        if (data.success) {
-            // Show success message
-            alert(data.message || 'Thêm sản phẩm thành công');
-            // Reload the page to show the new product
-            window.location.reload();
-        } else {
-            // Show error message
-            alert(data.message || 'Đã xảy ra lỗi khi thêm sản phẩm');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Đã xảy ra lỗi khi thêm sản phẩm');
-    })
-
-    // Close the modal
-    document.getElementById('add-product-modal').style.display = 'none';
-});
 </script>
 </body>
 </html>

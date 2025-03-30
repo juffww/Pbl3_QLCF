@@ -257,3 +257,4 @@ C:\Users\X1Gen5\OneDrive - The University of Technology\Documents\PBL3\pbl3_QLCF
 C:\Users\X1Gen5\OneDrive - The University of Technology\Documents\PBL3\pbl3_QLCF\bin\Debug\net8.0\MimeKit.dll
 C:\Users\X1Gen5\OneDrive - The University of Technology\Documents\PBL3\pbl3_QLCF\bin\Debug\net8.0\System.Security.Cryptography.Pkcs.dll
 C:\Users\X1Gen5\OneDrive - The University of Technology\Documents\PBL3\pbl3_QLCF\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Security.Cryptography.Pkcs.dll
+C:\Users\X1Gen5\OneDrive - The University of Technology\Documents\PBL3\pbl3_QLCF\obj\Debug\net8.0\pbl3_QLCF.sourcelink.json
