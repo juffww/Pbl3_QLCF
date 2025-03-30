@@ -58,10 +58,18 @@ namespace pbl3_QLCF.Controllers
 
             return View(products);
         }
+        [Route("ThemSanPham")]
+        [HttpGet]
+        public IActionResult ThemSanPham()
+        {
+            return View();
+        }
 
+        
+        [Route("ThemSanPham")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddProduct([FromBody] ThucDon product)
+        public IActionResult ThemSanPham(ThucDon product)
         {
             if (ModelState.IsValid)
             {
@@ -71,21 +79,85 @@ namespace pbl3_QLCF.Controllers
                     var existingProduct = _context.ThucDons.FirstOrDefault(p => p.MaMon == product.MaMon);
                     if (existingProduct != null)
                     {
-                        return Json(new { success = false, message = "Mã sản phẩm đã tồn tại" });
+                        TempData["ErrorMessage"] = "Lỗi: Mã sản phẩm đã tồn tại";
+                        return View(product);
                     }
-                    // Thêm sản phẩm mới
                     _context.ThucDons.Add(product);
                     _context.SaveChanges();
-                    return Json(new { success = true, message = "Thêm sản phẩm thành công" });
+                    TempData["SuccessMessage"] = "Thêm sản phẩm thành công";
+                    return RedirectToAction("SanPham");
                 }
                 catch (Exception ex)
                 {
-                    return Json(new { success = false, message = "Lỗi khi thêm sản phẩm: " + ex.Message });
+                    TempData["ErrorMessage"] = "Lỗi khi thêm sản phẩm: " + ex.Message;
                 }
             }
             else
             {
-                return Json(new { success = false, message = "Dữ liệu không hợp lệ" });
+                TempData["ErrorMessage"] = "Vui lòng kiểm tra lại thông tin sản phẩm";
+            }
+            return View(product);
+        }
+        [HttpGet]
+        // Xử lý hiển thị form chỉnh sửa sản phẩm
+        public IActionResult EditProduct(string id)
+        {
+            var product = _context.ThucDons.FirstOrDefault(p => p.MaMon == id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return View(product);
+        }
+
+        // Xử lý lưu thông tin chỉnh sửa
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditProduct(ThucDon product)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(product);
+                    _context.SaveChanges();
+                    TempData["SuccessMessage"] = "Cập nhật sản phẩm thành công";
+                    return RedirectToAction("SanPham");
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Lỗi khi cập nhật: " + ex.Message);
+                }
+            }
+            return View(product);
+        }
+        // Xử lý xóa sản phẩm
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteProduct(string id)
+        {
+            try
+            {
+                var product = _context.ThucDons.Find(id);
+                if (product == null)
+                {
+                    return Json(new { success = false, message = "Không tìm thấy sản phẩm" });
+                }
+
+                // Kiểm tra xem sản phẩm có đang được sử dụng trong chi tiết đơn hàng không
+                bool isInUse = _context.ChiTietDonHangs.Any(c => c.MaMon == id);
+                if (isInUse)
+                {
+                    return Json(new { success = false, message = "Không thể xóa sản phẩm này vì đã có trong đơn hàng" });
+                }
+
+                _context.ThucDons.Remove(product);
+                _context.SaveChanges();
+                return Json(new { success = true, message = "Xóa sản phẩm thành công" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Lỗi khi xóa sản phẩm: " + ex.Message });
             }
         }
         public IActionResult DonHang()

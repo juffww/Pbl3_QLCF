@@ -3,8 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\data\\thucdon.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:data\\thucdon.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\views\\manager\\themsanpham.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:views\\manager\\themsanpham.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\views\\manager\\editproduct.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:views\\manager\\editproduct.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\views\\manager\\sanpham.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -15,8 +19,11 @@
       "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:controllers\\manager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\views\\manager\\addproduct.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:views\\manager\\addproduct.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|ViewDataWindow_MSSQL__/DESKTOP_B526NK5_SQLEXPRESS/pbl3/True/SqlTable/dbo.ThucDon.sql||{0058A1F7-65F3-4DB9-B3D0-CA7E64DD73CD}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\data\\thucdon.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:data\\thucdon.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,7 +33,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -34,26 +41,49 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "ThucDon.cs",
-              "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Data\\ThucDon.cs",
-              "RelativeDocumentMoniker": "Data\\ThucDon.cs",
-              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Data\\ThucDon.cs",
-              "RelativeToolTip": "Data\\ThucDon.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAvAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-30T03:50:02.354Z",
+              "DocumentIndex": 1,
+              "Title": "EditProduct.cshtml",
+              "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Views\\Manager\\EditProduct.cshtml",
+              "RelativeDocumentMoniker": "Views\\Manager\\EditProduct.cshtml",
+              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Views\\Manager\\EditProduct.cshtml*",
+              "RelativeToolTip": "Views\\Manager\\EditProduct.cshtml*",
+              "ViewState": "AgIAAFIAAAAAAAAAAAAmwGwAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-03-30T07:50:20.301Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
+              "Title": "dbo.ThucDon [Data]",
+              "DocumentMoniker": "ViewDataWindow_MSSQL__/DESKTOP_B526NK5_SQLEXPRESS/pbl3/True/SqlTable/dbo.ThucDon.sql",
+              "ToolTip": "dbo.ThucDon [Data]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2025-03-30T07:36:56.795Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ThemSanPham.cshtml",
+              "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Views\\Manager\\ThemSanPham.cshtml",
+              "RelativeDocumentMoniker": "Views\\Manager\\ThemSanPham.cshtml",
+              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Views\\Manager\\ThemSanPham.cshtml*",
+              "RelativeToolTip": "Views\\Manager\\ThemSanPham.cshtml*",
+              "ViewState": "AgIAAFgAAAAAAAAAAAAmwGwAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-03-30T07:22:13.739Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "SanPham.cshtml",
               "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Views\\Manager\\SanPham.cshtml",
               "RelativeDocumentMoniker": "Views\\Manager\\SanPham.cshtml",
               "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Views\\Manager\\SanPham.cshtml",
               "RelativeToolTip": "Views\\Manager\\SanPham.cshtml",
-              "ViewState": "AgIAAGMCAAAAAAAAAAAAAGwCAAAKAAAAAAAAAA==",
+              "ViewState": "AgIAAFYCAAAAAAAAAAAUwIMCAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-03-30T03:48:44.371Z",
               "EditorCaption": ""
@@ -61,27 +91,27 @@
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "AddProduct.cshtml",
-              "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Views\\Manager\\AddProduct.cshtml",
-              "RelativeDocumentMoniker": "Views\\Manager\\AddProduct.cshtml",
-              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Views\\Manager\\AddProduct.cshtml",
-              "RelativeToolTip": "Views\\Manager\\AddProduct.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAGAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-03-30T03:48:16.514Z",
+              "Title": "Manager.cs",
+              "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Controllers\\Manager.cs",
+              "RelativeDocumentMoniker": "Controllers\\Manager.cs",
+              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Controllers\\Manager.cs",
+              "RelativeToolTip": "Controllers\\Manager.cs",
+              "ViewState": "AgIAAEYAAAAAAAAAAAAwwKEAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T03:45:34.458Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Manager.cs",
-              "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Controllers\\Manager.cs",
-              "RelativeDocumentMoniker": "Controllers\\Manager.cs",
-              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Controllers\\Manager.cs*",
-              "RelativeToolTip": "Controllers\\Manager.cs*",
-              "ViewState": "AgIAADgAAAAAAAAAAAAgwDwAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 5,
+              "Title": "ThucDon.cs",
+              "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Data\\ThucDon.cs",
+              "RelativeDocumentMoniker": "Data\\ThucDon.cs",
+              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Data\\ThucDon.cs",
+              "RelativeToolTip": "Data\\ThucDon.cs",
+              "ViewState": "AgIAABgAAAAAAAAAAAA1wDIAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-30T03:45:34.458Z",
+              "WhenOpened": "2025-03-30T03:50:02.354Z",
               "EditorCaption": ""
             }
           ]
