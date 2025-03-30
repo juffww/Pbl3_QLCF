@@ -1,0 +1,818 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AromaCafé - Đặt Món</title>
+    <link rel="stylesheet" type="text/css" href="~/css/Staff/Dashboard.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-color: #8b5a2b;
+            --primary-dark: #5d3a1f;
+            --primary-light: #e6d7c3;
+            --accent-color: #4caf50;
+            --accent-dark: #45a049;
+            --bg-color: #f9f5ee;
+            --text-color: #333;
+            --border-radius: 8px;
+            --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .top-menu-item {
+              color: black !important;
+          }
+        
+        .top-menu-item:hover, .top-menu-item.active {
+            background-color: #8b5a2b !important;
+            color: white !important;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-circle {
+            width: 45px;
+            height: 45px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .brand-name {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 18px;
+        }
+
+        .nav {
+            display: flex;
+            margin-left: 30px;
+            gap: 20px;
+        }
+
+        .nav-item {
+            padding: 10px 18px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            border-radius: var(--border-radius);
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            background-color: var(--primary-light);
+        }
+
+        .nav-item.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .search-container {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .search-input {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            width: 220px;
+            transition: box-shadow 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(139, 90, 43, 0.2);
+        }
+
+        .help-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Main Container */
+        .main-container {
+            display: flex;
+            height: calc(100vh - 75px);
+        }
+
+        /* Menu Section */
+        .menu-section {
+            flex: 3;
+            padding: 25px;
+            overflow-y: auto;
+        }
+
+        .section-title {
+            color: var(--primary-dark);
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+            font-weight: 600;
+        }
+
+        .search-products {
+            display: flex;
+            margin-bottom: 25px;
+        }
+
+        .search-products input {
+            flex: 1;
+            padding: 12px 18px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius) 0 0 var(--border-radius);
+            outline: none;
+            font-size: 15px;
+        }
+
+        .search-products button {
+            padding: 12px 25px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .search-products button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .category-tabs {
+            display: flex;
+            overflow-x: auto;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            scrollbar-width: thin;
+        }
+
+        .category-tabs::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .category-tabs::-webkit-scrollbar-thumb {
+            background-color: var(--primary-light);
+            border-radius: 10px;
+        }
+
+        .category-tab {
+            padding: 10px 22px;
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+            border-radius: var(--border-radius);
+            margin-right: 15px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .category-tab:hover {
+            background-color: #d9c7ae;
+        }
+
+        .category-tab.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .category-title {
+            color: var(--primary-dark);
+            margin: 30px 0 20px 0;
+            font-size: 1.4rem;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--primary-light);
+            display: flex;
+            align-items: center;
+        }
+
+        .category-title::before {
+            content: "";
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+            background-color: var(--primary-color);
+            margin-right: 10px;
+            border-radius: 2px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 25px;
+            margin-bottom: 35px;
+        }
+
+        .product-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+
+        .product-details {
+            padding: 18px;
+        }
+
+        .product-name {
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .product-price {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 17px;
+        }
+
+        .product-add {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .product-add::before {
+            content: "+";
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .product-add:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* Cart Section */
+        .cart-section {
+            flex: 1;
+            min-width: 380px;
+            background-color: white;
+            box-shadow: -3px 0 15px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .order-number {
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 5px 12px;
+            background-color: var(--primary-light);
+            border-radius: 20px;
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            padding: 18px 0;
+            border-bottom: 1px solid #f1f1f1;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @@keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: 500;
+            color: var(--primary-dark);
+            margin-bottom: 6px;
+            font-size: 16px;
+        }
+
+        .cart-item-price {
+            color: var(--primary-color);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .cart-item-note {
+            font-size: 0.85rem;
+            color: #777;
+            margin-top: 5px;
+            font-style: italic;
+            background-color: #f9f9f9;
+            padding: 6px 10px;
+            border-radius: 4px;
+            border-left: 3px solid var(--primary-light);
+        }
+
+        .add-note-btn {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-decoration: underline;
+            padding: 0;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .add-note-btn::before {
+            content: "✎";
+            font-size: 14px;
+        }
+
+        .cart-item-actions {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding-top: 5px;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: #f5f5f5;
+            border-radius: 20px;
+            padding: 5px;
+        }
+
+        .quantity-btn {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            border: none;
+            background-color: white;
+            color: var(--primary-dark);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .quantity-btn:hover {
+            background-color: var(--primary-light);
+        }
+
+        .quantity-display {
+            font-weight: 500;
+            color: var(--primary-dark);
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .delete-btn {
+            color: #ff5252;
+            cursor: pointer;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: #fff0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.2s;
+        }
+
+        .delete-btn:hover {
+            background-color: #ffe0e0;
+        }
+
+        .cart-summary {
+            background-color: #f9f9f9;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+        }
+
+        .summary-row.total {
+            font-weight: 600;
+            color: var(--primary-dark);
+            font-size: 1.1rem;
+            margin-top: 10px;
+            padding-top: 15px;
+            border-top: 1px dashed #ddd;
+        }
+
+        .order-options {
+            margin-top: 15px;
+        }
+
+        .option-group {
+            margin-bottom: 18px;
+        }
+
+        .option-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--primary-dark);
+            font-weight: 500;
+        }
+
+        .option-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .option-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(139, 90, 43, 0.1);
+        }
+
+        .option-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            background-color: white;
+            color: var(--primary-dark);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b5a2b' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .checkout-btn::before {
+            content: "✓";
+            font-weight: bold;
+        }
+
+        .checkout-btn:hover {
+            background-color: var(--accent-dark);
+        }
+
+        .clear-cart-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #f5f5f5;
+            color: #666;
+            border: none;
+            border-radius: var(--border-radius);
+            margin-top: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .clear-cart-btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* Empty cart state */
+        .empty-cart {
+            text-align: center;
+            padding: 40px 0;
+            color: #999;
+        }
+
+        .empty-cart-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+
+        /* Scrollbar styling */
+        .menu-section::-webkit-scrollbar, .cart-items::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .menu-section::-webkit-scrollbar-thumb, .cart-items::-webkit-scrollbar-thumb {
+            background-color: var(--primary-light);
+            border-radius: 10px;
+        }
+
+        /* Product badge */
+        .product-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* Responsive adjustments */
+        @@media (max-width: 1200px) {
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+
+        @@media (max-width: 992px) {
+            .main-container {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .cart-section {
+                min-width: 100%;
+                box-shadow: 0 -3px 15px rgba(0, 0, 0, 0.08);
+            }
+        }
+    </style>
+</head>
+<body>
+    @{
+        Html.RenderPartial("~/Views/Staff/sharedAll.cshtml");
+    }
+
+    <div class="main-container">
+        <div class="menu-section">
+            <h1 class="section-title">Danh mục sản phẩm</h1>
+
+            <div class="search-products">
+                <input type="text" placeholder="Tìm kiếm sản phẩm...">
+                <button>Tìm kiếm</button>
+            </div>
+
+            <div class="category-tabs">
+                <div class="category-tab active">Tất cả</div>
+                <div class="category-tab">Cà phê</div>
+                <div class="category-tab">Trà & Đồ uống khác</div>
+                <div class="category-tab">Đồ uống đá xay</div>
+                <div class="category-tab">Bánh ngọt</div>
+                <div class="category-tab">Đồ ăn nhẹ</div>
+            </div>
+
+            <h2 class="category-title">Cà phê</h2>
+            <div class="products-grid">
+                <div class="product-card">
+                    <img src="/api/placeholder/400/320" alt="Cà phê sữa" class="product-image">
+                    <div class="product-badge">Bán chạy</div>
+                    <div class="product-details">
+                        <div class="product-name">Cà phê sữa</div>
+                        <div class="product-price">35.000 VND</div>
+                        <button class="product-add">Thêm vào đơn</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <img src="/api/placeholder/400/320" alt="Cà phê đen" class="product-image">
+                    <div class="product-details">
+                        <div class="product-name">Cà phê đen</div>
+                        <div class="product-price">30.000 VND</div>
+                        <button class="product-add">Thêm vào đơn</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <img src="/api/placeholder/400/320" alt="Cappuccino" class="product-image">
+                    <div class="product-details">
+                        <div class="product-name">Cappuccino</div>
+                        <div class="product-price">40.000 VND</div>
+                        <button class="product-add">Thêm vào đơn</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <img src="/api/placeholder/400/320" alt="Americano" class="product-image">
+                    <div class="product-details">
+                        <div class="product-name">Americano</div>
+                        <div class="product-price">42.000 VND</div>
+                        <button class="product-add">Thêm vào đơn</button>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="category-title">Bánh ngọt</h2>
+            <div class="products-grid">
+                <div class="product-card">
+                    <img src="/api/placeholder/400/320" alt="Bánh chocolate" class="product-image">
+                    <div class="product-details">
+                        <div class="product-name">Bánh chocolate</div>
+                        <div class="product-price">45.000 VND</div>
+                        <button class="product-add">Thêm vào đơn</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <img src="/api/placeholder/400/320" alt="Bánh tiramisu" class="product-image">
+                    <div class="product-badge">Mới</div>
+                    <div class="product-details">
+                        <div class="product-name">Bánh tiramisu</div>
+                        <div class="product-price">55.000 VND</div>
+                        <button class="product-add">Thêm vào đơn</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <img src="/api/placeholder/400/320" alt="Bánh cheese" class="product-image">
+                    <div class="product-details">
+                        <div class="product-name">Bánh cheese</div>
+                        <div class="product-price">50.000 VND</div>
+                        <button class="product-add">Thêm vào đơn</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <img src="/api/placeholder/400/320" alt="Croissant" class="product-image">
+                    <div class="product-details">
+                        <div class="product-name">Croissant</div>
+                        <div class="product-price">35.000 VND</div>
+                        <button class="product-add">Thêm vào đơn</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cart-section">
+            <div class="cart-title">
+                <h2 class="section-title">Đơn hàng mới</h2>
+                <span class="order-number">#1016</span>
+            </div>
+
+            <div class="cart-items">
+                <!-- Empty cart state -->
+                <div class="empty-cart" style="display: none;">
+                    <div class="empty-cart-icon">🛒</div>
+                    <p>Chưa có sản phẩm nào trong đơn hàng</p>
+                    <p style="margin-top: 10px; font-size: 0.9em;">Vui lòng chọn sản phẩm từ menu bên trái</p>
+                </div>
+
+                <!-- Sample cart items -->
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">Cappuccino</div>
+                        <div class="cart-item-price">40.000 VND</div>
+                        <div class="cart-item-note">Ít đường</div>
+                        <button class="add-note-btn">Thêm ghi chú</button>
+                    </div>
+                    <div class="cart-item-actions">
+                        <div class="quantity-control">
+                            <button class="quantity-btn">-</button>
+                            <span class="quantity-display">1</span>
+                            <button class="quantity-btn">+</button>
+                        </div>
+                        <div class="delete-btn">×</div>
+                    </div>
+                </div>
+
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">Bánh chocolate</div>
+                        <div class="cart-item-price">45.000 VND x 2</div>
+                        <button class="add-note-btn">Thêm ghi chú</button>
+                    </div>
+                    <div class="cart-item-actions">
+                        <div class="quantity-control">
+                            <button class="quantity-btn">-</button>
+                            <span class="quantity-display">2</span>
+                            <button class="quantity-btn">+</button>
+                        </div>
+                        <div class="delete-btn">×</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cart-summary">
+                <div class="summary-row">
+                    <div>Tạm tính:</div>
+                    <div>130.000 VND</div>
+                </div>
+                <div class="summary-row">
+                    <div>Thuế (10%):</div>
+                    <div>13.000 VND</div>
+                </div>
+                <div class="summary-row total">
+                    <div>Tổng cộng:</div>
+                    <div>143.000 VND</div>
+                </div>
+            </div>
+
+            <div class="order-options">
+                <div class="option-group">
+                    <label class="option-label">Tên khách hàng</label>
+                    <input type="text" placeholder="Nhập tên khách hàng" class="option-input">
+                </div>
+                <div class="option-group">
+                    <label class="option-label">Số điện thoại</label>
+                    <input type="text" placeholder="Nhập số điện thoại" class="option-input">
+                </div>
+                <div class="option-group">
+                    <label class="option-label">Ghi chú đơn hàng</label>
+                    <textarea class="option-input" placeholder="Thêm ghi chú cho đơn hàng" style="height: 80px;"></textarea>
+                </div>
+            </div>
+
+            <button class="checkout-btn">Hoàn tất đơn hàng</button>
+            <button class="clear-cart-btn">Xóa đơn hàng</button>
+        </div>
+    </div>
+</body>
+</html>

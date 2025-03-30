@@ -19,7 +19,7 @@ namespace pbl3_QLCF.Controllers
             }
             else
             {
-                return /*RedirectToAction("Index", "Home")*/View();
+                return RedirectToAction("Index", "Home");
             }
         }
         [HttpPost]

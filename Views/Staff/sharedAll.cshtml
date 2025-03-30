@@ -7,7 +7,7 @@
     string currentAction = ViewContext.RouteData.Values["action"]?.ToString();
 }
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -22,12 +22,12 @@
         <div class="brand-name">AromaCafé</div>
       </div>
       <div class="top-menu">
-        <a asp-controller="Staff" asp-action="Dashboard">Dashboard</a>
-        <a asp-controller="Staff" asp-action="DonHang">Đơn hàng</a>
-        <a asp-controller="Staff" asp-action="SanPham">Sản phẩm</a>
-        <a asp-controller="Staff" asp-action="KhachHang">Khách hàng</a>
-        <a asp-controller="Staff" asp-action="KhuyenMai">Khuyến mãi</a>
-        <a asp-controller="Staff" asp-action="BaoCao">Báo cáo</a>
+        <a href="/Staff/staffDashboard" class="top-menu-item @(currentController == "Staff" && currentAction == "staffDashboard" ? "active" : "")">Dashboard</a>
+        <a href="/Staff/DonHang" class="top-menu-item @(currentController == "Staff" && currentAction == "DonHang" ? "active" : "")">Đơn hàng</a>
+        <a href="/Staff/SanPham" class="top-menu-item @(currentController == "Staff" && currentAction == "SanPham" ? "active" : "")">Sản phẩm</a>
+        <a href="/Staff/KhachHang" class="top-menu-item @(currentController == "Staff" && currentAction == "KhachHang" ? "active" : "")">Khách hàng</a>
+        <a href="/Staff/KhuyenMai" class="top-menu-item @(currentController == "Staff" && currentAction == "KhuyenMai" ? "active" : "")">Khuyến mãi</a>
+        <a href="/Staff/BaoCao" class="top-menu-item @(currentController == "Staff" && currentAction == "BaoCao" ? "active" : "")">Báo cáo</a>
       </div>
       <div class="search-section">
         <input type="text" class="search-box" placeholder="Tìm kiếm...">
