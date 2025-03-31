@@ -181,16 +181,19 @@
         #add-product-btn {
           white-space: nowrap;
           padding: 0.8rem 1.5rem !important;
+          text-decoration: none;
         }
 
         .btn-primary {
             background-color: var(--primary-color);
             color: white;
+            text-decoration: none;
         }
 
         .edit-product, .delete-product
         {
             padding: 8px 30px
+            text-decoration: none !important;
         }
         .btn-success {
             background-color: var(--success-color);
@@ -465,13 +468,14 @@
                 <button type="submit" class="btn btn-primary" id="search-btn">Tìm</button>
             </form>
             <div class="buttons">
-                <button class="btn btn-success" id="add-product-btn">+ Thêm Sản Phẩm</button>
+                <a href="@Url.Action("ThemSanPham", "Manager")" class="btn btn-success"id="add-product-btn">+ Thêm Sản Phẩm</a>
             </div>
         </div>
 
         <!-- Danh mục -->
         <div class="category-filter">
             <a class="category-item @(ViewBag.CurrentCategory == "all" ? "active" : "")" 
+            @* nếu bằng all thì cho active -> css, không thì chỉ có category-item(css) *@
                href="@Url.Action("SanPham", new { category = "all", search = ViewBag.SearchString, page = 1 })">Tất cả</a>
             <a class="category-item @(ViewBag.CurrentCategory == "Cà phê" ? "active" : "")" 
                href="@Url.Action("SanPham", new { category = "Cà phê", search = ViewBag.SearchString, page = 1 })">Cà phê</a>
@@ -502,9 +506,16 @@
                                 @(product.TinhTrang == true ? "Đang bán" : "Ngừng bán")
                             </span>
                         </div>
-                        <div class="product-actions">
-                            <button class="btn btn-primary edit-product" data-id="@product.MaMon">Chỉnh sửa</button>
-                            <button class="btn btn-danger delete-product" data-id="@product.MaMon">Xóa</button>
+                        <div class="product-actions"> 
+                            <a href="@Url.Action("EditProduct", "Manager", new { id = product.MaMon })" class="btn btn-primary edit-product">Chỉnh sửa</a>
+                            <form method="post" action="@Url.Action("DeleteProduct", "Manager")" style="display: inline-block;"
+                                    onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này không?');">
+                                                    @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@product.MaMon" />
+                                <button type="submit" class="btn btn-danger">Xóa</button>
+                            </form>
+                                @* Trước khi gửi, một hộp thoại xác nhận (confirm) sẽ xuất hiện *@
+                                    @* truyen ma mon vào request *@
                         </div>
                     </div>
                 </div>
@@ -517,7 +528,7 @@
                 int currentPage = ViewBag.CurrentPage;
                 int totalPages = ViewBag.TotalPages;
 
-                // Hiển thị nút trang trước
+                // Hiển thị nút trang trước [<]
                 if (currentPage > 1)
                 {
                     <a href="@Url.Action("SanPham", new { page = currentPage - 1, category = ViewBag.CurrentCategory, search = ViewBag.SearchString })">
@@ -528,7 +539,7 @@
                 // Hiển thị các trang gần đó
                 int startPage = Math.Max(1, currentPage - 1);
                 int endPage = Math.Min(totalPages, currentPage + 1);
-
+                //Nếu i == currentPage → Thêm class "active" (CSS sẽ làm nổi bật trang hiện tại).
                 for (int i = startPage; i <= endPage; i++)
                 {
                     <a class="@(i == currentPage ? "active" : "")" 
@@ -537,7 +548,7 @@
                     </a>
                 }
 
-                // Hiển thị nút trang sau
+                // Hiển thị nút trang sau [>]
                 if (currentPage < totalPages)
                 {
                     <a href="@Url.Action("SanPham", new { page = currentPage + 1, category = ViewBag.CurrentCategory, search = ViewBag.SearchString })">
@@ -547,101 +558,5 @@
             }
         </div>
     </div>
-    <div class="modal" id="add-product-modal" style="display: none;">
-    <div class="modal-content">
-        <div class="modal-header">
-            <div class="modal-title">Thêm Sản Phẩm Mới</div>
-            <div class="modal-close">&times;</div>
-        </div>
-
-        <div class="modal-body">
-            <div class="form-group">
-                <label class="form-label">Tên sản phẩm</label>
-                <input type="text" class="form-input" id="product-name" placeholder="Nhập tên sản phẩm">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Mã sản phẩm</label>
-                <input type="text" class="form-input" id="product-code" placeholder="Nhập mã sản phẩm">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Giá bán (VNĐ)</label>
-                <input type="number" class="form-input" id="product-price" placeholder="Nhập giá bán">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Danh mục</label>
-                <select class="form-select" id="product-category">
-                    <option value="">Chọn danh mục</option>
-                    <option value="Cà phê">Cà phê</option>
-                    <option value="Trà">Trà</option>
-                    <option value="Đồ uống đá xay">Đồ uống đá xay</option>
-                    <option value="Bánh ngọt">Bánh ngọt</option>
-                    <option value="Đồ ăn nhẹ">Đồ ăn nhẹ</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Hình ảnh (URL)</label>
-                <input type="text" class="form-input" id="product-image" placeholder="Nhập đường dẫn hình ảnh">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Trạng thái</label>
-                <select class="form-select" id="product-status">
-                    <option value="true">Đang bán</option>
-                    <option value="false">Ngừng bán</option>
-                </select>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn" id="cancel-btn">Hủy</button>
-            <button class="btn btn-success" id="save-product-btn">Lưu</button>
-        </div>
-    </div>
-</div>
-
-<script>
-    // Modal controls
-    document.getElementById('add-product-btn').addEventListener('click', function() {
-        // Chuyển hướng đến trang thêm sản phẩm thay vì mở modal
-        window.location.href = '@Url.Action("ThemSanPham", "Manager")';
-    });
-    // Xử lý nút chỉnh sửa sản phẩm
-    document.querySelectorAll('.edit-product').forEach(function(button) {
-        button.addEventListener('click', function() {
-            const productId = this.getAttribute('data-id');
-            window.location.href = '@Url.Action("EditProduct", "Manager")/' + productId;
-        });
-    });
-
-    // Xử lý nút xóa sản phẩm
-    document.querySelectorAll('.delete-product').forEach(function(button) {
-        button.addEventListener('click', function() {
-            const productId = this.getAttribute('data-id');
-            if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này không?')) {
-                // Gửi request xóa sản phẩm
-                fetch('@Url.Action("DeleteProduct", "Manager")', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-                    },
-                    body: 'id=' + productId
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert(data.message);
-                        // Reload trang sau khi xóa thành công
-                        window.location.reload();
-                    } else {
-                        alert(data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Đã xảy ra lỗi khi xóa sản phẩm');
-                });
-            }
-        });
-    });
-</script>
 </body>
 </html>

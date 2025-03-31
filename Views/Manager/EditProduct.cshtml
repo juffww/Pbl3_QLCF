@@ -202,16 +202,17 @@
         </div>
     </div>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+ @*    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script> *@
     <script>
         // Cập nhật xem trước hình ảnh khi URL thay đổi
         document.getElementById('imageUrl').addEventListener('change', function() {
-            const preview = document.getElementById('imagePreview');
+            const preview = document.getElementById('imagePreview'); //->lấy về img
             const imageUrl = this.value;
-
+            // this.value → Lấy giá trị từ ô nhập (<input>), tức là URL mà người dùng nhập
             if (imageUrl) {
+                // Lấy giá trị URL và cập nhật ảnh xem trước (img.src).
                 preview.src = imageUrl;
             } else {
                 preview.src = '/images/default.jpg';

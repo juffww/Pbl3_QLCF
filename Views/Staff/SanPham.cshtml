@@ -209,6 +209,7 @@
             white-space: nowrap;
             transition: all 0.2s;
             font-weight: 500;
+            text-decoration: none;
         }
 
         .category-tab:hover {
@@ -627,192 +628,194 @@
         }
     </style>
 </head>
+@model pbl3_QLCF.Models.SanPhamViewModel
+@{
+    ViewData["Title"] = "Sản phẩm";
+    var productTypes = Model.ThucDons.Select(t => t.TenLoai).Distinct().ToList();
+}
 <body>
     @{
         Html.RenderPartial("~/Views/Staff/sharedAll.cshtml");
     }
+<div class="main-container">
+    <div class="menu-section">
+        <h1 class="section-title">Danh mục sản phẩm</h1>
 
-    <div class="main-container">
-        <div class="menu-section">
-            <h1 class="section-title">Danh mục sản phẩm</h1>
-
-            <div class="search-products">
-                <input type="text" placeholder="Tìm kiếm sản phẩm...">
-                <button>Tìm kiếm</button>
-            </div>
-
-            <div class="category-tabs">
-                <div class="category-tab active">Tất cả</div>
-                <div class="category-tab">Cà phê</div>
-                <div class="category-tab">Trà & Đồ uống khác</div>
-                <div class="category-tab">Đồ uống đá xay</div>
-                <div class="category-tab">Bánh ngọt</div>
-                <div class="category-tab">Đồ ăn nhẹ</div>
-            </div>
-
-            <h2 class="category-title">Cà phê</h2>
-            <div class="products-grid">
-                <div class="product-card">
-                    <img src="/api/placeholder/400/320" alt="Cà phê sữa" class="product-image">
-                    <div class="product-badge">Bán chạy</div>
-                    <div class="product-details">
-                        <div class="product-name">Cà phê sữa</div>
-                        <div class="product-price">35.000 VND</div>
-                        <button class="product-add">Thêm vào đơn</button>
-                    </div>
-                </div>
-
-                <div class="product-card">
-                    <img src="/api/placeholder/400/320" alt="Cà phê đen" class="product-image">
-                    <div class="product-details">
-                        <div class="product-name">Cà phê đen</div>
-                        <div class="product-price">30.000 VND</div>
-                        <button class="product-add">Thêm vào đơn</button>
-                    </div>
-                </div>
-
-                <div class="product-card">
-                    <img src="/api/placeholder/400/320" alt="Cappuccino" class="product-image">
-                    <div class="product-details">
-                        <div class="product-name">Cappuccino</div>
-                        <div class="product-price">40.000 VND</div>
-                        <button class="product-add">Thêm vào đơn</button>
-                    </div>
-                </div>
-
-                <div class="product-card">
-                    <img src="/api/placeholder/400/320" alt="Americano" class="product-image">
-                    <div class="product-details">
-                        <div class="product-name">Americano</div>
-                        <div class="product-price">42.000 VND</div>
-                        <button class="product-add">Thêm vào đơn</button>
-                    </div>
-                </div>
-            </div>
-
-            <h2 class="category-title">Bánh ngọt</h2>
-            <div class="products-grid">
-                <div class="product-card">
-                    <img src="/api/placeholder/400/320" alt="Bánh chocolate" class="product-image">
-                    <div class="product-details">
-                        <div class="product-name">Bánh chocolate</div>
-                        <div class="product-price">45.000 VND</div>
-                        <button class="product-add">Thêm vào đơn</button>
-                    </div>
-                </div>
-
-                <div class="product-card">
-                    <img src="/api/placeholder/400/320" alt="Bánh tiramisu" class="product-image">
-                    <div class="product-badge">Mới</div>
-                    <div class="product-details">
-                        <div class="product-name">Bánh tiramisu</div>
-                        <div class="product-price">55.000 VND</div>
-                        <button class="product-add">Thêm vào đơn</button>
-                    </div>
-                </div>
-
-                <div class="product-card">
-                    <img src="/api/placeholder/400/320" alt="Bánh cheese" class="product-image">
-                    <div class="product-details">
-                        <div class="product-name">Bánh cheese</div>
-                        <div class="product-price">50.000 VND</div>
-                        <button class="product-add">Thêm vào đơn</button>
-                    </div>
-                </div>
-
-                <div class="product-card">
-                    <img src="/api/placeholder/400/320" alt="Croissant" class="product-image">
-                    <div class="product-details">
-                        <div class="product-name">Croissant</div>
-                        <div class="product-price">35.000 VND</div>
-                        <button class="product-add">Thêm vào đơn</button>
-                    </div>
-                </div>
-            </div>
+            @using (Html.BeginForm("TimKiem", "Staff", FormMethod.Post))
+            {
+        <div class="search-products">
+            <input type="text" name="search" placeholder="Tìm kiếm sản phẩm..." value="@Model.SearchString">
+            <button type="submit">Tìm kiếm</button>
         </div>
+            }
 
-        <div class="cart-section">
-            <div class="cart-title">
-                <h2 class="section-title">Đơn hàng mới</h2>
-                <span class="order-number">#1016</span>
-            </div>
+<div class="category-tabs">
+    <a href="@Url.Action("SanPham", "Staff", new { search = Model.SearchString })" 
+       class="category-tab @(TempData["SelectedCategory"] == null ? "active" : "")">Tất cả</a>
+                @foreach (var type in Model.ProductTypes)
+                {
+                    <a href="@Url.Action("SanPham", "Staff", new { loaiSanPham = type, search = Model.SearchString })" 
+                       class="category-tab @(TempData["SelectedCategory"]?.ToString() == type ? "active" : "")">
+                                @type
+                    </a>
+                }
+</div>
 
-            <div class="cart-items">
-                <!-- Empty cart state -->
-                <div class="empty-cart" style="display: none;">
-                    <div class="empty-cart-icon">🛒</div>
-                    <p>Chưa có sản phẩm nào trong đơn hàng</p>
-                    <p style="margin-top: 10px; font-size: 0.9em;">Vui lòng chọn sản phẩm từ menu bên trái</p>
-                </div>
+            @if (TempData["SelectedCategory"] != null)
+            {
+                <h2 class="category-title">@TempData["SelectedCategory"]</h2>
+            }
+            else
+            {
+                <h2 class="category-title">Tất cả sản phẩm</h2>
+            }
 
-                <!-- Sample cart items -->
-                <div class="cart-item">
-                    <div class="cart-item-info">
-                        <div class="cart-item-name">Cappuccino</div>
-                        <div class="cart-item-price">40.000 VND</div>
-                        <div class="cart-item-note">Ít đường</div>
-                        <button class="add-note-btn">Thêm ghi chú</button>
-                    </div>
-                    <div class="cart-item-actions">
-                        <div class="quantity-control">
-                            <button class="quantity-btn">-</button>
-                            <span class="quantity-display">1</span>
-                            <button class="quantity-btn">+</button>
+        <div class="products-grid">
+                @foreach (var item in Model.ThucDons)
+                {
+                    <div class="product-card">
+                        <img src="@(string.IsNullOrEmpty(item.HinhAnh) ? "/images/placeholder.jpg" : item.HinhAnh)" alt="@item.TenMon" class="product-image">
+                        @if (item.TinhTrang == true)
+                        {
+                                <div class="product-badge">Đang bán</div>
+                        }
+                        else
+                        {
+                                <div class="product-badge">Ngừng bán</div>
+                        }
+                        <div class="product-details">
+                            <div class="product-name">@item.TenMon</div>
+                            <div class="product-price">@item.GiaSp.ToString("#,##0") VND</div>
+                            @using (Html.BeginForm("ThemVaoDonHang", "Staff", FormMethod.Post))
+                            {
+                                    <input type="hidden" name="maMon" value="@item.MaMon" />
+                                    <input type="hidden" name="soLuong" value="1" />
+                                    <button type="submit" class="product-add" @(item.TinhTrang == true ? "" : "disabled")>Thêm vào đơn</button>
+                            }
                         </div>
-                        <div class="delete-btn">×</div>
                     </div>
-                </div>
-
-                <div class="cart-item">
-                    <div class="cart-item-info">
-                        <div class="cart-item-name">Bánh chocolate</div>
-                        <div class="cart-item-price">45.000 VND x 2</div>
-                        <button class="add-note-btn">Thêm ghi chú</button>
-                    </div>
-                    <div class="cart-item-actions">
-                        <div class="quantity-control">
-                            <button class="quantity-btn">-</button>
-                            <span class="quantity-display">2</span>
-                            <button class="quantity-btn">+</button>
-                        </div>
-                        <div class="delete-btn">×</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="cart-summary">
-                <div class="summary-row">
-                    <div>Tạm tính:</div>
-                    <div>130.000 VND</div>
-                </div>
-                <div class="summary-row">
-                    <div>Thuế (10%):</div>
-                    <div>13.000 VND</div>
-                </div>
-                <div class="summary-row total">
-                    <div>Tổng cộng:</div>
-                    <div>143.000 VND</div>
-                </div>
-            </div>
-
-            <div class="order-options">
-                <div class="option-group">
-                    <label class="option-label">Tên khách hàng</label>
-                    <input type="text" placeholder="Nhập tên khách hàng" class="option-input">
-                </div>
-                <div class="option-group">
-                    <label class="option-label">Số điện thoại</label>
-                    <input type="text" placeholder="Nhập số điện thoại" class="option-input">
-                </div>
-                <div class="option-group">
-                    <label class="option-label">Ghi chú đơn hàng</label>
-                    <textarea class="option-input" placeholder="Thêm ghi chú cho đơn hàng" style="height: 80px;"></textarea>
-                </div>
-            </div>
-
-            <button class="checkout-btn">Hoàn tất đơn hàng</button>
-            <button class="clear-cart-btn">Xóa đơn hàng</button>
+                }
         </div>
     </div>
+
+    <div class="cart-section">
+        <div class="cart-title">
+            <h2 class="section-title">Đơn hàng mới</h2>
+            <span class="order-number">#@Model.DonHangHienTai.MaDh</span>
+        </div>
+
+        <div class="cart-items">
+                @if (Model.DonHangHienTai?.ChiTietDonHangs == null || !Model.DonHangHienTai.ChiTietDonHangs.Any())
+                {
+            <div class="empty-cart">
+                <div class="empty-cart-icon">🛒</div>
+                <p>Chưa có sản phẩm nào trong đơn hàng</p>
+                <p style="margin-top: 10px; font-size: 0.9em;">Vui lòng chọn sản phẩm từ menu bên trái</p>
+            </div>
+                }
+                else
+                {
+                    foreach (var item in Model.DonHangHienTai.ChiTietDonHangs)
+                    {
+                        var thucDon = Model.ThucDons.FirstOrDefault(t => t.MaMon == item.MaMon);
+                        if (thucDon != null)
+                        {
+                        <div class="cart-item">
+                            <div class="cart-item-info">
+                                <div class="cart-item-name">@thucDon.TenMon</div>
+                                <div class="cart-item-price">@thucDon.GiaSp.ToString("#,##0") VND x @item.SoLuong</div>
+                                    @if (!string.IsNullOrEmpty(item.GhiChu))
+                                    {
+                                            <div class="cart-item-note">@item.GhiChu</div>
+                                    }
+                                    @using (Html.BeginForm("ThemGhiChu", "Staff", FormMethod.Post))
+                                    {
+                                            <input type="hidden" name="maMon" value="@item.MaMon" />
+                                            <input type="text" name="ghiChu" placeholder="Nhập ghi chú" value="@item.GhiChu" />
+                                            <button type="submit" class="add-note-btn">Cập nhật ghi chú</button>
+                                    }
+                            </div>
+                            <div class="cart-item-actions">
+                                <div class="quantity-control">
+                                        @using (Html.BeginForm("CapNhatSoLuong", "Staff", FormMethod.Post))
+                                        {
+                                                <input type="hidden" name="maMon" value="@item.MaMon" />
+                                                <input type="hidden" name="soLuong" value="@(item.SoLuong - 1)" />
+                                                <button type="submit" class="quantity-btn">-</button>
+                                        }
+                                    <span class="quantity-display">@item.SoLuong</span>
+                                        @using (Html.BeginForm("CapNhatSoLuong", "Staff", FormMethod.Post))
+                                        {
+                                                <input type="hidden" name="maMon" value="@item.MaMon" />
+                                                <input type="hidden" name="soLuong" value="@(item.SoLuong + 1)" />
+                                                <button type="submit" class="quantity-btn">+</button>
+                                        }
+                                </div>
+                                    @using (Html.BeginForm("XoaSanPham", "Staff", FormMethod.Post))
+                                    {
+                                            <input type="hidden" name="maMon" value="@item.MaMon" />
+                                            <button type="submit" class="delete-btn">×</button>
+                                    }
+                            </div>
+                        </div>
+                        }
+                    }
+                }
+    </div>
+
+            @{
+                double tamTinh = Model.DonHangHienTai.TongTien ?? 0;
+                double thue = tamTinh * 0.1;
+                double tongCong = tamTinh + thue;
+            }
+
+        <div class="cart-summary">
+            <div class="summary-row">
+                <div>Tạm tính:</div>
+                <div>@tamTinh.ToString("#,##0") VND</div>
+            </div>
+            <div class="summary-row">
+                <div>Thuế (10%):</div>
+                <div>@thue.ToString("#,##0") VND</div>
+            </div>
+            <div class="summary-row total">
+                <div>Tổng cộng:</div>
+                <div>@tongCong.ToString("#,##0") VND</div>
+            </div>
+        </div>
+
+            @using (Html.BeginForm("HoanTatDonHang", "Staff", FormMethod.Post))
+            {
+                <div class="order-options">
+                    <div class="option-group">
+                        <label class="option-label">Tên khách hàng</label>
+                        <input type="text" name="tenKhachHang" placeholder="Nhập tên khách hàng" class="option-input">
+                    </div>
+                    <div class="option-group">
+                        <label class="option-label">Số điện thoại</label>
+                        <input type="text" name="soDienThoai" placeholder="Nhập số điện thoại" class="option-input">
+                    </div>
+                    <div class="option-group">
+                        <label class="option-label">Ghi chú đơn hàng</label>
+                        <textarea name="ghiChuDonHang" class="option-input" placeholder="Thêm ghi chú cho đơn hàng" style="height: 80px;"></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="checkout-btn" @(Model.DonHangHienTai.ChiTietDonHangs.Any() ? "" : "disabled")>Hoàn tất đơn hàng</button>
+            }
+
+            @using (Html.BeginForm("XoaDonHang", "Staff", FormMethod.Post))
+            {
+                <button type="submit" class="clear-cart-btn" @(Model.DonHangHienTai.ChiTietDonHangs.Any() ? "" : "disabled")>Xóa đơn hàng</button>
+            }
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+    </div>
+</div>
 </body>
 </html>

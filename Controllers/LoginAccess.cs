@@ -70,5 +70,9 @@ namespace pbl3_QLCF.Controllers
             }
             return View();
         }       
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
     }
 }

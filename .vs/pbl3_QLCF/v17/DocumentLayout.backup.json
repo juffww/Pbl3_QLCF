@@ -3,8 +3,28 @@
   "WorkspaceRootPath": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\sessionextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:sessionextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\models\\viewmodels\\sanphamviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:models\\viewmodels\\sanphamviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\controllers\\staff.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:controllers\\staff.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\views\\staff\\sanpham.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:views\\staff\\sanpham.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\controllers\\manager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:controllers\\manager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,7 +34,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Bookmark",
@@ -34,15 +54,80 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
+              "Title": "SanPhamViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Models\\ViewModels\\SanPhamViewModel.cs",
+              "RelativeDocumentMoniker": "Models\\ViewModels\\SanPhamViewModel.cs",
+              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Models\\ViewModels\\SanPhamViewModel.cs",
+              "RelativeToolTip": "Models\\ViewModels\\SanPhamViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-31T14:56:41.347Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "SanPham.cshtml",
               "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Views\\Staff\\SanPham.cshtml",
               "RelativeDocumentMoniker": "Views\\Staff\\SanPham.cshtml",
-              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Views\\Staff\\SanPham.cshtml*",
-              "RelativeToolTip": "Views\\Staff\\SanPham.cshtml*",
-              "ViewState": "AgIAAMMBAAAAAAAAAAAmwNYBAAAcAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Views\\Staff\\SanPham.cshtml",
+              "RelativeToolTip": "Views\\Staff\\SanPham.cshtml",
+              "ViewState": "AgIAACEDAAAAAAAAAAAmwDMDAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-03-30T14:13:37.253Z",
+              "WhenOpened": "2025-03-31T12:13:32.014Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "SessionExtensions.cs",
+              "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\SessionExtensions.cs",
+              "RelativeDocumentMoniker": "SessionExtensions.cs",
+              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\SessionExtensions.cs",
+              "RelativeToolTip": "SessionExtensions.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-31T12:10:02.437Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Staff.cs",
+              "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Controllers\\Staff.cs",
+              "RelativeDocumentMoniker": "Controllers\\Staff.cs",
+              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Controllers\\Staff.cs",
+              "RelativeToolTip": "Controllers\\Staff.cs",
+              "ViewState": "AgIAAF4BAAAAAAAAAADwv30BAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-31T12:08:27.262Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-31T14:59:28.699Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Manager.cs",
+              "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Controllers\\Manager.cs",
+              "RelativeDocumentMoniker": "Controllers\\Manager.cs",
+              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Controllers\\Manager.cs",
+              "RelativeToolTip": "Controllers\\Manager.cs",
+              "ViewState": "AgIAACAAAAAAAAAAAAAgwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-31T14:26:08.865Z",
               "EditorCaption": ""
             }
           ]

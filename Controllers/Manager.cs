@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using pbl3_QLCF.Data;
 using pbl3_QLCF.Models.Authentication;
 
@@ -10,7 +11,7 @@ namespace pbl3_QLCF.Controllers
     public class Manager : Controller
     {
         private readonly Pbl3Context _context;
-        private const int PageSize = 8; // Số sản phẩm mỗi trang
+        private const int PageSize = 8;
 
         public Manager(Pbl3Context context)
         {
@@ -69,6 +70,7 @@ namespace pbl3_QLCF.Controllers
         [Route("ThemSanPham")]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        //ASP.NET Core yêu cầu một mã bảo mật trong mỗi request POST.
         public IActionResult ThemSanPham(ThucDon product)
         {
             if (ModelState.IsValid)
@@ -127,6 +129,8 @@ namespace pbl3_QLCF.Controllers
                 catch (Exception ex)
                 {
                     ModelState.AddModelError("", "Lỗi khi cập nhật: " + ex.Message);
+                    //Nếu có lỗi trong quá trình cập nhật (ví dụ: lỗi CSDL) → Bắt lỗi và thêm thông báo
+                    //lỗi vào ModelState.
                 }
             }
             return View(product);
@@ -141,23 +145,28 @@ namespace pbl3_QLCF.Controllers
                 var product = _context.ThucDons.Find(id);
                 if (product == null)
                 {
-                    return Json(new { success = false, message = "Không tìm thấy sản phẩm" });
+                    TempData["ErrorMessage"] = "Không tìm thấy sản phẩm";
+                    return RedirectToAction("SanPham");
                 }
 
                 // Kiểm tra xem sản phẩm có đang được sử dụng trong chi tiết đơn hàng không
                 bool isInUse = _context.ChiTietDonHangs.Any(c => c.MaMon == id);
                 if (isInUse)
                 {
-                    return Json(new { success = false, message = "Không thể xóa sản phẩm này vì đã có trong đơn hàng" });
+                    TempData["ErrorMessage"] = "Không thể xóa sản phẩm này vì đã có trong đơn hàng";
+                    return RedirectToAction("SanPham");
                 }
 
                 _context.ThucDons.Remove(product);
                 _context.SaveChanges();
-                return Json(new { success = true, message = "Xóa sản phẩm thành công" });
+
+                TempData["SuccessMessage"] = "Xóa sản phẩm thành công";
+                return RedirectToAction("SanPham");
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, message = "Lỗi khi xóa sản phẩm: " + ex.Message });
+                TempData["ErrorMessage"] = "Lỗi khi xóa sản phẩm: " + ex.Message;
+                return RedirectToAction("SanPham");
             }
         }
         public IActionResult DonHang()
