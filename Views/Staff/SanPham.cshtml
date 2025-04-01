@@ -317,7 +317,7 @@
         .cart-section {
             flex: 1;
             min-width: 380px;
-            background-color: white;
+            /* background-color: white; */
             box-shadow: -3px 0 15px rgba(0, 0, 0, 0.08);
             padding: 25px;
             display: flex;
@@ -341,7 +341,7 @@
 
         .cart-items {
             flex: 1;
-            overflow-y: auto;
+            /* overflow-y: auto; */
             margin-bottom: 20px;
         }
 
@@ -686,18 +686,18 @@
                         <div class="product-details">
                             <div class="product-name">@item.TenMon</div>
                             <div class="product-price">@item.GiaSp.ToString("#,##0") VND</div>
-                            @using (Html.BeginForm("ThemVaoDonHang", "Staff", FormMethod.Post))
+                            @using (Html.BeginForm("ThemVaoDonHang", "Staff", FormMethod.Post, new { id = "addToOrderForm", onsubmit = "return addToOrder(this);" }))
                             {
-                                    <input type="hidden" name="maMon" value="@item.MaMon" />
-                                    <input type="hidden" name="soLuong" value="1" />
-                                    <button type="submit" class="product-add" @(item.TinhTrang == true ? "" : "disabled")>Thêm vào đơn</button>
+                                <input type="hidden" name="maMon" value="@item.MaMon" />
+                                <input type="hidden" name="soLuong" value="1" />
+                                <button type="submit" class="product-add" @(item.TinhTrang == true ? "" : "disabled")>Thêm vào đơn</button>
                             }
                         </div>
                     </div>
                 }
         </div>
     </div>
-
+        
     <div class="cart-section">
         <div class="cart-title">
             <h2 class="section-title">Đơn hàng mới</h2>
@@ -707,11 +707,11 @@
         <div class="cart-items">
                 @if (Model.DonHangHienTai?.ChiTietDonHangs == null || !Model.DonHangHienTai.ChiTietDonHangs.Any())
                 {
-            <div class="empty-cart">
-                <div class="empty-cart-icon">🛒</div>
-                <p>Chưa có sản phẩm nào trong đơn hàng</p>
-                <p style="margin-top: 10px; font-size: 0.9em;">Vui lòng chọn sản phẩm từ menu bên trái</p>
-            </div>
+                    <div class="empty-cart">
+                        <div class="empty-cart-icon">🛒</div>
+                        <p>Chưa có sản phẩm nào trong đơn hàng</p>
+                        <p style="margin-top: 10px; font-size: 0.9em;">Vui lòng chọn sản phẩm từ menu bên trái</p>
+                    </div>
                 }
                 else
                 {
@@ -761,14 +761,21 @@
                         }
                     }
                 }
-    </div>
+                @if (Model.DonHangHienTai != null)
+                {
+                    <div style="display:none;">
+                        Order ID: @Model.DonHangHienTai.MaDh<br/>
+                        Items Count: @(Model.DonHangHienTai.ChiTietDonHangs?.Count ?? 0)
+                    </div>
+                }
 
-            @{
-                double tamTinh = Model.DonHangHienTai.TongTien ?? 0;
-                double thue = tamTinh * 0.1;
-                double tongCong = tamTinh + thue;
-            }
-
+                @{
+                    double tamTinh = Model.DonHangHienTai.TongTien ?? 0;
+                    double thue = tamTinh * 0.1;
+                    double tongCong = tamTinh + thue;
+                }
+        </div>
+            
         <div class="cart-summary">
             <div class="summary-row">
                 <div>Tạm tính:</div>
@@ -817,5 +824,24 @@
             }
     </div>
 </div>
-</body>
+@* <script>
+function addToOrder(form) {
+    var formData = new FormData(form);
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())
+    .then(html => {
+        // Cập nhật phần đơn hàng từ response
+        document.querySelector('.cart-section').innerHTML = 
+            new DOMParser().parseFromString(html, 'text/html')
+            .querySelector('.cart-section').innerHTML;
+    });
+
+    return false; // Ngăn form submit thông thường
+}
+</script>
+ *@</body>
 </html>

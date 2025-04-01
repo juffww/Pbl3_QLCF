@@ -26,18 +26,34 @@ namespace pbl3_QLCF.Controllers
         [HttpGet]
         public IActionResult SanPham(string loaiSanPham = null, string search = null)
         {
-            var donHang = HttpContext.Session.GetObjectFromJson<DonHang>("DonHangHienTai");
-            // Add debugging logs or breakpoints here to check if donHang is null
-            // or if ChiTietDonHangs is null or empty
+            var donHang = GetOrCreateDonHang();
+
+            // Get all product IDs in the cart
+            var cartProductIds = donHang.ChiTietDonHangs.Select(c => c.MaMon).ToList();
+
+            // Get filtered products based on category/search
+            var filteredProducts = string.IsNullOrEmpty(search)
+                ? GetThucDons(loaiSanPham)
+                : _context.ThucDons.Where(t => (t.TenMon.Contains(search) || t.TenLoai.Contains(search)) &&
+                                      (string.IsNullOrEmpty(loaiSanPham) || t.TenLoai == loaiSanPham)).ToList();
+
+            // Get the IDs of filtered products
+            var filteredProductIds = filteredProducts.Select(p => p.MaMon).ToList();
+
+            // Get products in cart that might not be in the filtered list
+            var cartProducts = _context.ThucDons
+                .Where(t => cartProductIds.Contains(t.MaMon) && !filteredProductIds.Contains(t.MaMon))
+                .ToList();
+
+            // Combine both lists
+            var allProducts = filteredProducts.Union(cartProducts).ToList();
+
             var model = new SanPhamViewModel
             {
-                ThucDons = string.IsNullOrEmpty(search)
-                    ? GetThucDons(loaiSanPham)
-                    : _context.ThucDons.Where(t => (t.TenMon.Contains(search) || t.TenLoai.Contains(search)) &&
-                                           (string.IsNullOrEmpty(loaiSanPham) || t.TenLoai == loaiSanPham)).ToList(),
-                DonHangHienTai = GetOrCreateDonHang(),
-                ProductTypes = GetDistinctProductTypes(), // Add all product types to the model
-                SearchString = search // Store the search string
+                ThucDons = allProducts,
+                DonHangHienTai = donHang,
+                ProductTypes = GetDistinctProductTypes(),
+                SearchString = search
             };
 
             // Store selected category in TempData
@@ -66,24 +82,13 @@ namespace pbl3_QLCF.Controllers
         public IActionResult ThemVaoDonHang(string maMon, int soLuong = 1, string ghiChu = "")
         {
             // Get current order from session
-            var donHang = HttpContext.Session.GetObjectFromJson<DonHang>("DonHangHienTai");
-
-            if (donHang == null)
-            {
-                donHang = CreateNewOrder();
-            }
-
-            // Ensure ChiTietDonHangs is never null
-            if (donHang.ChiTietDonHangs == null)
-            {
-                donHang.ChiTietDonHangs = new List<ChiTietDonHang>();
-            }
+            var donHang = GetOrCreateDonHang();
 
             // Get product details
             var thucDon = _context.ThucDons.FirstOrDefault(m => m.MaMon == maMon);
             if (thucDon == null)
             {
-                return RedirectToAction("SanPham", new { loaiSanPham = TempData["SelectedCategory"]?.ToString(), search = TempData["SearchString"]?.ToString() });
+                return RedirectToAction("SanPham");
             }
 
             // Check if item already exists in order
@@ -117,10 +122,6 @@ namespace pbl3_QLCF.Controllers
 
             // Save to session
             HttpContext.Session.SetObjectAsJson("DonHangHienTai", donHang);
-
-            // Persist TempData values for category and search
-            TempData.Keep("SelectedCategory");
-            TempData.Keep("SearchString");
 
             return RedirectToAction("SanPham", new
             {
@@ -292,6 +293,25 @@ namespace pbl3_QLCF.Controllers
             }
         }
 
+        private DonHang GetOrCreateDonHang()
+        {
+            var donHang = HttpContext.Session.GetObjectFromJson<DonHang>("DonHangHienTai");
+            if (donHang == null)
+            {
+                donHang = CreateNewOrder();
+            }
+
+            // Always ensure ChiTietDonHangs is initialized
+            if (donHang.ChiTietDonHangs == null)
+            {
+                donHang.ChiTietDonHangs = new List<ChiTietDonHang>();
+            }
+
+            // Save back to session to ensure consistency
+            HttpContext.Session.SetObjectAsJson("DonHangHienTai", donHang);
+            return donHang;
+        }
+
         //private DonHang GetOrCreateDonHang()
         //{
         //    var donHang = HttpContext.Session.GetObjectFromJson<DonHang>("DonHangHienTai");
@@ -300,25 +320,15 @@ namespace pbl3_QLCF.Controllers
         //        donHang = CreateNewOrder();
         //        HttpContext.Session.SetObjectAsJson("DonHangHienTai", donHang);
         //    }
+
+        //    // Ensure ChiTietDonHangs is never null
+        //    if (donHang.ChiTietDonHangs == null)
+        //    {
+        //        donHang.ChiTietDonHangs = new List<ChiTietDonHang>();
+        //    }
+
         //    return donHang;
         //}
-        private DonHang GetOrCreateDonHang()
-        {
-            var donHang = HttpContext.Session.GetObjectFromJson<DonHang>("DonHangHienTai");
-            if (donHang == null)
-            {
-                donHang = CreateNewOrder();
-                HttpContext.Session.SetObjectAsJson("DonHangHienTai", donHang);
-            }
-
-            // Ensure ChiTietDonHangs is never null
-            if (donHang.ChiTietDonHangs == null)
-            {
-                donHang.ChiTietDonHangs = new List<ChiTietDonHang>();
-            }
-
-            return donHang;
-        }
 
         private DonHang CreateNewOrder()
         {

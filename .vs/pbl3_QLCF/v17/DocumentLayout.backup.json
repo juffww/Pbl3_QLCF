@@ -3,8 +3,8 @@
   "WorkspaceRootPath": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\sessionextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:sessionextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\views\\staff\\sanpham.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:views\\staff\\sanpham.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\models\\viewmodels\\sanphamviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -15,8 +15,8 @@
       "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:controllers\\staff.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\views\\staff\\sanpham.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:views\\staff\\sanpham.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\sessionextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:sessionextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -34,7 +34,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -62,31 +62,31 @@
               "RelativeToolTip": "Models\\ViewModels\\SanPhamViewModel.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-31T14:56:41.347Z",
+              "WhenOpened": "2025-04-01T00:32:13.895Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "SanPham.cshtml",
               "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Views\\Staff\\SanPham.cshtml",
               "RelativeDocumentMoniker": "Views\\Staff\\SanPham.cshtml",
               "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Views\\Staff\\SanPham.cshtml",
               "RelativeToolTip": "Views\\Staff\\SanPham.cshtml",
-              "ViewState": "AgIAACEDAAAAAAAAAAAmwDMDAAAHAAAAAAAAAA==",
+              "ViewState": "AgIAACsBAAAAAAAAAAAqwD4BAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-03-31T12:13:32.014Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "SessionExtensions.cs",
               "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\SessionExtensions.cs",
               "RelativeDocumentMoniker": "SessionExtensions.cs",
               "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\SessionExtensions.cs",
               "RelativeToolTip": "SessionExtensions.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAUwAsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-31T12:10:02.437Z",
               "EditorCaption": ""
@@ -99,7 +99,7 @@
               "RelativeDocumentMoniker": "Controllers\\Staff.cs",
               "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Controllers\\Staff.cs",
               "RelativeToolTip": "Controllers\\Staff.cs",
-              "ViewState": "AgIAAF4BAAAAAAAAAADwv30BAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAGgAAAAAAAAAAAAUwHwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-31T12:08:27.262Z",
               "EditorCaption": ""
@@ -114,8 +114,7 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAA1AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-31T14:59:28.699Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-31T14:59:28.699Z"
             },
             {
               "$type": "Document",
@@ -127,8 +126,7 @@
               "RelativeToolTip": "Controllers\\Manager.cs",
               "ViewState": "AgIAACAAAAAAAAAAAAAgwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-31T14:26:08.865Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-31T14:26:08.865Z"
             }
           ]
         }
