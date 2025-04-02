@@ -36,7 +36,7 @@
         .page-header {
             display: flex;
             align-items: center;
-            gap: 500px; /* Reduce the gap to allow more space for search */
+            gap: 500px; 
         }
 
         .header {
@@ -57,7 +57,7 @@
         .logo {
             width: 50px;
             height: 50px;
-            background-color: #6F4E37; /* Coffee brown */
+            background-color: #6F4E37; 
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -69,8 +69,8 @@
 
         .brand-name {
             font-size: 18px;
-            font-weight: normal; /* Change from bold to normal */
-            color: #6F4E37; /* Coffee brown */
+            font-weight: normal;
+            color: #6F4E37;
         }
 
         .nav {
@@ -135,14 +135,14 @@
             align-items: center;
             width: 100%;
             margin-bottom: 15px;
-            gap: 15px; /* Thêm khoảng cách giữa thanh tìm kiếm và nút */
+            gap: 15px; 
         }
 
         .search-bar {
             display: flex;
             align-items: center;
-            flex-grow: 1; /* Cho phép thanh tìm kiếm mở rộng */
-            max-width: 1000px; /* Giới hạn chiều dài tối đa nếu cần */
+            flex-grow: 1; 
+            max-width: 1000px; 
             background: none !important;
             border: none !important;
         }
@@ -153,19 +153,19 @@
             padding: 13px 20px;
             outline: none;
             border-radius: 4px 0 0 4px;
-            min-width: 300px; /* Đặt chiều rộng tối thiểu */
+            min-width: 300px; 
         }
 
                 #search-btn {
             border-radius: 0 4px 4px 0;
             margin-left: 0;
-            padding: 13px 20px; /* Điều chỉnh padding cho cân đối */
-            white-space: nowrap; /* Ngăn chữ bị xuống dòng */
+            padding: 13px 20px; 
+            white-space: nowrap;
         }
 
         .buttons {
             display: flex;
-            flex-shrink: 0; /* Ngăn nút bị co lại */
+            flex-shrink: 0;
         }
 
         .btn {
@@ -213,14 +213,13 @@
             padding: 10px 20px;
             cursor: pointer;
             text-decoration: none;
-            color: black; /* Màu chữ mặc định là đen */
+            color: black; 
         }
 
         .category-item.active {
             background-color: var(--primary-color);
             color: white;
         }
-        /* Đảm bảo màu sắc ổn định trong mọi trạng thái */
         .category-item:link,
         .category-item:visited,
         .category-item:hover,
@@ -253,9 +252,9 @@
             overflow: hidden;
         }
         .product-image img {
-            max-width: 100%;             /* Scale image to fit horizontally */
-            max-height: 100%;            /* Scale image to fit vertically */
-            object-fit: cover;           /* Ensure the image covers the space without distortion */
+            max-width: 100%;            
+            max-height: 100%;        
+            object-fit: cover;          
         }
         .product-details {
             padding: 15px;
@@ -365,13 +364,13 @@
             width: 500px;
             border-radius: 8px;
             overflow: hidden;
-            overflow-y: auto; /* Add scrolling if needed */
+            overflow-y: auto; 
         }
 
         .modal-header {
             background-color: var(--primary-color);
             color: white;
-            padding: 10px 15px; /* Reduced padding */
+            padding: 10px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -475,7 +474,6 @@
         <!-- Danh mục -->
         <div class="category-filter">
             <a class="category-item @(ViewBag.CurrentCategory == "all" ? "active" : "")" 
-            @* nếu bằng all thì cho active -> css, không thì chỉ có category-item(css) *@
                href="@Url.Action("SanPham", new { category = "all", search = ViewBag.SearchString, page = 1 })">Tất cả</a>
             <a class="category-item @(ViewBag.CurrentCategory == "Cà phê" ? "active" : "")" 
                href="@Url.Action("SanPham", new { category = "Cà phê", search = ViewBag.SearchString, page = 1 })">Cà phê</a>
@@ -514,8 +512,6 @@
                                 <input type="hidden" name="id" value="@product.MaMon" />
                                 <button type="submit" class="btn btn-danger">Xóa</button>
                             </form>
-                                @* Trước khi gửi, một hộp thoại xác nhận (confirm) sẽ xuất hiện *@
-                                    @* truyen ma mon vào request *@
                         </div>
                     </div>
                 </div>
@@ -539,7 +535,6 @@
                 // Hiển thị các trang gần đó
                 int startPage = Math.Max(1, currentPage - 1);
                 int endPage = Math.Min(totalPages, currentPage + 1);
-                //Nếu i == currentPage → Thêm class "active" (CSS sẽ làm nổi bật trang hiện tại).
                 for (int i = startPage; i <= endPage; i++)
                 {
                     <a class="@(i == currentPage ? "active" : "")" 

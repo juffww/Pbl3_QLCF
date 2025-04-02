@@ -25,33 +25,27 @@ namespace pbl3_QLCF.Controllers
 
         public IActionResult SanPham(int page = 1, string category = "all", string search = "")
         {
-            // Lấy danh sách sản phẩm từ CSDL
             IQueryable<ThucDon> query = _context.ThucDons;
 
-            // Lọc theo danh mục
             if (category != "all")
             {
                 query = query.Where(p => p.TenLoai == category);
             }
 
-            // Tìm kiếm
             if (!string.IsNullOrEmpty(search))
             {
                 query = query.Where(p => p.TenMon.Contains(search));
             }
 
-            // Tính toán phân trang
             int totalItems = query.Count();
             int totalPages = (int)Math.Ceiling(totalItems / (double)PageSize);
 
-            // Lấy dữ liệu cho trang hiện tại
             var products = query
                 .OrderBy(p => p.MaMon)
                 .Skip((page - 1) * PageSize)
                 .Take(PageSize)
                 .ToList();
 
-            // Truyền dữ liệu sang View
             ViewBag.CurrentPage = page;
             ViewBag.TotalPages = totalPages;
             ViewBag.CurrentCategory = category;
@@ -77,7 +71,6 @@ namespace pbl3_QLCF.Controllers
             {
                 try
                 {
-                    // Kiểm tra mã sản phẩm đã tồn tại chưa
                     var existingProduct = _context.ThucDons.FirstOrDefault(p => p.MaMon == product.MaMon);
                     if (existingProduct != null)
                     {
@@ -101,7 +94,6 @@ namespace pbl3_QLCF.Controllers
             return View(product);
         }
         [HttpGet]
-        // Xử lý hiển thị form chỉnh sửa sản phẩm
         public IActionResult EditProduct(string id)
         {
             var product = _context.ThucDons.FirstOrDefault(p => p.MaMon == id);
@@ -112,7 +104,6 @@ namespace pbl3_QLCF.Controllers
             return View(product);
         }
 
-        // Xử lý lưu thông tin chỉnh sửa
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult EditProduct(ThucDon product)
@@ -129,13 +120,10 @@ namespace pbl3_QLCF.Controllers
                 catch (Exception ex)
                 {
                     ModelState.AddModelError("", "Lỗi khi cập nhật: " + ex.Message);
-                    //Nếu có lỗi trong quá trình cập nhật (ví dụ: lỗi CSDL) → Bắt lỗi và thêm thông báo
-                    //lỗi vào ModelState.
                 }
             }
             return View(product);
         }
-        // Xử lý xóa sản phẩm
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteProduct(string id)
@@ -149,7 +137,6 @@ namespace pbl3_QLCF.Controllers
                     return RedirectToAction("SanPham");
                 }
 
-                // Kiểm tra xem sản phẩm có đang được sử dụng trong chi tiết đơn hàng không
                 bool isInUse = _context.ChiTietDonHangs.Any(c => c.MaMon == id);
                 if (isInUse)
                 {

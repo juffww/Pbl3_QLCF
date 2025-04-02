@@ -1,7 +1,7 @@
 ﻿using pbl3_QLCF.Data;
 using System.Collections.Generic;
 
-namespace pbl3_QLCF.Models
+namespace pbl3_QLCF.ViewModels
 {
     public class SanPhamViewModel
     {

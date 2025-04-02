@@ -45,7 +45,7 @@
         .top-menu-item {
               color: black !important;
           }
-        
+
         .top-menu-item:hover, .top-menu-item.active {
             background-color: #8b5a2b !important;
             color: white !important;
@@ -609,7 +609,7 @@
         }
 
         /* Responsive adjustments */
-        @@media (max-width: 1200px) {
+        /* @@media (max-width: 1200px) {
             .products-grid {
                 grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             }
@@ -625,41 +625,59 @@
                 min-width: 100%;
                 box-shadow: 0 -3px 15px rgba(0, 0, 0, 0.08);
             }
+        } */
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        .alert-success {
+            color: #3c763d;
+            background-color: #dff0d8;
+            border-color: #d6e9c6;
         }
     </style>
 </head>
-@model pbl3_QLCF.Models.SanPhamViewModel
+@using pbl3_QLCF.ViewModels;
+@model SanPhamViewModel
 @{
     ViewData["Title"] = "Sản phẩm";
-    var productTypes = Model.ThucDons.Select(t => t.TenLoai).Distinct().ToList();
 }
 <body>
     @{
         Html.RenderPartial("~/Views/Staff/sharedAll.cshtml");
     }
-<div class="main-container">
-    <div class="menu-section">
-        <h1 class="section-title">Danh mục sản phẩm</h1>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+        </div>
+    }
+    <div class="main-container">
+        <div class="menu-section">
+            <h1 class="section-title">Danh mục sản phẩm</h1>
 
             @using (Html.BeginForm("TimKiem", "Staff", FormMethod.Post))
             {
-        <div class="search-products">
-            <input type="text" name="search" placeholder="Tìm kiếm sản phẩm..." value="@Model.SearchString">
-            <button type="submit">Tìm kiếm</button>
-        </div>
+                <div class="search-products">
+                    <input type="text" name="search" placeholder="Tìm kiếm sản phẩm..." value="@Model.SearchString">
+                    <button type="submit">Tìm kiếm</button>
+                </div>
             }
 
-<div class="category-tabs">
-    <a href="@Url.Action("SanPham", "Staff", new { search = Model.SearchString })" 
-       class="category-tab @(TempData["SelectedCategory"] == null ? "active" : "")">Tất cả</a>
+            <div class="category-tabs">
+                <a href="@Url.Action("SanPham", "Staff", new { search = Model.SearchString })" 
+                class="category-tab @(TempData["SelectedCategory"] == null ? "active" : "")">Tất cả</a>
                 @foreach (var type in Model.ProductTypes)
                 {
                     <a href="@Url.Action("SanPham", "Staff", new { loaiSanPham = type, search = Model.SearchString })" 
-                       class="category-tab @(TempData["SelectedCategory"]?.ToString() == type ? "active" : "")">
-                                @type
+                    class="category-tab @(TempData["SelectedCategory"]?.ToString() == type ? "active" : "")">
+                        @type
                     </a>
                 }
-</div>
+            </div>
 
             @if (TempData["SelectedCategory"] != null)
             {
@@ -674,30 +692,30 @@
                 @foreach (var item in Model.ThucDons)
                 {
                     <div class="product-card">
-                        <img src="@(string.IsNullOrEmpty(item.HinhAnh) ? "/images/placeholder.jpg" : item.HinhAnh)" alt="@item.TenMon" class="product-image">
+                        <img src="@(string.IsNullOrEmpty(item.HinhAnh) ? "/images/default.jpg" : item.HinhAnh)" alt="@item.TenMon" class="product-image">
                         @if (item.TinhTrang == true)
                         {
-                                <div class="product-badge">Đang bán</div>
+                            <div class="product-badge">Đang bán</div>
                         }
                         else
                         {
-                                <div class="product-badge">Ngừng bán</div>
+                            <div class="product-badge">Ngừng bán</div>
                         }
                         <div class="product-details">
                             <div class="product-name">@item.TenMon</div>
-                            <div class="product-price">@item.GiaSp.ToString("#,##0") VND</div>
-                            @using (Html.BeginForm("ThemVaoDonHang", "Staff", FormMethod.Post, new { id = "addToOrderForm", onsubmit = "return addToOrder(this);" }))
-                            {
-                                <input type="hidden" name="maMon" value="@item.MaMon" />
-                                <input type="hidden" name="soLuong" value="1" />
-                                <button type="submit" class="product-add" @(item.TinhTrang == true ? "" : "disabled")>Thêm vào đơn</button>
-                            }
+                            <div class="product-price">@item.GiaSp.ToString("#,##0").Replace(",", ".") VND</div>
+                        @using (Html.BeginForm("ThemVaoDonHang", "Staff", FormMethod.Post, new { id = "addToOrderForm", onsubmit = "return addToOrder(this);" }))
+                        {
+                            <input type="hidden" name="maMon" value="@item.MaMon" />
+                            <input type="hidden" name="soLuong" value="1" />
+                            <button type="submit" class="product-add" @(item.TinhTrang == true ? "" : "disabled")>Thêm vào đơn</button>
+                        }
                         </div>
                     </div>
                 }
         </div>
     </div>
-        
+
     <div class="cart-section">
         <div class="cart-title">
             <h2 class="section-title">Đơn hàng mới</h2>
@@ -720,44 +738,44 @@
                         var thucDon = Model.ThucDons.FirstOrDefault(t => t.MaMon == item.MaMon);
                         if (thucDon != null)
                         {
-                        <div class="cart-item">
-                            <div class="cart-item-info">
-                                <div class="cart-item-name">@thucDon.TenMon</div>
-                                <div class="cart-item-price">@thucDon.GiaSp.ToString("#,##0") VND x @item.SoLuong</div>
+                            <div class="cart-item">
+                                <div class="cart-item-info">
+                                    <div class="cart-item-name">@thucDon.TenMon</div>
+                                    <div class="cart-item-price">@thucDon.GiaSp.ToString("#,##0") VND x @item.SoLuong</div>
                                     @if (!string.IsNullOrEmpty(item.GhiChu))
                                     {
-                                            <div class="cart-item-note">@item.GhiChu</div>
+                                        <div class="cart-item-note">@item.GhiChu</div>
                                     }
                                     @using (Html.BeginForm("ThemGhiChu", "Staff", FormMethod.Post))
                                     {
-                                            <input type="hidden" name="maMon" value="@item.MaMon" />
-                                            <input type="text" name="ghiChu" placeholder="Nhập ghi chú" value="@item.GhiChu" />
-                                            <button type="submit" class="add-note-btn">Cập nhật ghi chú</button>
+                                        <input type="hidden" name="maMon" value="@item.MaMon" />
+                                        <input type="text" name="ghiChu" placeholder="Nhập ghi chú" value="@item.GhiChu" />
+                                        <button type="submit" class="add-note-btn">Cập nhật ghi chú</button>
                                     }
-                            </div>
-                            <div class="cart-item-actions">
-                                <div class="quantity-control">
-                                        @using (Html.BeginForm("CapNhatSoLuong", "Staff", FormMethod.Post))
-                                        {
-                                                <input type="hidden" name="maMon" value="@item.MaMon" />
-                                                <input type="hidden" name="soLuong" value="@(item.SoLuong - 1)" />
-                                                <button type="submit" class="quantity-btn">-</button>
-                                        }
-                                    <span class="quantity-display">@item.SoLuong</span>
-                                        @using (Html.BeginForm("CapNhatSoLuong", "Staff", FormMethod.Post))
-                                        {
-                                                <input type="hidden" name="maMon" value="@item.MaMon" />
-                                                <input type="hidden" name="soLuong" value="@(item.SoLuong + 1)" />
-                                                <button type="submit" class="quantity-btn">+</button>
-                                        }
                                 </div>
+                                <div class="cart-item-actions">
+                                    <div class="quantity-control">
+                                        @using (Html.BeginForm("CapNhatSoLuong", "Staff", FormMethod.Post))
+                                        {
+                                            <input type="hidden" name="maMon" value="@item.MaMon" />
+                                            <input type="hidden" name="soLuong" value="@(item.SoLuong - 1)" />
+                                            <button type="submit" class="quantity-btn">-</button>
+                                        }
+                                        <span class="quantity-display">@item.SoLuong</span>
+                                        @using (Html.BeginForm("CapNhatSoLuong", "Staff", FormMethod.Post))
+                                        {
+                                            <input type="hidden" name="maMon" value="@item.MaMon" />
+                                            <input type="hidden" name="soLuong" value="@(item.SoLuong + 1)" />
+                                            <button type="submit" class="quantity-btn">+</button>
+                                        }
+                                    </div>
                                     @using (Html.BeginForm("XoaSanPham", "Staff", FormMethod.Post))
                                     {
-                                            <input type="hidden" name="maMon" value="@item.MaMon" />
-                                            <button type="submit" class="delete-btn">×</button>
+                                        <input type="hidden" name="maMon" value="@item.MaMon" />
+                                        <button type="submit" class="delete-btn">×</button>
                                     }
+                                    </div>
                             </div>
-                        </div>
                         }
                     }
                 }
@@ -775,7 +793,7 @@
                     double tongCong = tamTinh + thue;
                 }
         </div>
-            
+
         <div class="cart-summary">
             <div class="summary-row">
                 <div>Tạm tính:</div>
@@ -791,40 +809,33 @@
             </div>
         </div>
 
-            @using (Html.BeginForm("HoanTatDonHang", "Staff", FormMethod.Post))
-            {
-                <div class="order-options">
-                    <div class="option-group">
-                        <label class="option-label">Tên khách hàng</label>
-                        <input type="text" name="tenKhachHang" placeholder="Nhập tên khách hàng" class="option-input">
-                    </div>
-                    <div class="option-group">
-                        <label class="option-label">Số điện thoại</label>
-                        <input type="text" name="soDienThoai" placeholder="Nhập số điện thoại" class="option-input">
-                    </div>
-                    <div class="option-group">
-                        <label class="option-label">Ghi chú đơn hàng</label>
-                        <textarea name="ghiChuDonHang" class="option-input" placeholder="Thêm ghi chú cho đơn hàng" style="height: 80px;"></textarea>
-                    </div>
+        @using (Html.BeginForm("HoanTatDonHang", "Staff", FormMethod.Post))
+        {
+            <div class="order-options">
+                <div class="option-group">
+                    <label class="option-label">Tên khách hàng</label>
+                    <input type="text" name="tenKhachHang" placeholder="Nhập tên khách hàng" class="option-input">
                 </div>
+                <div class="option-group">
+                    <label class="option-label">Số điện thoại</label>
+                    <input type="text" name="soDienThoai" placeholder="Nhập số điện thoại" class="option-input" required>
+                </div>
+                <div class="option-group">
+                    <label class="option-label">Ghi chú đơn hàng</label>
+                    <textarea name="ghiChuDonHang" class="option-input" placeholder="Thêm ghi chú cho đơn hàng" style="height: 80px;"></textarea>
+                </div>
+            </div>
 
-                <button type="submit" class="checkout-btn" @(Model.DonHangHienTai.ChiTietDonHangs.Any() ? "" : "disabled")>Hoàn tất đơn hàng</button>
-            }
+            <button type="submit" class="checkout-btn" @(Model.DonHangHienTai.ChiTietDonHangs.Any() ? "" : "disabled")>Hoàn tất đơn hàng</button>
+        }
 
-            @using (Html.BeginForm("XoaDonHang", "Staff", FormMethod.Post))
-            {
+        @using (Html.BeginForm("XoaDonHang", "Staff", FormMethod.Post))
+        {
                 <button type="submit" class="clear-cart-btn" @(Model.DonHangHienTai.ChiTietDonHangs.Any() ? "" : "disabled")>Xóa đơn hàng</button>
-            }
-
-            @if (TempData["SuccessMessage"] != null)
-            {
-                <div class="alert alert-success">
-                    @TempData["SuccessMessage"]
-                </div>
-            }
+        }
     </div>
 </div>
-@* <script>
+<script>
 function addToOrder(form) {
     var formData = new FormData(form);
 
@@ -843,5 +854,5 @@ function addToOrder(form) {
     return false; // Ngăn form submit thông thường
 }
 </script>
- *@</body>
+</body>
 </html>

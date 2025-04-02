@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Options;
 using pbl3_QLCF.Data;
 using pbl3_QLCF.Models;
+using pbl3_QLCF.Service;
+//using pbl3_QLCF.Service;
 using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +15,13 @@ builder.Services.AddDbContext<Pbl3Context>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("CafeLink"));
 });
 builder.Services.AddSession();
+
+// Thêm vào Program.cs hoặc Startup.cs
+builder.Services.AddTransient<IMyEmailSender>(provider =>
+    new MyEmailSender(
+        "baoho1503@gmail.com",  // Thay bằng email của bạn
+        "xbuy fprn swrn ilhu"          // Thay bằng password hoặc App Password
+    ));
 
 builder.Services.AddControllersWithViews();
 // Các cấu hình khác...

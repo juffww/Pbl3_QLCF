@@ -3,28 +3,56 @@
   "WorkspaceRootPath": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\views\\staff\\sanpham.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:views\\staff\\sanpham.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\controllers\\loginaccess.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:controllers\\loginaccess.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\models\\viewmodels\\sanphamviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:models\\viewmodels\\sanphamviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\views\\loginaccess\\resetpassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:views\\loginaccess\\resetpassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\controllers\\staff.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:controllers\\staff.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\sessionextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:sessionextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\controllers\\manager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:controllers\\manager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\views\\loginaccess\\verifycode.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:views\\loginaccess\\verifycode.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\controllers\\manager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:controllers\\manager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\service\\myemailsender.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:service\\myemailsender.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\service\\imyemailsender.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:service\\imyemailsender.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\sessionextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:sessionextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\viewmodels\\changepasswordviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:viewmodels\\changepasswordviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\viewmodels\\sanphamviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:viewmodels\\sanphamviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|c:\\users\\x1gen5\\onedrive - the university of technology\\documents\\pbl3\\pbl3_qlcf\\views\\loginaccess\\forgotpassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{9BB4C57F-B991-409D-B116-AB6DEF687D87}|pbl3_QLCF.csproj|solutionrelative:views\\loginaccess\\forgotpassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,7 +62,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -54,41 +82,67 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "VerifyCode.cshtml",
+              "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Views\\LoginAccess\\VerifyCode.cshtml",
+              "RelativeDocumentMoniker": "Views\\LoginAccess\\VerifyCode.cshtml",
+              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Views\\LoginAccess\\VerifyCode.cshtml",
+              "RelativeToolTip": "Views\\LoginAccess\\VerifyCode.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-02T02:45:13.448Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "SanPhamViewModel.cs",
-              "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Models\\ViewModels\\SanPhamViewModel.cs",
-              "RelativeDocumentMoniker": "Models\\ViewModels\\SanPhamViewModel.cs",
-              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Models\\ViewModels\\SanPhamViewModel.cs",
-              "RelativeToolTip": "Models\\ViewModels\\SanPhamViewModel.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAABAAAAAAAAAA==",
+              "Title": "ResetPassword.cshtml",
+              "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Views\\LoginAccess\\ResetPassword.cshtml",
+              "RelativeDocumentMoniker": "Views\\LoginAccess\\ResetPassword.cshtml",
+              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Views\\LoginAccess\\ResetPassword.cshtml",
+              "RelativeToolTip": "Views\\LoginAccess\\ResetPassword.cshtml",
+              "ViewState": "AgIAAB0BAAAAAAAAAAAmwFUBAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-02T02:42:53.646Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-01T00:32:13.895Z",
+              "WhenOpened": "2025-04-02T00:28:46.638Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "SanPham.cshtml",
-              "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Views\\Staff\\SanPham.cshtml",
-              "RelativeDocumentMoniker": "Views\\Staff\\SanPham.cshtml",
-              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Views\\Staff\\SanPham.cshtml",
-              "RelativeToolTip": "Views\\Staff\\SanPham.cshtml",
-              "ViewState": "AgIAACsBAAAAAAAAAAAqwD4BAAAdAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-03-31T12:13:32.014Z",
+              "Title": "LoginAccess.cs",
+              "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Controllers\\LoginAccess.cs",
+              "RelativeDocumentMoniker": "Controllers\\LoginAccess.cs",
+              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Controllers\\LoginAccess.cs",
+              "RelativeToolTip": "Controllers\\LoginAccess.cs",
+              "ViewState": "AgIAAEkAAAAAAAAAAAAIwGAAAAA8AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-02T02:04:20.56Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "SessionExtensions.cs",
-              "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\SessionExtensions.cs",
-              "RelativeDocumentMoniker": "SessionExtensions.cs",
-              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\SessionExtensions.cs",
-              "RelativeToolTip": "SessionExtensions.cs",
-              "ViewState": "AgIAAAoAAAAAAAAAAAAUwAsAAAAAAAAAAAAAAA==",
+              "Title": "Manager.cs",
+              "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Controllers\\Manager.cs",
+              "RelativeDocumentMoniker": "Controllers\\Manager.cs",
+              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Controllers\\Manager.cs",
+              "RelativeToolTip": "Controllers\\Manager.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-31T12:10:02.437Z",
+              "WhenOpened": "2025-04-02T00:42:29.105Z",
               "EditorCaption": ""
             },
             {
@@ -99,34 +153,101 @@
               "RelativeDocumentMoniker": "Controllers\\Staff.cs",
               "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Controllers\\Staff.cs",
               "RelativeToolTip": "Controllers\\Staff.cs",
-              "ViewState": "AgIAAGgAAAAAAAAAAAAUwHwAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAIUAAAAAAAAAAAA/wEMAAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-31T12:08:27.262Z",
+              "WhenOpened": "2025-04-02T02:28:36.31Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAA1AAAAAAAAAA==",
+              "DocumentIndex": 6,
+              "Title": "MyEmailSender.cs",
+              "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Service\\MyEmailSender.cs",
+              "RelativeDocumentMoniker": "Service\\MyEmailSender.cs",
+              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Service\\MyEmailSender.cs",
+              "RelativeToolTip": "Service\\MyEmailSender.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABIAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-31T14:59:28.699Z"
+              "WhenOpened": "2025-04-02T00:24:41.694Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Manager.cs",
-              "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Controllers\\Manager.cs",
-              "RelativeDocumentMoniker": "Controllers\\Manager.cs",
-              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Controllers\\Manager.cs",
-              "RelativeToolTip": "Controllers\\Manager.cs",
-              "ViewState": "AgIAACAAAAAAAAAAAAAgwAAAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 8,
+              "Title": "IMyEmailSender.cs",
+              "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Service\\IMyEmailSender.cs",
+              "RelativeDocumentMoniker": "Service\\IMyEmailSender.cs",
+              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Service\\IMyEmailSender.cs",
+              "RelativeToolTip": "Service\\IMyEmailSender.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-31T14:26:08.865Z"
+              "WhenOpened": "2025-04-02T00:23:17.562Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-04-02T00:28:49.615Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "SessionExtensions.cs",
+              "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\SessionExtensions.cs",
+              "RelativeDocumentMoniker": "SessionExtensions.cs",
+              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\SessionExtensions.cs",
+              "RelativeToolTip": "SessionExtensions.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-02T00:33:34.193Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "ChangePasswordViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\ViewModels\\ChangePasswordViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModels\\ChangePasswordViewModel.cs",
+              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\ViewModels\\ChangePasswordViewModel.cs",
+              "RelativeToolTip": "ViewModels\\ChangePasswordViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-02T02:04:52.729Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "SanPhamViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\ViewModels\\SanPhamViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModels\\SanPhamViewModel.cs",
+              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\ViewModels\\SanPhamViewModel.cs",
+              "RelativeToolTip": "ViewModels\\SanPhamViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-02T00:36:36.105Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "ForgotPassword.cshtml",
+              "DocumentMoniker": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Views\\LoginAccess\\ForgotPassword.cshtml",
+              "RelativeDocumentMoniker": "Views\\LoginAccess\\ForgotPassword.cshtml",
+              "ToolTip": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\Views\\LoginAccess\\ForgotPassword.cshtml",
+              "RelativeToolTip": "Views\\LoginAccess\\ForgotPassword.cshtml",
+              "ViewState": "AgIAAMwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-02T00:29:50.357Z",
+              "EditorCaption": ""
             }
           ]
         }

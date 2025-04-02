@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using pbl3_QLCF.Models;
+using pbl3_QLCF.ViewModels;
 using pbl3_QLCF.Data;
+using pbl3_QLCF.Models.Authentication;
 namespace pbl3_QLCF.Controllers
 {
     //[Authentication]
@@ -74,7 +75,6 @@ namespace pbl3_QLCF.Controllers
                 DonHangHienTai = GetOrCreateDonHang()
             };
 
-            //return View("SanPham", model);
             return RedirectToAction("SanPham", new { loaiSanPham = TempData["SelectedCategory"]?.ToString(), search });
         }
 
@@ -82,7 +82,7 @@ namespace pbl3_QLCF.Controllers
         public IActionResult ThemVaoDonHang(string maMon, int soLuong = 1, string ghiChu = "")
         {
             // Get current order from session
-            var donHang = GetOrCreateDonHang();
+            var donHang = GetOrCreateDonHang(); 
 
             // Get product details
             var thucDon = _context.ThucDons.FirstOrDefault(m => m.MaMon == maMon);
@@ -226,7 +226,7 @@ namespace pbl3_QLCF.Controllers
                 {
                     khachHang = new KhachHang
                     {
-                        MaKh = "KH" + DateTime.Now.ToString("yyyyMMddHHmmss"),
+                        MaKh = "KH" + soDienThoai,
                         TenKh = tenKhachHang,
                         Sdt = soDienThoai
                     };
@@ -312,24 +312,6 @@ namespace pbl3_QLCF.Controllers
             return donHang;
         }
 
-        //private DonHang GetOrCreateDonHang()
-        //{
-        //    var donHang = HttpContext.Session.GetObjectFromJson<DonHang>("DonHangHienTai");
-        //    if (donHang == null)
-        //    {
-        //        donHang = CreateNewOrder();
-        //        HttpContext.Session.SetObjectAsJson("DonHangHienTai", donHang);
-        //    }
-
-        //    // Ensure ChiTietDonHangs is never null
-        //    if (donHang.ChiTietDonHangs == null)
-        //    {
-        //        donHang.ChiTietDonHangs = new List<ChiTietDonHang>();
-        //    }
-
-        //    return donHang;
-        //}
-
         private DonHang CreateNewOrder()
         {
             return new DonHang
@@ -345,26 +327,44 @@ namespace pbl3_QLCF.Controllers
 
         private string GenerateNewOrderId()
         {
-            // Format: DH + current date + sequential number
-            string datePrefix = "DH" + DateTime.Now.ToString("yyyyMMdd");
+            // Format: DH + sequential number (DH001, DH002, DH003, etc.)
+            string prefix = "DH";
 
             // Get the latest order with this prefix
             var latestOrder = _context.DonHangs
-                .Where(o => o.MaDh.StartsWith(datePrefix))
+                .Where(o => o.MaDh.StartsWith(prefix))
                 .OrderByDescending(o => o.MaDh)
                 .FirstOrDefault();
 
             if (latestOrder == null)
             {
-                // First order of the day
-                return datePrefix + "001";
+                // First order ever
+                return prefix + "001";
             }
             else
             {
-                // Extract the numeric part and increment
-                string currentNumber = latestOrder.MaDh.Substring(datePrefix.Length);
-                int nextNumber = int.Parse(currentNumber) + 1;
-                return datePrefix + nextNumber.ToString("D3"); // Format as 3 digits
+                try
+                {
+                    // Extract the numeric part
+                    string currentNumber = latestOrder.MaDh.Substring(prefix.Length);
+
+                    // Use TryParse to safely convert the string to an integer
+                    if (int.TryParse(currentNumber, out int currentVal))
+                    {
+                        int nextNumber = currentVal + 1;
+                        return prefix + nextNumber.ToString("D3"); // Format as 3 digits with leading zeros
+                    }
+                    else
+                    {
+                        // If parsing fails, start from 1
+                        return prefix + "001";
+                    }
+                }
+                catch
+                {
+                    // Handle any unexpected errors by providing a fallback
+                    return prefix + "001";
+                }
             }
         }
 
