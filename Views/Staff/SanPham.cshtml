@@ -735,7 +735,7 @@
                 {
                     foreach (var item in Model.DonHangHienTai.ChiTietDonHangs)
                     {
-                        var thucDon = Model.ThucDons.FirstOrDefault(t => t.MaMon == item.MaMon);
+                        var thucDon = Model.Cart.FirstOrDefault(t => t.MaMon == item.MaMon);
                         if (thucDon != null)
                         {
                             <div class="cart-item">

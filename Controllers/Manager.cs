@@ -12,7 +12,7 @@ namespace pbl3_QLCF.Controllers
     {
         private readonly Pbl3Context _context;
         private const int PageSize = 8;
-
+        private const int PageOrderSize = 5;
         public Manager(Pbl3Context context)
         {
             _context = context;
@@ -22,7 +22,7 @@ namespace pbl3_QLCF.Controllers
         {
             return View();
         }
-
+        [HttpGet]
         public IActionResult SanPham(int page = 1, string category = "all", string search = "")
         {
             IQueryable<ThucDon> query = _context.ThucDons;
@@ -156,14 +156,59 @@ namespace pbl3_QLCF.Controllers
                 return RedirectToAction("SanPham");
             }
         }
-        public IActionResult DonHang()
-        {
-            return View();
-        }
+        
 
         public IActionResult KhachHang()
         {
             return View();
+        }
+
+        //-----------------------------Đơn Hàng----------------------------------------------------
+        [HttpGet]
+        public IActionResult DonHang(int page = 1, string category = "all", string search = "")
+        {
+            IQueryable<DonHang> query = _context.DonHangs;
+            if(category != "all")
+            {
+                switch(category)
+                {
+                    case "new":
+                        query = query.Where(dh => dh.TrangThaiDh == "Mới"); 
+                        break;
+                    case "processing":
+                        query = query.Where(dh => dh.TrangThaiDh == "Đang xử lý");
+                        break;
+                    case "completed":
+                        query = query.Where(dh => dh.TrangThaiDh == "Hoàn thành");
+                        break;
+                }
+            }
+            //search
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(dh =>
+                    dh.MaDh.Contains(search) ||
+                    dh.MaKh.Contains(search) ||
+                    dh.MaNv.Contains(search) ||
+                    dh.MaBan.Contains(search)
+                );
+            }
+            query = query.OrderByDescending(dh => dh.ThoiGianDat);
+
+            int totalItems = query.Count();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)PageOrderSize);
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+            ViewBag.CurrentCategory = category;
+            ViewBag.SearchString = search;
+
+            var orders = query
+                .Skip((page - 1) * PageSize)
+                .Take(PageSize)
+                .ToList();
+
+            return View(orders);
         }
     }
 }

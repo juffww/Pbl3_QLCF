@@ -156,7 +156,7 @@
             min-width: 300px; 
         }
 
-                #search-btn {
+        #search-btn {
             border-radius: 0 4px 4px 0;
             margin-left: 0;
             padding: 13px 20px; 
@@ -524,6 +524,13 @@
                 int currentPage = ViewBag.CurrentPage;
                 int totalPages = ViewBag.TotalPages;
 
+                //Hiển thị nút trang đầu cùng [<<]
+                if(currentPage > 1)
+                {
+                    <a href="@Url.Action("SanPham", new { page = 1, category = ViewBag.CurrentCategory, search = ViewBag.SearchString})">
+                        &lt;&lt
+                    </a>
+                }
                 // Hiển thị nút trang trước [<]
                 if (currentPage > 1)
                 {
@@ -533,8 +540,36 @@
                 }
 
                 // Hiển thị các trang gần đó
-                int startPage = Math.Max(1, currentPage - 1);
-                int endPage = Math.Min(totalPages, currentPage + 1);
+                // int startPage = Math.Max(1, currentPage - 1);
+                // int endPage = Math.Min(totalPages, currentPage + 1);
+                // for (int i = startPage; i <= endPage; i++)
+                // {
+                //     <a class="@(i == currentPage ? "active" : "")" 
+                //        href="@Url.Action("SanPham", new { page = i, category = ViewBag.CurrentCategory, search = ViewBag.SearchString })">
+                //         @i
+                //     </a>
+                // }
+
+                // Hiển thị các trang gần đó (5 trang)
+                int startPage = Math.Max(1, currentPage - 2); // Show 2 pages before current
+                int endPage = Math.Min(totalPages, currentPage + 2); // Show 2 pages after current
+
+                // Điều chỉnh để luôn hiển thị 5 trang nếu có thể
+                if (endPage - startPage + 1 < 5 && totalPages >= 5)
+                {
+                    if (currentPage <= 3)
+                    {
+                        // Nếu đang ở gần đầu, hiển thị 5 trang đầu
+                        endPage = Math.Min(5, totalPages);
+                        startPage = 1;
+                    }
+                    else
+                    {
+                        // Nếu đang ở gần cuối, hiển thị 5 trang cuối
+                        startPage = Math.Max(1, totalPages - 4);
+                        endPage = totalPages;
+                    }
+                }
                 for (int i = startPage; i <= endPage; i++)
                 {
                     <a class="@(i == currentPage ? "active" : "")" 
@@ -550,6 +585,14 @@
                         &gt;
                     </a>
                 }
+                //Hiển thị nút trang đầu cùng [>>]
+                if (currentPage < totalPages)
+                {
+                    <a href="@Url.Action("SanPham", new { page = totalPages, category = ViewBag.CurrentCategory, search = ViewBag.SearchString})">
+                        &gt;&gt;
+                    </a>
+                }
+                
             }
         </div>
     </div>

@@ -124,14 +124,15 @@
             display: flex;
             flex-grow: 1;
             margin-right: 20px;
-            background-color: transparent !important;
             border: none !important;
+            background-color: transparent !important;
         }
 
         .search-input {
             flex-grow: 1;
             padding: 10px 15px;
             border: 1px solid #ddd;
+            outline: none;
             border-radius: 4px 0 0 4px;
             font-size: 16px;
         }
@@ -144,7 +145,6 @@
             border-radius: 0 4px 4px 0;
             cursor: pointer;
             font-weight: bold;
-            border: nont !important;
         }
 
         .add-button {
@@ -163,33 +163,35 @@
             margin-right: 8px;
         }
 
-        .filter-bar {
+        .category-filter {
             display: flex;
             margin-bottom: 20px;
-            background-color: #fff;
+            background-color: white;
             border-radius: 4px;
             overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
-        .filter-option {
+        .category-item {
             padding: 12px 20px;
             cursor: pointer;
-            background-color: white;
+            color: black;
             border: none;
-            font-weight: bold;
+            /* font-weight: bold; */
+            text-decoration: none;
         }
 
-        .filter-option.active {
-            background-color: #6d4c41;
+        .category-item.active {
+            background-color: #8B6D5A;
             color: white;
         }
-
-        .filter-option:not(.active) {
-            background-color: #f1f1f1;
-        }
-
-        .filter-option:first-child {
-            border-radius: 4px 0 0 4px;
+        .category-item:link,
+        .category-item:visited,
+        .category-item:hover,
+        .category-item:active,
+        .category-item:focus {
+            text-decoration: none;
+            outline: none;
         }
 
         .orders-table {
@@ -224,22 +226,22 @@
             font-weight: bold;
         }
 
-        .status-new {
-            background-color: #e3f2fd;
-            color: #1976d2;
-        }
-
-        .status-processing {
+        .status-đang-xử-lý {
             background-color: #fff8e1;
             color: #ffa000;
         }
 
-        .status-completed {
+        .status-mới {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status-hoàn-thành {
             background-color: #e8f5e9;
             color: #388e3c;
         }
 
-        .status-cancelled {
+        .status-đã-hủy {
             background-color: #ffebee;
             color: #d32f2f;
         }
@@ -280,6 +282,7 @@
             border: 1px solid #ddd;
             background-color: white;
             cursor: pointer;
+            text-decoration: none;
         }
 
         .pagination-btn.active {
@@ -289,6 +292,8 @@
         }
     </style>
 </head>
+@using pbl3_QLCF.Data;
+@model IEnumerable<DonHang>
 <body>
     @{
         Html.RenderPartial("~/Views/Manager/sharedAll.cshtml");
@@ -299,18 +304,27 @@
 
         <div class="action-bar">
             <div class="search-bar">
-                <input type="text" class="search-input" placeholder="Tìm kiếm theo mã đơn, khách hàng...">
-                <button class="search-button">Tìm</button>
+                <form method="get" action="@Url.Action("DonHang")" style="display: flex; width: 100%;">
+                    <input type="text" name="search" class="search-input" placeholder="Tìm kiếm theo mã đơn, khách hàng..." value="@ViewBag.SearchString">
+                    <input type="hidden" name="category" value="@ViewBag.CurrentCategory">
+                    <input type="hidden" name="page" value="1">
+                    <button type="submit" class="search-button" id="search-btn">Tìm</button>
+                </form>
             </div>
             <button class="add-button"><i>+</i> Thêm Đơn Hàng</button>
         </div>
 
-        <div class="filter-bar">
-            <button class="filter-option active">Tất cả</button>
-            <button class="filter-option">Mới</button>
-            <button class="filter-option">Đang xử lý</button>
-            <button class="filter-option">Hoàn thành</button>
-            <button class="filter-option">Đã hủy</button>
+        <div class="category-filter">
+            <a href="@Url.Action("DonHang", new { category = "all", search = ViewBag.SearchString })" 
+                class="category-item @(ViewBag.CurrentCategory == "all" ? "active" : "")">Tất cả</a>
+            <a href="@Url.Action("DonHang", new { category = "new", search = ViewBag.SearchString })" 
+                class="category-item @(ViewBag.CurrentCategory == "new" ? "active" : "")">Mới</a>
+            <a href="@Url.Action("DonHang", new { category = "processing", search = ViewBag.SearchString })" 
+                class="category-item @(ViewBag.CurrentCategory == "processing" ? "active" : "")">Đang xử lý</a>
+            <a href="@Url.Action("DonHang", new { category = "completed", search = ViewBag.SearchString })" 
+                class="category-item @(ViewBag.CurrentCategory == "completed" ? "active" : "")">Hoàn thành</a>
+            <a href="@Url.Action("DonHang", new { category = "cancelled", search = ViewBag.SearchString })" 
+                class="category-item @(ViewBag.CurrentCategory == "cancelled" ? "active" : "")">Đã hủy</a>
         </div>
 
         <table class="orders-table">
@@ -328,90 +342,43 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>DH001</td>
-                    <td>KH023</td>
-                    <td>NV002</td>
-                    <td>B05</td>
-                    <td>29/03/2025 08:15</td>
-                    <td>320,000 đ</td>
-                    <td>Đã thanh toán</td>
-                    <td><span class="status status-completed">Hoàn thành</span></td>
-                    <td>
-                        <button class="action-btn view-btn">Xem</button>
-                        <button class="action-btn edit-btn">Sửa</button>
-                        <button class="action-btn delete-btn">Xóa</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>DH002</td>
-                    <td>KH045</td>
-                    <td>NV001</td>
-                    <td>B12</td>
-                    <td>29/03/2025 08:30</td>
-                    <td>195,000 đ</td>
-                    <td>Chưa thanh toán</td>
-                    <td><span class="status status-processing">Đang xử lý</span></td>
-                    <td>
-                        <button class="action-btn view-btn">Xem</button>
-                        <button class="action-btn edit-btn">Sửa</button>
-                        <button class="action-btn delete-btn">Xóa</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>DH003</td>
-                    <td>KH011</td>
-                    <td>NV003</td>
-                    <td>B07</td>
-                    <td>29/03/2025 08:42</td>
-                    <td>420,000 đ</td>
-                    <td>Đã thanh toán</td>
-                    <td><span class="status status-new">Mới</span></td>
-                    <td>
-                        <button class="action-btn view-btn">Xem</button>
-                        <button class="action-btn edit-btn">Sửa</button>
-                        <button class="action-btn delete-btn">Xóa</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>DH004</td>
-                    <td>KH032</td>
-                    <td>NV001</td>
-                    <td>B03</td>
-                    <td>29/03/2025 09:10</td>
-                    <td>155,000 đ</td>
-                    <td>Đã thanh toán</td>
-                    <td><span class="status status-cancelled">Đã hủy</span></td>
-                    <td>
-                        <button class="action-btn view-btn">Xem</button>
-                        <button class="action-btn edit-btn">Sửa</button>
-                        <button class="action-btn delete-btn">Xóa</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>DH005</td>
-                    <td>KH019</td>
-                    <td>NV004</td>
-                    <td>B01</td>
-                    <td>29/03/2025 09:25</td>
-                    <td>290,000 đ</td>
-                    <td>Đã thanh toán</td>
-                    <td><span class="status status-completed">Hoàn thành</span></td>
-                    <td>
-                        <button class="action-btn view-btn">Xem</button>
-                        <button class="action-btn edit-btn">Sửa</button>
-                        <button class="action-btn delete-btn">Xóa</button>
-                    </td>
-                </tr>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.MaDh</td>
+                        <td>@item.MaKh</td>
+                        <td>@item.MaNv</td>
+                        <td>@item.MaBan</td>
+                        <td>@(item.ThoiGianDat?.ToString("dd/MM/yyyy HH:mm"))</td>
+                        <td>@item.TongTien?.ToString("#,###") đ</td>
+                        <td>@item.ThanhToan</td>
+                            <td><span class="status status-@(item.TrangThaiDh?.ToLower().Replace(" ", "-"))">@item.TrangThaiDh</span></td>
+                        <td>
+                            <button class="action-btn view-btn" onclick="location.href='@Url.Action("XemDonHang", new { id = item.MaDh })'">Xem</button>
+                            <button class="action-btn edit-btn" onclick="location.href='@Url.Action("SuaDonHang", new { id = item.MaDh })'">Sửa</button>
+                            <button class="action-btn delete-btn" onclick="confirmDelete('@item.MaDh')">Xóa</button>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
 
         <div class="pagination">
-            <button class="pagination-btn">«</button>
-            <button class="pagination-btn active">1</button>
-            <button class="pagination-btn">2</button>
-            <button class="pagination-btn">3</button>
-            <button class="pagination-btn">»</button>
+            @{
+                if (ViewBag.CurrentPage > 1)
+                {
+                    <a href="@Url.Action("DonHang", new { page = ViewBag.CurrentPage - 1, category = ViewBag.CurrentCategory, search = ViewBag.SearchString })" class="pagination-btn">&lt</a>
+                }
+                for (int i = 1; i <= ViewBag.TotalPages; i++)
+                {
+                    <a href="@Url.Action("DonHang", new { page = i, category = ViewBag.CurrentCategory, search = ViewBag.SearchString })" 
+                       class="pagination-btn @(ViewBag.CurrentPage == i ? "active" : "")">@i</a>
+                }
+                if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                {
+                    <a href="@Url.Action("DonHang", new { page = ViewBag.CurrentPage + 1, category = ViewBag.CurrentCategory, search = ViewBag.SearchString })" class="pagination-btn">&gt</a>
+                }
+            }
         </div>
     </main>
 </body>

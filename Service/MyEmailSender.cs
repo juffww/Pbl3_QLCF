@@ -21,24 +21,38 @@ namespace pbl3_QLCF.Service
 
         public async Task SendEmailAsync(string email, string subject, string message)
         {
-            using (var client = new SmtpClient("smtp.gmail.com", 587)
+            try
             {
-                EnableSsl = true,
-                Credentials = new NetworkCredential(_email, _password),
-                DeliveryMethod = SmtpDeliveryMethod.Network
-            })
-            {
-                using (var mailMessage = new MailMessage
+                using (var client = new SmtpClient("smtp.gmail.com", 587)
                 {
-                    From = new MailAddress(_email),
-                    Subject = subject,
-                    Body = message,
-                    IsBodyHtml = true,
+                    EnableSsl = true,
+                    Credentials = new NetworkCredential(_email, _password),
+                    DeliveryMethod = SmtpDeliveryMethod.Network
                 })
                 {
-                    mailMessage.To.Add(email);
-                    await client.SendMailAsync(mailMessage);
+                    // Add timeout if needed
+                    client.Timeout = 10000; // 10 seconds
+
+                    using (var mailMessage = new MailMessage
+                    {
+                        From = new MailAddress(_email),
+                        Subject = subject,
+                        Body = message,
+                        IsBodyHtml = true,
+                    })
+                    {
+                        mailMessage.To.Add(email);
+                        await client.SendMailAsync(mailMessage);
+                        // Log success here
+                        Console.WriteLine($"Email sent successfully to {email}");
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception details
+                Console.WriteLine($"Failed to send email to {email}: {ex.Message}");
+                throw; // Re-throw to handle in the controller
             }
         }
     }

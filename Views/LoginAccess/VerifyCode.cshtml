@@ -288,29 +288,43 @@
         function resendCode(e) {
             e.preventDefault();
 
-            // Submit form to resend code action
-            fetch('@Url.Action("SendVerificationCode", "LoginAccess")', {
+            // Disable the resend link while processing
+            const resendLink = document.getElementById('resendLink');
+            resendLink.style.pointerEvents = 'none';
+            resendLink.textContent = 'Đang gửi...';
+
+            // Submit request to resend code action
+            fetch('@Url.Action("ResendVerificationCode", "LoginAccess")', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
                 }
             })
-            .then(response => {
-                if (response.ok) {
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
                     // Reset timer and inputs
                     startTimer();
                     document.querySelectorAll('.code-input').forEach(input => {
                         input.value = '';
                     });
                     document.getElementById('code1').focus();
+                } else {
+                    // Show error message
+                    alert(data.message || 'Failed to resend code. Please try again.');
                 }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to resend code. Please try again.');
+            })
+            .finally(() => {
+                // Re-enable the resend link
+                resendLink.style.pointerEvents = 'auto';
+                resendLink.textContent = 'Gửi lại mã';
             });
         }
-
-        // Before submitting the form, combine all code inputs
-        document.getElementById('verifyForm').addEventListener('submit', function(e) {
-            completeInputs();
-        });
     </script>
 </body>
 </html>

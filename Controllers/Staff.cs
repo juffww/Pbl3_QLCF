@@ -42,16 +42,22 @@ namespace pbl3_QLCF.Controllers
             var filteredProductIds = filteredProducts.Select(p => p.MaMon).ToList();
 
             // Get products in cart that might not be in the filtered list
-            var cartProducts = _context.ThucDons
-                .Where(t => cartProductIds.Contains(t.MaMon) && !filteredProductIds.Contains(t.MaMon))
-                .ToList();
+            //var cartProducts = _context.ThucDons
+            //    .Where(t => cartProductIds.Contains(t.MaMon) && !filteredProductIds.Contains(t.MaMon))
+            //    .ToList();
 
+            // Get ALL products in cart
+            var cartProducts = _context.ThucDons
+                .Where(t => cartProductIds.Contains(t.MaMon))
+                .ToList();
             // Combine both lists
-            var allProducts = filteredProducts.Union(cartProducts).ToList();
+            //var allProducts = filteredProducts.Union(cartProducts).ToList();
 
             var model = new SanPhamViewModel
             {
-                ThucDons = allProducts,
+                //ThucDons = allProducts,
+                ThucDons = filteredProducts,
+                Cart = cartProducts,
                 DonHangHienTai = donHang,
                 ProductTypes = GetDistinctProductTypes(),
                 SearchString = search
@@ -248,7 +254,7 @@ namespace pbl3_QLCF.Controllers
                 ThoiGianDat = DateTime.Now,
                 TongTien = donHang.TongTien,
                 ThanhToan = "Chưa thanh toán",
-                TrangThaiDh = "Đã xác nhận",
+                TrangThaiDh = "Mới",
                 // Add note if provided
                 // Note: You might need to add a GhiChu field to your DonHang model
             };

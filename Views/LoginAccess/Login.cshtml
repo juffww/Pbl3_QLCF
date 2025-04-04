@@ -2,8 +2,7 @@
     Layout = null;
 }
 @model pbl3_QLCF.Data.NguoiDung
-@* Cho phép view sử dụng các thuộc tính của model NguoiDung (TenDangNhap, MatKhau) và 
-binding dữ liệu từ form. *@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,6 +10,26 @@ binding dữ liệu từ form. *@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng nhập | Hệ thống quản lý quán cà phê</title>
     <link rel="stylesheet" type="text/css" href="~/css/Login.css" />
+    <style>
+        .alert {
+            padding: 12px 16px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-danger {
+            background-color: rgba(211, 47, 47, 0.1);
+            color: var(--error-color);
+            border: 1px solid rgba(211, 47, 47, 0.2);
+        }
+
+        .alert-success {
+            background-color: rgba(46, 125, 50, 0.1);
+            color: var(--success-message);
+            border: 1px solid rgba(46, 125, 50, 0.2);
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -20,6 +39,19 @@ binding dữ liệu từ form. *@
             <p class="app-description">Hệ thống quản lý quán cà phê hiện đại, giúp bạn vận hành quán một cách hiệu quả</p>
         </div>
         <div class="right-panel">
+            @if (ViewBag.ErrorMessage != null)
+            {
+                <div class="alert alert-danger">
+                    @ViewBag.ErrorMessage
+                </div>
+            }
+
+            @if (ViewBag.SuccessMessage != null)
+            {
+                <div class="alert alert-success">
+                    @ViewBag.SuccessMessage
+                </div>
+            }
             <h2 class="login-title">Đăng nhập</h2>
             <div class="tabs">
                 <div class="tab active">
@@ -33,7 +65,6 @@ binding dữ liệu từ form. *@
             </div>
 
             @using (Html.BeginForm("Login", "LoginAccess", FormMethod.Post))
-                @* Form sẽ POST dữ liệu đến action Login trong controller LoginAccess *@
             {
                 <input type="hidden" id="userRole" name="userRole" value="employee" />
                 <div class="form-group">

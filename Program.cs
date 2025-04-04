@@ -19,8 +19,8 @@ builder.Services.AddSession();
 // Thêm vào Program.cs hoặc Startup.cs
 builder.Services.AddTransient<IMyEmailSender>(provider =>
     new MyEmailSender(
-        "baoho1503@gmail.com",  // Thay bằng email của bạn
-        "xbuy fprn swrn ilhu"          // Thay bằng password hoặc App Password
+        "baoho1503@gmail.com",  
+        "xbuy fprn swrn ilhu"          
     ));
 
 builder.Services.AddControllersWithViews();

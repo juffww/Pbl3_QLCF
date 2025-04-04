@@ -23,13 +23,14 @@ namespace pbl3_QLCF.Controllers
         {
             if (HttpContext.Session.GetString("TenDangNhap") == null)
             {
-                return View();
+                if (TempData["SuccessMessage"] != null)
+                {
+                    ViewBag.SuccessMessage = TempData["SuccessMessage"];
+                }
             }
-            else
-            {
-                return RedirectToAction("Index", "Home");
-            }
+            return View();
         }
+
         [HttpPost]
         public IActionResult Login(NguoiDung user, string userRole)
         {
@@ -70,10 +71,12 @@ namespace pbl3_QLCF.Controllers
             }
             return View();
         }
-        //private void CheckEmail(string email)
-        //{
-        //    string EmailDb = db.NguoiDungs.FirstOrDefault(e => e.Email == email).ToString();
-        //}
+        private bool CheckEmail(string email)
+        {
+            var user = db.NguoiDungs.FirstOrDefault(e => e.Email == email);
+            return user != null;
+
+        }
         [HttpGet]
         public IActionResult ForgotPassword()
         {
@@ -88,6 +91,11 @@ namespace pbl3_QLCF.Controllers
                 return View();
             }
 
+            if(!CheckEmail(email))
+            {
+                ViewBag.Message = "No user database matched";
+                return View();
+            }
             // Tạo mã xác nhận
             Random rand = new Random();
             string code = rand.Next(100000, 999999).ToString();
@@ -108,7 +116,40 @@ namespace pbl3_QLCF.Controllers
             catch
             {
                 ModelState.AddModelError("", "Failed to send email. Please try again.");
+                ViewBag.Message = "Failed to send email. Please try again";
                 return View("VerifyCode");
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> ResendVerificationCode()
+        {
+            // Get the email from session
+            string email = HttpContext.Session.GetString("ChangePWEmail");
+
+            if (string.IsNullOrEmpty(email))
+            {
+                return Json(new { success = false, message = "Email not found" });
+            }
+
+            // Generate new code
+            Random rand = new Random();
+            string code = rand.Next(100000, 999999).ToString();
+
+            // Save the new code in session
+            HttpContext.Session.SetString("ChangePWCode", code);
+
+            // Send the email
+            string subject = "Password Recovery Code";
+            string message = $"Your verification code is: <strong>{code}</strong>";
+
+            try
+            {
+                await _emailSender.SendEmailAsync(email, subject, message);
+                return Json(new { success = true });
+            }
+            catch
+            {
+                return Json(new { success = false, message = "Failed to send email" });
             }
         }
         [HttpPost]
@@ -117,6 +158,7 @@ namespace pbl3_QLCF.Controllers
             if (string.IsNullOrEmpty(code))
             {
                 ModelState.AddModelError("", "Verification code is required");
+                ViewBag.ErrorMessage = "Verification code is required";
                 return View();
             }
 
@@ -126,11 +168,12 @@ namespace pbl3_QLCF.Controllers
             if (savedCode == null || savedCode != code)
             {
                 ModelState.AddModelError("", "Invalid verification code");
+                ViewBag.ErrorMessage = "Invalid verification code";
                 return View();
             }
 
             // Nếu code đúng, chuyển hướng đến trang đổi mật khẩu với state "Code sent"
-            return RedirectToAction("ResetPassword", new { state = "Code sent" });
+            return RedirectToAction("ResetPassword", new { state = "Change Password" });
         }
         [HttpGet]
         public IActionResult VerifyCode()
@@ -138,7 +181,7 @@ namespace pbl3_QLCF.Controllers
             return View();
         }
         [HttpGet]
-        public IActionResult ResetPassWord(string state)
+        public IActionResult ResetPassword(string state)
         {
             var model = new ChangePasswordViewModel
             {
@@ -148,41 +191,36 @@ namespace pbl3_QLCF.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ResetPassword(ChangePasswordViewModel model)
+        public IActionResult ResetPassword(ChangePasswordViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-
-            if (model.State == "Code sent")
+            string email = HttpContext.Session.GetString("ChangePWEmail");
+            if (model.newPassword != model.confirmPassword)
             {
-                string savedCode = HttpContext.Session.GetString("ChangePWCode");
-                if (savedCode != model.ConfirmCode)
-                {
-                    ModelState.AddModelError("ConfirmCode", "Invalid verification code");
-                    return View(model);
-                }
-
-                model.State = "Change Password";
+                ModelState.AddModelError("confirmPassword", "Mật khẩu xác nhận không khớp với mật khẩu mới");
+                ViewBag.ErrorMessage = "Mật khẩu xác nhận không khớp với mật khẩu mới";
                 return View(model);
             }
-            else if (model.State == "Change Password")
+
+            var user = db.NguoiDungs.FirstOrDefault(x => x.Email == email);
+            if (user != null)
             {
-                // Xử lý đổi mật khẩu ở đây
-                // Lấy email từ session
-                string email = HttpContext.Session.GetString("ChangePWEmail");
-
-                // TODO: Cập nhật mật khẩu mới trong database
-
-                // Xóa session
+                user.MatKhau = model.newPassword;
+                db.SaveChanges();
                 HttpContext.Session.Remove("ChangePWCode");
                 HttpContext.Session.Remove("ChangePWEmail");
-
-                return RedirectToAction("Login"); // Chuyển hướng đến trang đăng nhập
+                TempData["SuccessMessage"] = "Đã thay đổi mật khẩu thành công";
+                ViewBag.SuccessMessage = "Đã thay đổi mật khẩu thành công";
+                return RedirectToAction("Login", "LoginAccess");
             }
-
-            return View(model);
+            else
+            {
+                ModelState.AddModelError("", "User not found");
+                return View(model);
+            }
         }
     }
 }
