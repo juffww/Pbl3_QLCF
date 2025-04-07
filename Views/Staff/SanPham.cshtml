@@ -317,8 +317,8 @@
         .cart-section {
             flex: 1;
             min-width: 380px;
-            /* background-color: white; */
-            box-shadow: -3px 0 15px rgba(0, 0, 0, 0.08);
+            /* background-color: white;
+            box-shadow: -3px 0 15px rgba(0, 0, 0, 0.08); */
             padding: 25px;
             display: flex;
             flex-direction: column;
@@ -608,24 +608,6 @@
             font-weight: 500;
         }
 
-        /* Responsive adjustments */
-        /* @@media (max-width: 1200px) {
-            .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            }
-        }
-
-        @@media (max-width: 992px) {
-            .main-container {
-                flex-direction: column;
-                height: auto;
-            }
-
-            .cart-section {
-                min-width: 100%;
-                box-shadow: 0 -3px 15px rgba(0, 0, 0, 0.08);
-            }
-        } */
         .alert {
             padding: 15px;
             margin-bottom: 20px;
@@ -789,8 +771,8 @@
 
                 @{
                     double tamTinh = Model.DonHangHienTai.TongTien ?? 0;
-                    double thue = tamTinh * 0.1;
-                    double tongCong = tamTinh + thue;
+                    // double thue = tamTinh * 0.1;
+                    double tongCong = tamTinh /* + thue */;
                 }
         </div>
 
@@ -799,10 +781,10 @@
                 <div>Tạm tính:</div>
                 <div>@tamTinh.ToString("#,##0") VND</div>
             </div>
-            <div class="summary-row">
+           @*  <div class="summary-row">
                 <div>Thuế (10%):</div>
                 <div>@thue.ToString("#,##0") VND</div>
-            </div>
+            </div> *@
             <div class="summary-row total">
                 <div>Tổng cộng:</div>
                 <div>@tongCong.ToString("#,##0") VND</div>

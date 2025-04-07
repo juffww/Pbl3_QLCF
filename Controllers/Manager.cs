@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using pbl3_QLCF.Data;
 using pbl3_QLCF.Models.Authentication;
+using pbl3_QLCF.ViewModels;
 
 namespace pbl3_QLCF.Controllers
 {
@@ -204,11 +206,69 @@ namespace pbl3_QLCF.Controllers
             ViewBag.SearchString = search;
 
             var orders = query
-                .Skip((page - 1) * PageSize)
-                .Take(PageSize)
+                .Skip((page - 1) * PageOrderSize)
+                .Take(PageOrderSize)
                 .ToList();
 
             return View(orders);
+        }
+        [HttpGet]
+        public IActionResult XemDonHang(string id)
+        {
+            // Use Include to explicitly load the navigation properties
+            var order = _context.DonHangs
+                .Include(o => o.ChiTietDonHangs)
+                .ThenInclude(c => c.MaMonNavigation)
+                .FirstOrDefault(o => o.MaDh == id);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+            var KH = _context.KhachHangs.FirstOrDefault(kh => kh.MaKh == order.MaKh);
+            var NV = _context.NguoiDungs.Where(nv => nv.ChucVu == "Nhân viên").FirstOrDefault(nv => nv.MaNv == order.MaNv);
+            var model = new CTDHViewModel
+            {
+                MaDh = order.MaDh,
+                ThoigianDat = order.ThoiGianDat,
+                TrangThaiDh = order.TrangThaiDh,
+                TongTien = order.TongTien,
+                ThanhToan = order.ThanhToan,
+                MaNv = order.MaNv,
+                tenNv = NV.TenDangNhap,
+
+                MaKh = order.MaKh,
+                tenKh = KH.TenKh,
+                SDT = KH.Sdt,
+                CTDHs = order.ChiTietDonHangs.ToList()
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult XoaDonHang(string id)
+        {
+            try
+            {
+                var order = _context.DonHangs.Find(id);
+                if(order == null)
+                {
+                    TempData["ErrorMessage"] = "Không tìm thấy sản phẩm để xóa";
+                    return RedirectToAction("DonHang");
+                }
+                var orderDetails = _context.ChiTietDonHangs.Where(od => od.MaDh == id).ToList();
+                _context.ChiTietDonHangs.RemoveRange(orderDetails);
+                _context.DonHangs.Remove(order);
+                _context.SaveChanges();
+                TempData["SuccessMessage"] = "Đã xóa đơn hàng thành công";
+                return RedirectToAction("DonHang");
+            }
+            catch(Exception e)
+            {
+                TempData["ErrorMessage"] = "Lỗi khi xóa sản phẩm" + e.Message;
+                return RedirectToAction("DonHang");
+            }
         }
     }
 }

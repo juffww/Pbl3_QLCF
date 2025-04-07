@@ -247,12 +247,17 @@
         }
 
         .action-btn {
-            padding: 5px 10px;
-            border: none;
+            display: inline-block;
+            min-width: 60px;
+            text-align: center;
+            padding: 6px 12px;
+            margin: 0 2px;
             border-radius: 4px;
+            text-decoration: none;
             cursor: pointer;
-            margin-right: 5px;
-            font-weight: bold;
+            font-family: inherit;
+            font-size: inherit;
+            border: none;
         }
 
         .view-btn {
@@ -283,12 +288,25 @@
             background-color: white;
             cursor: pointer;
             text-decoration: none;
+            color: black;
         }
 
         .pagination-btn.active {
             background-color: #6d4c41;
             color: white;
             border-color: #6d4c41;
+        }
+        alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        .alert-success {
+            color: #3c763d;
+            background-color: #dff0d8;
+            border-color: #d6e9c6;
         }
     </style>
 </head>
@@ -298,7 +316,19 @@
     @{
         Html.RenderPartial("~/Views/Manager/sharedAll.cshtml");
     }
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+        </div>
+    }
 
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+        </div>
+    }
     <main class="content">
         <h1 class="page-title">Quản lý Đơn Hàng</h1>
 
@@ -311,7 +341,6 @@
                     <button type="submit" class="search-button" id="search-btn">Tìm</button>
                 </form>
             </div>
-            <button class="add-button"><i>+</i> Thêm Đơn Hàng</button>
         </div>
 
         <div class="category-filter">
@@ -323,8 +352,6 @@
                 class="category-item @(ViewBag.CurrentCategory == "processing" ? "active" : "")">Đang xử lý</a>
             <a href="@Url.Action("DonHang", new { category = "completed", search = ViewBag.SearchString })" 
                 class="category-item @(ViewBag.CurrentCategory == "completed" ? "active" : "")">Hoàn thành</a>
-            <a href="@Url.Action("DonHang", new { category = "cancelled", search = ViewBag.SearchString })" 
-                class="category-item @(ViewBag.CurrentCategory == "cancelled" ? "active" : "")">Đã hủy</a>
         </div>
 
         <table class="orders-table">
@@ -354,9 +381,13 @@
                         <td>@item.ThanhToan</td>
                             <td><span class="status status-@(item.TrangThaiDh?.ToLower().Replace(" ", "-"))">@item.TrangThaiDh</span></td>
                         <td>
-                            <button class="action-btn view-btn" onclick="location.href='@Url.Action("XemDonHang", new { id = item.MaDh })'">Xem</button>
-                            <button class="action-btn edit-btn" onclick="location.href='@Url.Action("SuaDonHang", new { id = item.MaDh })'">Sửa</button>
-                            <button class="action-btn delete-btn" onclick="confirmDelete('@item.MaDh')">Xóa</button>
+                            <a href="@Url.Action("XemDonHang", new { id = item.MaDh})" class="action-btn view-btn">Xem</a>
+                            <a href="@Url.Action("SuaDonHang", new { id = item.MaDh})" class="action-btn edit-btn">Sửa</a>
+                            <form method="post" action="@Url.Action("XoaDonHang", new { id = item.MaDh})" style="display: inline;"
+                                onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này không?');">
+                                    @Html.AntiForgeryToken()
+                                <button type="submit" class="action-btn delete-btn" >Xóa</button>
+                            </form>
                         </td>
                     </tr>
                 }
@@ -365,18 +396,53 @@
 
         <div class="pagination">
             @{
-                if (ViewBag.CurrentPage > 1)
+                int currentPage = ViewBag.CurrentPage;
+                int totalPages = ViewBag.TotalPages;
+                if (currentPage > 1)
+                {
+                    <a href="@Url.Action("DonHang", new { page = 1, category = ViewBag.currentCategory, search = ViewBag.SearchString })" class="pagination-btn">&lt;&lt</a>
+                }
+                if (currentPage > 1)
                 {
                     <a href="@Url.Action("DonHang", new { page = ViewBag.CurrentPage - 1, category = ViewBag.CurrentCategory, search = ViewBag.SearchString })" class="pagination-btn">&lt</a>
                 }
-                for (int i = 1; i <= ViewBag.TotalPages; i++)
+                int startPage = Math.Max(1, currentPage - 2); // Show 2 pages before current
+                int endPage = Math.Min(totalPages, currentPage + 2); // Show 2 pages after current
+
+                if (endPage - startPage + 1 < 5 && totalPages >= 5)
+                {
+                    if (currentPage <= 3)
+                    {
+                        // Nếu đang ở gần đầu, hiển thị 5 trang đầu
+                        endPage = Math.Min(5, totalPages);
+                        startPage = 1;
+                    }
+                    else
+                    {
+                        // Nếu đang ở gần cuối, hiển thị 5 trang cuối
+                        startPage = Math.Max(1, totalPages - 4);
+                        endPage = totalPages;
+                    }
+                }
+                for (int i = startPage; i <= endPage; i++)
                 {
                     <a href="@Url.Action("DonHang", new { page = i, category = ViewBag.CurrentCategory, search = ViewBag.SearchString })" 
-                       class="pagination-btn @(ViewBag.CurrentPage == i ? "active" : "")">@i</a>
+                        class="pagination-btn @(ViewBag.CurrentPage == i ? "active" : "")">@i</a>
                 }
-                if (ViewBag.CurrentPage < ViewBag.TotalPages)
+
+                // Hiển thị nút trang sau [>]
+                if (currentPage < totalPages)
                 {
-                    <a href="@Url.Action("DonHang", new { page = ViewBag.CurrentPage + 1, category = ViewBag.CurrentCategory, search = ViewBag.SearchString })" class="pagination-btn">&gt</a>
+                    <a href="@Url.Action("DonHang", new { page = currentPage + 1, category = ViewBag.CurrentCategory, search = ViewBag.SearchString })" class="pagination-btn">
+                        &gt;
+                    </a>
+                }
+                //Hiển thị nút trang đầu cùng [>>]
+                if (currentPage < totalPages)
+                {
+                    <a href="@Url.Action("DonHang", new { page = totalPages, category = ViewBag.CurrentCategory, search = ViewBag.SearchString})" class="pagination-btn">
+                        &gt;&gt;
+                    </a>
                 }
             }
         </div>

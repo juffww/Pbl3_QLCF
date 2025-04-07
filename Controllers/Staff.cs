@@ -41,17 +41,10 @@ namespace pbl3_QLCF.Controllers
             // Get the IDs of filtered products
             var filteredProductIds = filteredProducts.Select(p => p.MaMon).ToList();
 
-            // Get products in cart that might not be in the filtered list
-            //var cartProducts = _context.ThucDons
-            //    .Where(t => cartProductIds.Contains(t.MaMon) && !filteredProductIds.Contains(t.MaMon))
-            //    .ToList();
-
             // Get ALL products in cart
             var cartProducts = _context.ThucDons
                 .Where(t => cartProductIds.Contains(t.MaMon))
                 .ToList();
-            // Combine both lists
-            //var allProducts = filteredProducts.Union(cartProducts).ToList();
 
             var model = new SanPhamViewModel
             {
@@ -320,6 +313,8 @@ namespace pbl3_QLCF.Controllers
 
         private DonHang CreateNewOrder()
         {
+            //var tenNv = HttpContext.Session.GetString("TenDangNhap");
+            //var MaNV = _context.NguoiDungs.FirstOrDefault(nv => nv.TenDangNhap == tenNv);
             return new DonHang
             {
                 MaDh = GenerateNewOrderId(),
@@ -327,7 +322,8 @@ namespace pbl3_QLCF.Controllers
                 TongTien = 0,
                 ThanhToan = "Chưa thanh toán",
                 TrangThaiDh = "Mới",
-                ChiTietDonHangs = new List<ChiTietDonHang>()
+                ChiTietDonHangs = new List<ChiTietDonHang>(),
+                //MaNv = MaNV.MaNv
             };
         }
 
