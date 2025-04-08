@@ -771,8 +771,7 @@
 
                 @{
                     double tamTinh = Model.DonHangHienTai.TongTien ?? 0;
-                    // double thue = tamTinh * 0.1;
-                    double tongCong = tamTinh /* + thue */;
+                    double tongCong = tamTinh;
                 }
         </div>
 
@@ -781,10 +780,6 @@
                 <div>Tạm tính:</div>
                 <div>@tamTinh.ToString("#,##0") VND</div>
             </div>
-           @*  <div class="summary-row">
-                <div>Thuế (10%):</div>
-                <div>@thue.ToString("#,##0") VND</div>
-            </div> *@
             <div class="summary-row total">
                 <div>Tổng cộng:</div>
                 <div>@tongCong.ToString("#,##0") VND</div>

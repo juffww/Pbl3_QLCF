@@ -25,6 +25,7 @@ builder.Services.AddTransient<IMyEmailSender>(provider =>
 
 builder.Services.AddControllersWithViews();
 // Các cấu hình khác...
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllersWithViews();
 var app = builder.Build();
 

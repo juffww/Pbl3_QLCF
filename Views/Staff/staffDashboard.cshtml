@@ -1,7 +1,8 @@
 ﻿@{
     Layout = null;
 }
-
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -123,8 +124,8 @@
       <div class="user-section">
         <div class="user-avatar">NV</div>
         <div class="user-info">
-          <div class="user-name">Nguyễn Văn A</div>
-          <div class="user-role">Nhân viên</div>
+          <div class="user-name">@Context.Session.GetString("Ten")</div>
+          <div class="user-role">@Context.Session.GetString("UserRole")</div>
         </div>
       </div>
     </div>

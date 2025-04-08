@@ -6,6 +6,7 @@
     string currentController = ViewContext.RouteData.Values["controller"]?.ToString();
     string currentAction = ViewContext.RouteData.Values["action"]?.ToString();
 }
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -13,26 +14,113 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - pbl3_QLCF</title>
     <link rel="stylesheet" type="text/css" href="~/css/Staff/Dashboard.css" />
+    <style>
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background-color: #8b5a2b;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: 500;
+            color: #4a2c0f;
+            font-size: 0.9rem;
+        }
+
+        .user-role {
+            font-size: 0.8rem;
+            color: #a67c52;
+        }
+
+        .top-navbar {
+            justify-content: space-between;
+            padding: 0 1rem;
+        }
+
+        /* Tạo dropdown khi hover vào user menu */
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            min-width: 150px;
+            display: none;
+            z-index: 100;
+        }
+
+        .user-menu:hover .user-dropdown {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 0.7rem 1rem;
+            color: #4a2c0f;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background-color: #fff8ea;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background-color: #f0e6d2;
+            margin: 0.3rem 0;
+        }
+    </style>
 </head>
 <body>
     <!-- Top Navbar instead of Side Menu -->
     <nav class="top-navbar">
-      <div class="logo-section">
-        <div class="brand-logo">AC</div>
-        <div class="brand-name">AromaCafé</div>
-      </div>
-      <div class="top-menu">
-        <a href="/Staff/staffDashboard" class="top-menu-item @(currentController == "Staff" && currentAction == "staffDashboard" ? "active" : "")">Dashboard</a>
-        <a href="/Staff/DonHang" class="top-menu-item @(currentController == "Staff" && currentAction == "DonHang" ? "active" : "")">Đơn hàng</a>
-        <a href="/Staff/SanPham" class="top-menu-item @(currentController == "Staff" && currentAction == "SanPham" ? "active" : "")">Sản phẩm</a>
-        <a href="/Staff/KhachHang" class="top-menu-item @(currentController == "Staff" && currentAction == "KhachHang" ? "active" : "")">Khách hàng</a>
-        <a href="/Staff/KhuyenMai" class="top-menu-item @(currentController == "Staff" && currentAction == "KhuyenMai" ? "active" : "")">Khuyến mãi</a>
-        <a href="/Staff/BaoCao" class="top-menu-item @(currentController == "Staff" && currentAction == "BaoCao" ? "active" : "")">Báo cáo</a>
-      </div>
-      <div class="search-section">
-        <input type="text" class="search-box" placeholder="Tìm kiếm...">
-        <div>?</div>
-      </div>
+        <div class="logo-section">
+            <div class="brand-logo">AC</div>
+            <div class="brand-name">AromaCafé</div>
+        </div>
+        <div class="top-menu">
+            <a href="/Staff/staffDashboard" class="top-menu-item @(currentController == "Staff" && currentAction == "staffDashboard" ? "active" : "")">Dashboard</a>
+            <a href="/Staff/DonHang" class="top-menu-item @(currentController == "Staff" && currentAction == "DonHang" ? "active" : "")">Đơn hàng</a>
+            <a href="/Staff/SanPham" class="top-menu-item @(currentController == "Staff" && currentAction == "SanPham" ? "active" : "")">Sản phẩm</a>
+            <a href="/Staff/KhachHang" class="top-menu-item @(currentController == "Staff" && currentAction == "KhachHang" ? "active" : "")">Khách hàng</a>
+            <a href="/Staff/KhuyenMai" class="top-menu-item @(currentController == "Staff" && currentAction == "KhuyenMai" ? "active" : "")">Khuyến mãi</a>
+            <a href="/Staff/BaoCao" class="top-menu-item @(currentController == "Staff" && currentAction == "BaoCao" ? "active" : "")">Báo cáo</a>
+        </div>
+        <div class="user-menu">
+            <div class="user-avatar">NV</div>
+            <div class="user-info">
+                <div class="user-name">@Context.Session.GetString("Ten")</div>
+                <div class="user-role">@Context.Session.GetString("UserRole")</div>
+            </div>
+            <div class="user-dropdown">
+                <a href="/Staff/Profile" class="dropdown-item">Thông tin cá nhân</a>
+                <a href="/Staff/Settings" class="dropdown-item">Cài đặt</a>
+                <div class="dropdown-divider"></div>
+                <a href="/Account/Logout" class="dropdown-item">Đăng xuất</a>
+            </div>
+        </div>
     </nav>
 </body>
 </html>

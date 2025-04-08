@@ -235,7 +235,7 @@ namespace pbl3_QLCF.Controllers
                 TongTien = order.TongTien,
                 ThanhToan = order.ThanhToan,
                 MaNv = order.MaNv,
-                tenNv = NV.TenDangNhap,
+                tenNv = NV.HoTen,
 
                 MaKh = order.MaKh,
                 tenKh = KH.TenKh,

@@ -6,6 +6,8 @@
     string currentController = ViewContext.RouteData.Values["controller"]?.ToString();
     string currentAction = ViewContext.RouteData.Values["action"]?.ToString();
 }
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -54,8 +56,8 @@
             <div class="user-info">
                 <div class="user-avatar">QL</div>
                 <div>
-                    <div class="user-name">Hồ Quốc Bảo</div>
-                    <div class="user-role">Quản lý</div>
+                    <div class="user-name">@Context.Session.GetString("Ten")</div>
+                    <div class="user-role">@Context.Session.GetString("UserRole")</div>
                 </div>
             </div>
         </div>

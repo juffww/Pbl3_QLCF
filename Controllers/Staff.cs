@@ -2,6 +2,7 @@
 using pbl3_QLCF.ViewModels;
 using pbl3_QLCF.Data;
 using pbl3_QLCF.Models.Authentication;
+using Microsoft.EntityFrameworkCore;
 namespace pbl3_QLCF.Controllers
 {
     //[Authentication]
@@ -13,11 +14,7 @@ namespace pbl3_QLCF.Controllers
         {
             _context = context;
         }
-        [HttpGet]
-        public IActionResult DonHang()
-        {
-            return View();
-        }
+        
         [HttpGet]
         public IActionResult staffDashboard()
         {
@@ -388,6 +385,30 @@ namespace pbl3_QLCF.Controllers
                 .Distinct()
                 .Where(t => t != null)
                 .ToList();
+        }
+
+        //------------------DonHang---------
+        [HttpGet]
+        public IActionResult DonHang(string page = "1", string category = "all")
+        {
+            IQueryable<DonHang> query = _context.DonHangs;
+            if(category != "all")
+            {
+                switch(category)
+                {
+                    case "Mới": query = query.Where(q => q.TrangThaiDh == "Mới"); break;
+                    case "Đang xử lý": query = query.Where(q => q.TrangThaiDh == "Đang xử lý"); break;
+                    case "Hoàn thành": query = query.Where(q => q.TrangThaiDh == "Hoàn thành"); break;
+                }
+            }
+            var donHang = query.Include(d => d.MaKhNavigation)
+                                .Include(d => d.ChiTietDonHangs)
+                                .ThenInclude(d => d.MaMonNavigation)
+                                .OrderByDescending(d => d.ThoiGianDat)
+                                .ToList();
+            ViewBag.currentPage = page;
+            ViewBag.currentCategory = category;
+            return View(donHang);
         }
     }
 }

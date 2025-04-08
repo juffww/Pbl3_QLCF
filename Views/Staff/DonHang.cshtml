@@ -1,0 +1,496 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AromaCafé - Quản Lý Đơn Hàng</title>
+    <link rel="stylesheet" type="text/css" href="~/css/Staff/Dashboard.css" />
+    <style>
+        :root {
+            --primary-color: #8C5E2A;
+            --primary-dark: #704A21;
+            --primary-light: #A37B4F;
+            --accent-color: #F8F3E9;
+            --text-color: #4A3520;
+            --success-color: #5C914E;
+            --warning-color: #E09E50;
+            --danger-color: #D05D5D;
+            --gray-light: #F5F5F5;
+            --gray: #E0E0E0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--accent-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .brand-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin: 0 10px;
+        }
+
+        .nav-links li a {
+            text-decoration: none;
+            color: var(--text-color);
+            padding: 10px 15px;
+            font-weight: 500;
+        }
+
+        .nav-links li a.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 5px;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .search-box {
+            padding: 8px 15px;
+            border: 1px solid var(--gray);
+            border-radius: 20px;
+            width: 200px;
+            outline: none;
+        }
+
+        .help-icon {
+            margin-left: 10px;
+            font-size: 20px;
+            color: var(--primary-color);
+        }
+
+        /* Main content */
+        main {
+            padding: 20px 0;
+        }
+
+        .page-title {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: var(--primary-color);
+        }
+
+        .filter-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--gray);
+            text-decoration: none;
+            color: black;
+        }
+
+        .filter-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 500;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+            text-decoration: none;
+            color: black;
+        }
+
+        .filter-tab.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .filter-tab.link,
+        .filter-tab.hover,
+        .filter-tab.focus,
+        .filter-tab.visited,
+        .filter-tab.active{
+            text-decoration: none;
+            outline: none;
+        }
+        .order-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .order-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .order-card:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .order-id {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .order-customer {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .order-status {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 500;
+            position: static !important;
+            top: auto !important;
+        }
+
+        .status-new {
+            background-color: #FFEFD5;
+            color: #E09E50;
+        }
+
+        .status-processing {
+            background-color: #E8F4FD;
+            color: #4A90E2;
+        }
+
+        .status-completed {
+            background-color: #EDF7ED;
+            color: #5C914E;
+        }
+
+        .order-time {
+            font-size: 12px;
+            color: #777;
+            margin-bottom: 10px;
+        }
+
+        .order-items {
+            margin-bottom: 15px;
+        }
+
+        .order-item {
+            margin-bottom: 5px;
+        }
+
+        .order-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-process {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-process:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-complete {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-complete:hover {
+            background-color: #4A7A3E;
+        }
+
+        .btn-view {
+            background-color: var(--gray-light);
+            color: var(--text-color);
+        }
+
+        .btn-view:hover {
+            background-color: var(--gray);
+        }
+
+        /* Pagination styles */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .pagination-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+            border-radius: 5px;
+            background-color: white;
+            color: var(--text-color);
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+        }
+
+        .pagination-item:hover {
+            background-color: var(--gray-light);
+        }
+
+        .pagination-item.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .pagination-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+            border-radius: 5px;
+            background-color: white;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+        }
+
+        .pagination-arrow:hover {
+            background-color: var(--gray-light);
+        }
+
+        .pagination-arrow:disabled,
+        .pagination-arrow.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .pagination-info {
+            margin-right: 10px;
+            color: #777;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        @@media (max-width: 768px) {
+            .order-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .order-status {
+                align-self: flex-start;
+            }
+
+            .order-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+@using pbl3_QLCF.Data;
+@model IEnumerable<DonHang>
+<body>
+    @{
+        Html.RenderPartial("~/Views/Staff/sharedAll.cshtml");
+    }
+    <main class="container">
+        <h1 class="page-title">Quản lý đơn hàng</h1>
+        <div class="filter-tabs">
+            <a class="filter-tab @(ViewBag.CurrentCategory == "all" ? "active" : "")"
+                href="@Url.Action("DonHang",new {page = ViewBag.CurrentPage, category = "all"})">Tất cả</a>
+            <a class="filter-tab @(ViewBag.CurrentCategory == "Mới" ? "active" : "")"
+                href="@Url.Action("DonHang", new { page = ViewBag.CurrentPage, category = "Mới"})">Mới</a>
+            <a class="filter-tab @(ViewBag.CurrentCategory == "Đang xử lý" ? "active" : "")"
+                href="@Url.Action("DonHang",new {page = ViewBag.CurrentPage, category = "Đang xử lý"})">Đang xử lý</a>
+            <a class="filter-tab @(ViewBag.CurrentCategory == "Hoàn thành" ? "active" : "")"
+                href="@Url.Action("DonHang", new { page = ViewBag.CurrentPage, category = "Hoàn thành"})">Hoàn thành</a>
+        </div>
+
+        <div class="order-list">
+            @foreach (var item in Model)
+            {
+                <div class="order-card">
+                    <div class="order-header">
+                        <span class="order-id">@item.MaDh</span>
+                        <span class="order-customer">@item.MaKhNavigation.TenKh</span>
+                        <span class="order-status status-@(
+                            item.TrangThaiDh == "Mới" ? "new" :
+                            item.TrangThaiDh == "Đang xử lý" ? "processing" : "completed"
+                        )">@item.TrangThaiDh</span>
+                    </div>
+                    <div class="order-time">@item.ThoiGianDat</div>
+                    <div class="order-items">
+                    @foreach (var order in item.ChiTietDonHangs)
+                    {
+                        <div class="order-item">@order.SoLuong x @order.MaMonNavigation.TenMon</div>
+                    }
+                    </div>
+                    <div class="order-actions">
+                        <button class="btn btn-view">Xem chi tiết</button>
+                        <button class="btn btn-process">Xử lý đơn</button>
+                    </div>
+                </div>        
+            }
+        </div>
+
+        <!-- Pagination control -->
+        <div class="pagination">
+            <div class="pagination-arrow disabled">&lt;</div>
+            <div class="pagination-item active">1</div>
+            <div class="pagination-item">2</div>
+            <div class="pagination-item">3</div>
+            <div class="pagination-item">...</div>
+            <div class="pagination-item">6</div>
+            <div class="pagination-arrow">&gt;</div>
+        </div>
+    </main>
+
+   @*  <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab filter functionality
+            const filterTabs = document.querySelectorAll('.filter-tab');
+            filterTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    filterTabs.forEach(t => t.classList.remove('active'));
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+
+                    // Simulate filtering orders (in a real app, this would fetch data)
+                    console.log('Filtering by:', this.textContent.trim());
+
+                    // Reset pagination to page 1 when changing filters
+                    const paginationItems = document.querySelectorAll('.pagination-item');
+                    paginationItems.forEach(item => item.classList.remove('active'));
+                    paginationItems[0].classList.add('active');
+                });
+            });
+
+            // Order status change functionality
+            const processButtons = document.querySelectorAll('.btn-process');
+            const completeButtons = document.querySelectorAll('.btn-complete');
+
+            // Function for process buttons
+            processButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const orderCard = this.closest('.order-card');
+                    const statusSpan = orderCard.querySelector('.order-status');
+                    const actionDiv = orderCard.querySelector('.order-actions');
+
+                    // Change status to "Processing"
+                    statusSpan.textContent = 'Đang xử lý';
+                    statusSpan.classList.remove('status-new');
+                    statusSpan.classList.add('status-processing');
+
+                    // Replace button
+                    actionDiv.innerHTML = `
+                        <button class="btn btn-view">Xem chi tiết</button>
+                        <button class="btn btn-complete">Hoàn thành</button>
+                    `;
+
+                    // Add event listener to the new complete button
+                    const newCompleteButton = actionDiv.querySelector('.btn-complete');
+                    addCompleteEvent(newCompleteButton);
+                });
+            });
+
+            // Function to add event listeners to complete buttons
+            function addCompleteEvent(button) {
+                button.addEventListener('click', function() {
+                    const orderCard = this.closest('.order-card');
+                    const statusSpan = orderCard.querySelector('.order-status');
+                    const actionDiv = orderCard.querySelector('.order-actions');
+
+                    // Change status to "Complete"
+                    statusSpan.textContent = 'Hoàn thành';
+                    statusSpan.classList.remove('status-processing');
+                    statusSpan.classList.add('status-completed');
+
+                    // Remove the complete button
+                    actionDiv.innerHTML = `
+                        <button class="btn btn-view">Xem chi tiết</button>
+                    `;
+                });
+            }
+
+            // Add events to existing complete buttons
+            completeButtons.forEach(button => {
+                addCompleteEvent(button);
+            });
+        });
+    </script> *@
+</body>
+</html>
