@@ -159,12 +159,6 @@ namespace pbl3_QLCF.Controllers
             }
         }
         
-
-        public IActionResult KhachHang()
-        {
-            return View();
-        }
-
         //-----------------------------Đơn Hàng----------------------------------------------------
         [HttpGet]
         public IActionResult DonHang(int page = 1, string category = "all", string search = "")
@@ -236,7 +230,7 @@ namespace pbl3_QLCF.Controllers
                 ThanhToan = order.ThanhToan,
                 MaNv = order.MaNv,
                 tenNv = NV.HoTen,
-
+                MaBan = order.MaBan,
                 MaKh = order.MaKh,
                 tenKh = KH.TenKh,
                 SDT = KH.Sdt,
@@ -269,6 +263,26 @@ namespace pbl3_QLCF.Controllers
                 TempData["ErrorMessage"] = "Lỗi khi xóa sản phẩm" + e.Message;
                 return RedirectToAction("DonHang");
             }
+        }
+        //---------------------------------Khách hàng---------
+        [HttpGet]
+        public IActionResult KhachHang(int page = 1, string category = "all", string search = "")
+        {
+            IQueryable<KhachHang> query = _context.KhachHangs;
+            if(category != "all")
+            {
+                query = query.Where(q => q.LoaiKH == category);
+            }
+            if(!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(q => q.TenKh.Contains(search));
+            }
+            var KHs = query.ToList();
+
+            ViewBag.CurrentPage = page;
+            ViewBag.CurrentCategory = category;
+            ViewBag.SearchString = search;
+            return View(KHs);
         }
     }
 }

@@ -296,7 +296,7 @@
             color: white;
             border-color: #6d4c41;
         }
-        alert {
+        .alert {
             padding: 15px;
             margin-bottom: 20px;
             border: 1px solid transparent;
@@ -319,14 +319,14 @@
     @if (TempData["SuccessMessage"] != null)
     {
         <div class="alert alert-success">
-        @TempData["SuccessMessage"]
+            @TempData["SuccessMessage"]
         </div>
     }
 
     @if (TempData["ErrorMessage"] != null)
     {
         <div class="alert alert-danger">
-        @TempData["ErrorMessage"]
+            @TempData["ErrorMessage"]
         </div>
     }
     <main class="content">
@@ -377,7 +377,7 @@
                         <td>@item.MaNv</td>
                         <td>@item.MaBan</td>
                         <td>@(item.ThoiGianDat?.ToString("dd/MM/yyyy HH:mm"))</td>
-                        <td>@item.TongTien?.ToString("#,###") đ</td>
+                        <td>@item.TongTien?.ToString("#,###") VND</td>
                         <td>@item.ThanhToan</td>
                             <td><span class="status status-@(item.TrangThaiDh?.ToLower().Replace(" ", "-"))">@item.TrangThaiDh</span></td>
                         <td>

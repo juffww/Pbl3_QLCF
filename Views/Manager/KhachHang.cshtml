@@ -66,11 +66,15 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 1.5rem;
+            color: black;
         }
 
 
         .filter-tabs {
             display: flex;
+            color: black;
+            text-decoration: none;
+            
         }
 
         .filter-tab {
@@ -82,8 +86,17 @@
         }
 
         .filter-tab.active {
-            background-color: var(--primary);
+            background-color: var(--primary) !important;
             color: white;
+        }
+
+        .filter-tab:focus,
+        .filter-tab:hover,
+        .filter-tab:link,
+        .filter-tab:visited,
+        .filter-tab:active {
+            text-decoration: none;
+            outline: none;
         }
 
         .add-button {
@@ -95,7 +108,7 @@
             cursor: pointer;
             display: flex;
             align-items: center;
-        }
+            }
 
         .add-button:before {
             content: "+";
@@ -206,6 +219,8 @@
         }
     </style>
 </head>
+@using pbl3_QLCF.Data;
+@model IEnumerable<KhachHang>
 <body>
     @{
         Html.RenderPartial("~/Views/Manager/sharedAll.cshtml");
@@ -215,147 +230,50 @@
         <h1 class="page-title">Quản lý Khách Hàng</h1>
 
         <!-- Search bar -->
-        <div class="search-bar">
-            <input type="text" class="search-input" placeholder="Tìm kiếm khách hàng...">
-            <button class="search-button">Tìm</button>
-        </div>
-
+        <form method="get" action="@Url.Action("KhachHang")" class="search-bar">
+            <input type="text" name="search" class = "search-input" placeholder = "Tìm kiếm khách hàng" value="@ViewBag.searchString" />
+            <input type="hidden" name="page" value="1" />
+            <input type="hidden" name="category" value="@ViewBag.currentCategory" />
+            <button type="submit" class="search-button">Tìm</button>
+        </form>
         <!-- Action bar -->
         <div class="action-bar">
             <div class="filter-tabs">
-                <div class="filter-tab active">Tất cả</div>
-                <div class="filter-tab">Thường xuyên</div>
-                <div class="filter-tab">VIP</div>
-                <div class="filter-tab">Mới</div>
-                <div class="filter-tab">Không hoạt động</div>
+                <a class="filter-tab @(ViewBag.category == "all" ? "active" : "")"
+                    href="@Url.Action("KhachHang", new { page=1, category="all", search= ViewBag.searchString}) ">Tất cả</a>
+                <a class="filter-tab @(ViewBag.category == "Thường xuyên" ? "active" : "")"
+                    href="@Url.Action("KhachHang", new { page=1, category="Thường xuyên", search=ViewBag.searchString})">Thường xuyên</a>
+                <a class="filter-tab @(ViewBag.category == "Mới" ? "active" : "")"
+                    href="@Url.Action("KhachHang", new { page=1, category="Mới", search=ViewBag.searchString})">Mới</a>
+                <a class="filter-tab @(ViewBag.category == "VIP" ? "acitve" : "")"
+                    href="@Url.Action("KhachHang", new { page=1, category="VIP", search=ViewBag.searchString})">VIP</a>
+                <a class="filter-tab @(ViewBag.category == "Không hoạt động" ? "acitve" : "")"
+                    href="@Url.Action("KhachHang", new { page=1, category="Không hoạt động", search=ViewBag.searchString})">Không hoạt động</a>
             </div>
-
-            <button class="add-button">Thêm Khách Hàng</button>
         </div>
 
         <!-- Customer grid -->
         <div class="customer-grid">
-            <!-- Customer card 1 -->
-            <div class="customer-card">
-                <div class="status-badge">VIP</div>
-                <div class="customer-name">Nguyễn Văn An</div>
-                <div class="customer-info">
-                    <p>Mã KH: KH001</p>
-                    <p>SĐT: 0901234567</p>
-                    <p>Email: nguyenvanan@email.com</p>
-                    <p>Ngày sinh: 15/05/1985</p>
+            @foreach(var item in Model)
+            {
+                <div class="customer-card">
+                    <div class="status-badge">@item.LoaiKH</div>
+                    <div class="customer-name">@item.TenKh</div>
+                    <div class="customer-info">
+                        <p>Mã KH: @item.MaKh</p>
+                        <p>SĐT: @item.Sdt</p>
+                    </div>
+                    <div class="loyalty-points">
+                        <span class="loyalty-label">Điểm tích lũy</span>
+                        <span class="loyalty-value">@item.DiemTichLuy</span>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="edit-button">Chỉnh sửa</button>
+                        <button class="history-button">Lịch sử mua</button>
+                    </div>
                 </div>
-                <div class="loyalty-points">
-                    <span class="loyalty-label">Điểm tích lũy:</span>
-                    <span class="loyalty-value">520</span>
-                </div>
-                <div class="action-buttons">
-                    <button class="edit-button">Chỉnh sửa</button>
-                    <button class="history-button">Lịch sử mua</button>
-                </div>
-            </div>
-
-            <!-- Customer card 2 -->
-            <div class="customer-card">
-                <div class="status-badge">Thường xuyên</div>
-                <div class="customer-name">Trần Thị Bình</div>
-                <div class="customer-info">
-                    <p>Mã KH: KH002</p>
-                    <p>SĐT: 0912345678</p>
-                    <p>Email: tranthib@email.com</p>
-                    <p>Ngày sinh: 20/08/1990</p>
-                </div>
-                <div class="loyalty-points">
-                    <span class="loyalty-label">Điểm tích lũy:</span>
-                    <span class="loyalty-value">320</span>
-                </div>
-                <div class="action-buttons">
-                    <button class="edit-button">Chỉnh sửa</button>
-                    <button class="history-button">Lịch sử mua</button>
-                </div>
-            </div>
-
-            <!-- Customer card 3 -->
-            <div class="customer-card">
-                <div class="status-badge">Mới</div>
-                <div class="customer-name">Lê Minh Cường</div>
-                <div class="customer-info">
-                    <p>Mã KH: KH003</p>
-                    <p>SĐT: 0978123456</p>
-                    <p>Email: leminhc@email.com</p>
-                    <p>Ngày sinh: 05/03/1992</p>
-                </div>
-                <div class="loyalty-points">
-                    <span class="loyalty-label">Điểm tích lũy:</span>
-                    <span class="loyalty-value">80</span>
-                </div>
-                <div class="action-buttons">
-                    <button class="edit-button">Chỉnh sửa</button>
-                    <button class="history-button">Lịch sử mua</button>
-                </div>
-            </div>
-
-            <!-- Customer card 4 -->
-            <div class="customer-card">
-                <div class="status-badge">Thường xuyên</div>
-                <div class="customer-name">Phạm Thị Dung</div>
-                <div class="customer-info">
-                    <p>Mã KH: KH004</p>
-                    <p>SĐT: 0936789123</p>
-                    <p>Email: phamthid@email.com</p>
-                    <p>Ngày sinh: 12/11/1988</p>
-                </div>
-                <div class="loyalty-points">
-                    <span class="loyalty-label">Điểm tích lũy:</span>
-                    <span class="loyalty-value">245</span>
-                </div>
-                <div class="action-buttons">
-                    <button class="edit-button">Chỉnh sửa</button>
-                    <button class="history-button">Lịch sử mua</button>
-                </div>
-            </div>
-
-            <!-- Customer card 5 -->
-            <div class="customer-card">
-                <div class="status-badge">Không hoạt động</div>
-                <div class="customer-name">Hoàng Văn Em</div>
-                <div class="customer-info">
-                    <p>Mã KH: KH005</p>
-                    <p>SĐT: 0945678912</p>
-                    <p>Email: hoangvane@email.com</p>
-                    <p>Ngày sinh: 25/07/1995</p>
-                </div>
-                <div class="loyalty-points">
-                    <span class="loyalty-label">Điểm tích lũy:</span>
-                    <span class="loyalty-value">140</span>
-                </div>
-                <div class="action-buttons">
-                    <button class="edit-button">Chỉnh sửa</button>
-                    <button class="history-button">Lịch sử mua</button>
-                </div>
-            </div>
-
-            <!-- Customer card 6 -->
-            <div class="customer-card">
-                <div class="status-badge">VIP</div>
-                <div class="customer-name">Vũ Thị Giang</div>
-                <div class="customer-info">
-                    <p>Mã KH: KH006</p>
-                    <p>SĐT: 0923456789</p>
-                    <p>Email: vuthig@email.com</p>
-                    <p>Ngày sinh: 18/02/1987</p>
-                </div>
-                <div class="loyalty-points">
-                    <span class="loyalty-label">Điểm tích lũy:</span>
-                    <span class="loyalty-value">750</span>
-                </div>
-                <div class="action-buttons">
-                    <button class="edit-button">Chỉnh sửa</button>
-                    <button class="history-button">Lịch sử mua</button>
-                </div>
-            </div>
+            }
         </div>
-
         <!-- Pagination -->
         <div class="pagination">
             <button class="page-button">«</button>

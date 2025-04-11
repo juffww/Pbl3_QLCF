@@ -71,6 +71,14 @@
             "MimeKit": {
               "target": "Package",
               "version": "[4.11.0, )"
+            },
+            "X.PagedList": {
+              "target": "Package",
+              "version": "[10.5.3, )"
+            },
+            "X.PagedList.Mvc.Core": {
+              "target": "Package",
+              "version": "[10.5.3, )"
             }
           },
           "imports": [

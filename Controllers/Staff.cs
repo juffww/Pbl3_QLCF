@@ -195,17 +195,17 @@ namespace pbl3_QLCF.Controllers
             return RedirectToAction("SanPham");
         }
 
-        [HttpPost]
-        public IActionResult XoaDonHang()
-        {
-            // Create new empty order
-            var donHangMoi = CreateNewOrder();
-            HttpContext.Session.SetObjectAsJson("DonHangHienTai", donHangMoi);
-            return RedirectToAction("SanPham");
-        }
+        //[HttpPost]
+        //public IActionResult XoaDonHang()
+        //{
+        //    // Create new empty order
+        //    var donHangMoi = CreateNewOrder();
+        //    HttpContext.Session.SetObjectAsJson("DonHangHienTai", donHangMoi);
+        //    return RedirectToAction("SanPham");
+        //}
 
         [HttpPost]
-        public IActionResult HoanTatDonHang(string tenKhachHang, string soDienThoai, string ghiChuDonHang)
+        public IActionResult HoanTatDonHang(string tenKhachHang, string soDienThoai, string ghiChuDonHang, string ban=null)
         {
             var donHang = HttpContext.Session.GetObjectFromJson<DonHang>("DonHangHienTai");
             if (donHang == null || !donHang.ChiTietDonHangs.Any())
@@ -232,19 +232,19 @@ namespace pbl3_QLCF.Controllers
                 maKh = khachHang.MaKh;
             }
 
-            // Get current user ID (staff ID)
-            var maNv = User.Identity.IsAuthenticated ? User.FindFirst("MaNv")?.Value : null;
+            var maNV = HttpContext.Session.GetString("maNV");
 
             // Create order in database
             var orderToSave = new DonHang
             {
                 MaDh = donHang.MaDh,
                 MaKh = maKh,
-                MaNv = maNv,
+                MaNv = maNV,
                 ThoiGianDat = DateTime.Now,
                 TongTien = donHang.TongTien,
                 ThanhToan = "Chưa thanh toán",
                 TrangThaiDh = "Mới",
+                MaBan = ban
                 // Add note if provided
                 // Note: You might need to add a GhiChu field to your DonHang model
             };
@@ -409,6 +409,25 @@ namespace pbl3_QLCF.Controllers
             ViewBag.currentPage = page;
             ViewBag.currentCategory = category;
             return View(donHang);
+        }
+        [HttpPost]
+        public IActionResult XuLyDon(string id)
+        {
+            var donHang = _context.DonHangs.FirstOrDefault(d => d.MaDh == id);
+            if(donHang == null)
+            {
+                return RedirectToAction("DonHang");
+            }
+            if(donHang.TrangThaiDh == "Mới")
+            {
+                donHang.TrangThaiDh = "Đang xử lý";
+            }    
+            else if (donHang.TrangThaiDh == "Đang xử lý")
+            {
+                donHang.TrangThaiDh = "Hoàn thành";
+            }
+            _context.SaveChanges();
+            return RedirectToAction("DonHang");
         }
     }
 }

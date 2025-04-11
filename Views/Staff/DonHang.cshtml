@@ -400,7 +400,11 @@
                     </div>
                     <div class="order-actions">
                         <button class="btn btn-view">Xem chi tiết</button>
-                        <button class="btn btn-process">Xử lý đơn</button>
+                        @* <button class="btn btn-process">Xử lý đơn</button> *@
+                        <form asp-controller="Staff" asp-action="XuLyDon">
+                            <input type="hidden" name = "id" value ="@item.MaDh">
+                            <button class="btn btn-process">Xử lý đơn</button>
+                        </form>
                     </div>
                 </div>        
             }
@@ -417,80 +421,5 @@
             <div class="pagination-arrow">&gt;</div>
         </div>
     </main>
-
-   @*  <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Tab filter functionality
-            const filterTabs = document.querySelectorAll('.filter-tab');
-            filterTabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    // Remove active class from all tabs
-                    filterTabs.forEach(t => t.classList.remove('active'));
-                    // Add active class to clicked tab
-                    this.classList.add('active');
-
-                    // Simulate filtering orders (in a real app, this would fetch data)
-                    console.log('Filtering by:', this.textContent.trim());
-
-                    // Reset pagination to page 1 when changing filters
-                    const paginationItems = document.querySelectorAll('.pagination-item');
-                    paginationItems.forEach(item => item.classList.remove('active'));
-                    paginationItems[0].classList.add('active');
-                });
-            });
-
-            // Order status change functionality
-            const processButtons = document.querySelectorAll('.btn-process');
-            const completeButtons = document.querySelectorAll('.btn-complete');
-
-            // Function for process buttons
-            processButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const orderCard = this.closest('.order-card');
-                    const statusSpan = orderCard.querySelector('.order-status');
-                    const actionDiv = orderCard.querySelector('.order-actions');
-
-                    // Change status to "Processing"
-                    statusSpan.textContent = 'Đang xử lý';
-                    statusSpan.classList.remove('status-new');
-                    statusSpan.classList.add('status-processing');
-
-                    // Replace button
-                    actionDiv.innerHTML = `
-                        <button class="btn btn-view">Xem chi tiết</button>
-                        <button class="btn btn-complete">Hoàn thành</button>
-                    `;
-
-                    // Add event listener to the new complete button
-                    const newCompleteButton = actionDiv.querySelector('.btn-complete');
-                    addCompleteEvent(newCompleteButton);
-                });
-            });
-
-            // Function to add event listeners to complete buttons
-            function addCompleteEvent(button) {
-                button.addEventListener('click', function() {
-                    const orderCard = this.closest('.order-card');
-                    const statusSpan = orderCard.querySelector('.order-status');
-                    const actionDiv = orderCard.querySelector('.order-actions');
-
-                    // Change status to "Complete"
-                    statusSpan.textContent = 'Hoàn thành';
-                    statusSpan.classList.remove('status-processing');
-                    statusSpan.classList.add('status-completed');
-
-                    // Remove the complete button
-                    actionDiv.innerHTML = `
-                        <button class="btn btn-view">Xem chi tiết</button>
-                    `;
-                });
-            }
-
-            // Add events to existing complete buttons
-            completeButtons.forEach(button => {
-                addCompleteEvent(button);
-            });
-        });
-    </script> *@
 </body>
 </html>

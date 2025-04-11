@@ -14,6 +14,7 @@ namespace pbl3_QLCF.ViewModels
         //NV info
         public string? MaNv { get; set; }
         public string? tenNv { get; set; }
+        public string? MaBan {  get; set; }
         //KH info
         public string MaKh { get; set; }
         public string tenKh { get; set; }

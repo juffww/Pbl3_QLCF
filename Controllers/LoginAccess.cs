@@ -55,6 +55,7 @@ namespace pbl3_QLCF.Controllers
                     HttpContext.Session.SetString("TenDangNhap", u.TenDangNhap.ToString());
                     HttpContext.Session.SetString("UserRole", u.ChucVu.ToString());
                     HttpContext.Session.SetString("Ten", u.HoTen.ToString());
+                    HttpContext.Session.SetString("maNV", u.MaNv.ToString());
                     if (u.ChucVu.Equals("Quản lý"))
                     {
                         return RedirectToAction("magDashboard", "Manager");
