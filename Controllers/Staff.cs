@@ -43,14 +43,25 @@ namespace pbl3_QLCF.Controllers
                 .Where(t => cartProductIds.Contains(t.MaMon))
                 .ToList();
 
+            string searchPhone = TempData["SearchPhone"] as string ?? "";
+            int diemTichLuy = 0;
+
+            if (!string.IsNullOrEmpty(searchPhone))
+            {
+                var customer = _context.KhachHangs.FirstOrDefault(c => c.Sdt == searchPhone);
+                if (customer != null)
+                {
+                    diemTichLuy = customer.DiemTichLuy ?? 0;
+                }
+            }
             var model = new SanPhamViewModel
             {
-                //ThucDons = allProducts,
                 ThucDons = filteredProducts,
                 Cart = cartProducts,
                 DonHangHienTai = donHang,
                 ProductTypes = GetDistinctProductTypes(),
-                SearchString = search
+                SearchString = search,
+                DTL = diemTichLuy
             };
 
             // Store selected category in TempData
@@ -63,35 +74,23 @@ namespace pbl3_QLCF.Controllers
         [HttpPost]
         public IActionResult TimKiem(string search)
         {
-            var model = new SanPhamViewModel
-            {
-                ThucDons = string.IsNullOrEmpty(search)
-                    ? _context.ThucDons.ToList()
-                    : _context.ThucDons.Where(t => t.TenMon.Contains(search) || t.TenLoai.Contains(search)).ToList(),
-                DonHangHienTai = GetOrCreateDonHang()
-            };
-
             return RedirectToAction("SanPham", new { loaiSanPham = TempData["SelectedCategory"]?.ToString(), search });
         }
 
         [HttpPost]
         public IActionResult ThemVaoDonHang(string maMon, int soLuong = 1, string ghiChu = "")
         {
-            // Get current order from session
             var donHang = GetOrCreateDonHang(); 
 
-            // Get product details
             var thucDon = _context.ThucDons.FirstOrDefault(m => m.MaMon == maMon);
             if (thucDon == null)
             {
                 return RedirectToAction("SanPham");
             }
 
-            // Check if item already exists in order
             var chiTiet = donHang.ChiTietDonHangs.FirstOrDefault(c => c.MaMon == maMon);
             if (chiTiet != null)
             {
-                // Update existing item
                 chiTiet.SoLuong += soLuong;
                 if (!string.IsNullOrEmpty(ghiChu))
                 {
@@ -100,7 +99,6 @@ namespace pbl3_QLCF.Controllers
             }
             else
             {
-                // Add new item
                 var newItem = new ChiTietDonHang
                 {
                     MaDh = donHang.MaDh,
@@ -113,10 +111,8 @@ namespace pbl3_QLCF.Controllers
                 donHang.ChiTietDonHangs.Add(newItem);
             }
 
-            // Recalculate total
             CapNhatTongTien(donHang);
 
-            // Save to session
             HttpContext.Session.SetObjectAsJson("DonHangHienTai", donHang);
 
             return RedirectToAction("SanPham", new
@@ -140,12 +136,10 @@ namespace pbl3_QLCF.Controllers
             {
                 if (soLuong <= 0)
                 {
-                    // Remove the item
                     donHang.ChiTietDonHangs.Remove(chiTiet);
                 }
                 else
                 {
-                    // Update quantity
                     chiTiet.SoLuong = soLuong;
                 }
 
@@ -195,17 +189,17 @@ namespace pbl3_QLCF.Controllers
             return RedirectToAction("SanPham");
         }
 
-        //[HttpPost]
-        //public IActionResult XoaDonHang()
-        //{
-        //    // Create new empty order
-        //    var donHangMoi = CreateNewOrder();
-        //    HttpContext.Session.SetObjectAsJson("DonHangHienTai", donHangMoi);
-        //    return RedirectToAction("SanPham");
-        //}
-
         [HttpPost]
-        public IActionResult HoanTatDonHang(string tenKhachHang, string soDienThoai, string ghiChuDonHang, string ban=null)
+        public IActionResult XoaDonHang()
+        {
+            var donHangMoi = CreateNewOrder();
+            HttpContext.Session.SetObjectAsJson("DonHangHienTai", donHangMoi);
+    
+            TempData["SuccessMessage"] = "Đơn hàng đã được xóa!";
+            return RedirectToAction("SanPham");
+        }
+        [HttpPost]
+        public IActionResult HoanTatDonHang(string tenKhachHang, string soDienThoai, string ghiChuDonHang, string ban = null, bool usePoints = false, int pointsToUse = 0)
         {
             var donHang = HttpContext.Session.GetObjectFromJson<DonHang>("DonHangHienTai");
             if (donHang == null || !donHang.ChiTietDonHangs.Any())
@@ -213,7 +207,6 @@ namespace pbl3_QLCF.Controllers
                 return RedirectToAction("SanPham");
             }
 
-            // Find or create customer if info provided
             string? maKh = null;
             if (!string.IsNullOrEmpty(tenKhachHang) && !string.IsNullOrEmpty(soDienThoai))
             {
@@ -229,12 +222,41 @@ namespace pbl3_QLCF.Controllers
                     _context.KhachHangs.Add(khachHang);
                     _context.SaveChanges();
                 }
+
                 maKh = khachHang.MaKh;
+
+                // If using points, calculate how many points can actually be used
+                if (usePoints && khachHang.DiemTichLuy > 0)
+                {
+                    double originalTotal = donHang.TongTien ?? 0;
+                    int availablePoints = khachHang.DiemTichLuy ?? 0;
+
+                    // Calculate maximum points that can be used (1 point = 1000 VND)
+                    int maxUsablePoints = (int)Math.Ceiling(originalTotal / 1000);
+                    int pointsToDeduct = Math.Min(availablePoints, maxUsablePoints);
+
+                    // Calculate discount amount
+                    double discountAmount = pointsToDeduct * 1000;
+
+                    // Apply discount
+                    donHang.TongTien -= discountAmount;
+                    if (donHang.TongTien < 0) donHang.TongTien = 0;
+
+                    // Update customer points
+                    khachHang.DiemTichLuy -= pointsToDeduct;
+
+                    // Store used points for receipt/history
+                    donHang.TongTien = pointsToDeduct;
+                    TempData["tienDuocGiam"] = discountAmount;
+                }
+
+                // Calculate new points based on the final amount (after discount)
+                int newPoints = (int)(donHang.TongTien / 10000);
+                khachHang.DiemTichLuy += newPoints;
+                _context.SaveChanges();
             }
 
             var maNV = HttpContext.Session.GetString("maNV");
-
-            // Create order in database
             var orderToSave = new DonHang
             {
                 MaDh = donHang.MaDh,
@@ -245,8 +267,6 @@ namespace pbl3_QLCF.Controllers
                 ThanhToan = "Chưa thanh toán",
                 TrangThaiDh = "Mới",
                 MaBan = ban
-                // Add note if provided
-                // Note: You might need to add a GhiChu field to your DonHang model
             };
 
             _context.DonHangs.Add(orderToSave);
@@ -267,16 +287,12 @@ namespace pbl3_QLCF.Controllers
             }
 
             _context.SaveChanges();
-
-            // Create new empty order
             var donHangMoi = CreateNewOrder();
             HttpContext.Session.SetObjectAsJson("DonHangHienTai", donHangMoi);
-
             TempData["SuccessMessage"] = "Đơn hàng đã được tạo thành công!";
             return RedirectToAction("SanPham");
         }
 
-        // Helper methods
         private List<ThucDon> GetThucDons(string loaiSanPham)
         {
             if (string.IsNullOrEmpty(loaiSanPham))
@@ -297,21 +313,17 @@ namespace pbl3_QLCF.Controllers
                 donHang = CreateNewOrder();
             }
 
-            // Always ensure ChiTietDonHangs is initialized
             if (donHang.ChiTietDonHangs == null)
             {
                 donHang.ChiTietDonHangs = new List<ChiTietDonHang>();
             }
 
-            // Save back to session to ensure consistency
             HttpContext.Session.SetObjectAsJson("DonHangHienTai", donHang);
             return donHang;
         }
 
         private DonHang CreateNewOrder()
         {
-            //var tenNv = HttpContext.Session.GetString("TenDangNhap");
-            //var MaNV = _context.NguoiDungs.FirstOrDefault(nv => nv.TenDangNhap == tenNv);
             return new DonHang
             {
                 MaDh = GenerateNewOrderId(),
@@ -320,16 +332,13 @@ namespace pbl3_QLCF.Controllers
                 ThanhToan = "Chưa thanh toán",
                 TrangThaiDh = "Mới",
                 ChiTietDonHangs = new List<ChiTietDonHang>(),
-                //MaNv = MaNV.MaNv
             };
         }
 
         private string GenerateNewOrderId()
         {
-            // Format: DH + sequential number (DH001, DH002, DH003, etc.)
             string prefix = "DH";
 
-            // Get the latest order with this prefix
             var latestOrder = _context.DonHangs
                 .Where(o => o.MaDh.StartsWith(prefix))
                 .OrderByDescending(o => o.MaDh)
@@ -337,31 +346,25 @@ namespace pbl3_QLCF.Controllers
 
             if (latestOrder == null)
             {
-                // First order ever
                 return prefix + "001";
             }
             else
             {
                 try
                 {
-                    // Extract the numeric part
                     string currentNumber = latestOrder.MaDh.Substring(prefix.Length);
-
-                    // Use TryParse to safely convert the string to an integer
                     if (int.TryParse(currentNumber, out int currentVal))
                     {
                         int nextNumber = currentVal + 1;
-                        return prefix + nextNumber.ToString("D3"); // Format as 3 digits with leading zeros
+                        return prefix + nextNumber.ToString("D3");
                     }
                     else
                     {
-                        // If parsing fails, start from 1
                         return prefix + "001";
                     }
                 }
                 catch
                 {
-                    // Handle any unexpected errors by providing a fallback
                     return prefix + "001";
                 }
             }
@@ -375,9 +378,10 @@ namespace pbl3_QLCF.Controllers
                 tongTien += (double)(item.GiaBan * item.SoLuong);
             }
             donHang.TongTien = tongTien;
+
+            _context.SaveChanges();
         }
 
-        // Helper to get distinct product types
         public List<string> GetDistinctProductTypes()
         {
             return _context.ThucDons
@@ -411,23 +415,88 @@ namespace pbl3_QLCF.Controllers
             return View(donHang);
         }
         [HttpPost]
+        public IActionResult capNhatTrangThai(string id)
+        {
+            var order = _context.DonHangs.FirstOrDefault(d => d.MaDh == id);
+            if (order == null)
+            {
+                return RedirectToAction("XuLyDon");
+            }
+            order.TrangThaiDh = "Hoàn thành";
+            _context.SaveChanges();
+            return RedirectToAction("XuLyDon", new { id = id});
+        }
+        [HttpGet]
         public IActionResult XuLyDon(string id)
         {
-            var donHang = _context.DonHangs.FirstOrDefault(d => d.MaDh == id);
-            if(donHang == null)
+            var order = _context.DonHangs
+                .Include(o => o.ChiTietDonHangs)
+                .ThenInclude(c => c.MaMonNavigation)
+                .FirstOrDefault(o => o.MaDh == id);
+            if (order == null)
             {
-                return RedirectToAction("DonHang");
+                return NotFound();
             }
-            if(donHang.TrangThaiDh == "Mới")
+            if (order.TrangThaiDh == "Mới")
             {
-                donHang.TrangThaiDh = "Đang xử lý";
-            }    
-            else if (donHang.TrangThaiDh == "Đang xử lý")
-            {
-                donHang.TrangThaiDh = "Hoàn thành";
+                order.TrangThaiDh = "Đang xử lý";
+                _context.SaveChanges();
             }
-            _context.SaveChanges();
-            return RedirectToAction("DonHang");
+            var KH = _context.KhachHangs.FirstOrDefault(kh => kh.MaKh == order.MaKh);
+
+            string? tenNhanVien = null;
+            if (!string.IsNullOrEmpty(order.MaNv))
+            {
+                var NV = _context.NguoiDungs
+                    .FirstOrDefault(nv => nv.MaNv == order.MaNv && nv.ChucVu == "Nhân viên");
+                tenNhanVien = NV?.HoTen;
+            }
+
+            var model = new CTDHViewModel
+            {
+                MaDh = order.MaDh,
+                ThoigianDat = order.ThoiGianDat,
+                TrangThaiDh = order.TrangThaiDh,
+                TongTien = order.TongTien,
+                ThanhToan = order.ThanhToan,
+                MaNv = order.MaNv,
+                tenNv = tenNhanVien ?? "N/A", 
+                MaBan = order.MaBan,
+                MaKh = order.MaKh,
+                tenKh = KH?.TenKh ?? "Unknown",
+                SDT = KH?.Sdt ?? "N/A",
+                CTDHs = order.ChiTietDonHangs?.ToList() ?? new List<ChiTietDonHang>()
+            };
+            return View(model);
+        }
+        [HttpPost]
+        public IActionResult timKhachHang(string soDienThoai)  // Match the form parameter name
+        {
+            TempData["SearchPhone"] = soDienThoai;  // Use consistent naming (SearchPhone)
+
+            var customer = _context.KhachHangs.FirstOrDefault(c => c.Sdt == soDienThoai);
+            if (customer != null)
+            {
+                TempData["CustomerName"] = customer.TenKh;
+                TempData["CustomerPoints"] = customer.DiemTichLuy ?? 0;  // Use consistent naming
+                TempData["IsNewCustomer"] = false;
+            }
+            else
+            {
+                TempData["CustomerName"] = "";  // Set empty name for new customers
+                TempData["CustomerPoints"] = 0;  // Set zero points for new customers
+                TempData["IsNewCustomer"] = true;
+            }
+
+            // Preserve search state
+            TempData.Keep("SelectedCategory");
+            TempData.Keep("SearchString");
+
+            return RedirectToAction("SanPham", new
+            {
+                loaiSanPham = TempData["SelectedCategory"]?.ToString(),
+                search = TempData["SearchString"]?.ToString()
+            });
         }
     }
 }

@@ -62,31 +62,27 @@
             cursor: pointer;
         }
 
-        .action-bar {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 1.5rem;
-            color: black;
-        }
-
-
+        
         .filter-tabs {
             display: flex;
-            color: black;
-            text-decoration: none;
-            
+            margin-bottom: 20px;
+            background-color: white;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);  
         }
 
         .filter-tab {
             padding: 0.7rem 1.5rem;
             margin-right: 0.5rem;
-            background-color: #EFEFEF;
             border-radius: 4px;
             cursor: pointer;
+            text-decoration: none;
+            color: black;
         }
 
         .filter-tab.active {
-            background-color: var(--primary) !important;
+            background-color: #8B6D5A;
             color: white;
         }
 
@@ -98,7 +94,11 @@
             text-decoration: none;
             outline: none;
         }
-
+        .category-item.active {
+            background-color: #8B6D5A;
+            color: white;
+        }
+        
         .add-button {
             background-color: var(--accent);
             color: white;
@@ -121,15 +121,14 @@
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1.5rem;
         }
-
         .customer-card {
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             padding: 1.5rem;
             position: relative;
+            min-height: 200px;
         }
-
         .status-badge {
             position: absolute;
             top: 1rem;
@@ -139,23 +138,25 @@
             padding: 0.3rem 0.8rem;
             border-radius: 20px;
             font-size: 0.8rem;
+            max-width: 120px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            z-index: 1;
         }
-
         .customer-name {
             font-size: 1.1rem;
             font-weight: bold;
             margin-bottom: 0.5rem;
+            padding-right: 130px; 
         }
-
         .customer-info {
             margin-bottom: 1rem;
             color: #666;
         }
-
         .customer-info p {
             margin: 0.3rem 0;
         }
-
         .loyalty-points {
             background-color: #FFF8E9;
             padding: 0.8rem;
@@ -165,21 +166,19 @@
             align-items: center;
             margin-bottom: 1rem;
         }
-
         .loyalty-label {
             font-size: 0.9rem;
         }
-
         .loyalty-value {
             font-weight: bold;
             color: #F1A545;
         }
-
         .action-buttons {
-            display: flex;
+            display: block; /* Change from flex to block */
+            width: 100%;
         }
-
-        .edit-button, .history-button {
+        /* .edit-button, . */
+        .history-button {
             flex: 1;
             background-color: #F2F2F2;
             border: none;
@@ -189,13 +188,13 @@
             cursor: pointer;
             color: var(--text);
         }
-
         .edit-button:hover, .history-button:hover {
             background-color: #E5E5E5;
         }
-
         .history-button {
             margin-right: 0;
+            width: 100% !important;
+            display: block !important;
         }
 
         .pagination {
@@ -210,12 +209,14 @@
             padding: 0.5rem 0.8rem;
             margin: 0 0.2rem;
             cursor: pointer;
+            text-decoration: none;
+            color: black;
         }
 
         .page-button.active {
-            background-color: var(--primary);
+            background-color: #6d4c41;
             color: white;
-            border-color: var(--primary);
+            border-color: #6d4c41;
         }
     </style>
 </head>
@@ -231,26 +232,24 @@
 
         <!-- Search bar -->
         <form method="get" action="@Url.Action("KhachHang")" class="search-bar">
-            <input type="text" name="search" class = "search-input" placeholder = "Tìm kiếm khách hàng" value="@ViewBag.searchString" />
+            <input type="text" name="search" class = "search-input" placeholder = "Tìm kiếm khách hàng..." value="@ViewBag.searchString" />
             <input type="hidden" name="page" value="1" />
             <input type="hidden" name="category" value="@ViewBag.currentCategory" />
             <button type="submit" class="search-button">Tìm</button>
         </form>
         <!-- Action bar -->
-        <div class="action-bar">
             <div class="filter-tabs">
-                <a class="filter-tab @(ViewBag.category == "all" ? "active" : "")"
+                <a class="filter-tab @(ViewBag.CurrentCategory == "all" ? "active" : "")"
                     href="@Url.Action("KhachHang", new { page=1, category="all", search= ViewBag.searchString}) ">Tất cả</a>
-                <a class="filter-tab @(ViewBag.category == "Thường xuyên" ? "active" : "")"
+                <a class="filter-tab @(ViewBag.CurrentCategory == "Thường xuyên" ? "active" : "")"
                     href="@Url.Action("KhachHang", new { page=1, category="Thường xuyên", search=ViewBag.searchString})">Thường xuyên</a>
-                <a class="filter-tab @(ViewBag.category == "Mới" ? "active" : "")"
+                <a class="filter-tab @(ViewBag.CurrentCategory == "Mới" ? "active" : "")"
                     href="@Url.Action("KhachHang", new { page=1, category="Mới", search=ViewBag.searchString})">Mới</a>
-                <a class="filter-tab @(ViewBag.category == "VIP" ? "acitve" : "")"
+                <a class="filter-tab @(ViewBag.CurrentCategory == "VIP" ? "active" : "")"
                     href="@Url.Action("KhachHang", new { page=1, category="VIP", search=ViewBag.searchString})">VIP</a>
-                <a class="filter-tab @(ViewBag.category == "Không hoạt động" ? "acitve" : "")"
+                <a class="filter-tab @(ViewBag.CurrentCategory == "Không hoạt động" ? "active" : "")"
                     href="@Url.Action("KhachHang", new { page=1, category="Không hoạt động", search=ViewBag.searchString})">Không hoạt động</a>
             </div>
-        </div>
 
         <!-- Customer grid -->
         <div class="customer-grid">
@@ -268,19 +267,63 @@
                         <span class="loyalty-value">@item.DiemTichLuy</span>
                     </div>
                     <div class="action-buttons">
-                        <button class="edit-button">Chỉnh sửa</button>
-                        <button class="history-button">Lịch sử mua</button>
+                        @* <button class="edit-button">Chỉnh sửa</button> *@
+                       @*  <button class="history-button">Lịch sử mua</button> *@
+                           <form method="get" action="@Url.Action("lichSuMua", new { id = item.MaKh, page = ViewBag.CurrentPage, category = ViewBag.CurrentCategory, search = ViewBag.SearchString })">
+                           <button class="history-button">Lịch sử mua</button>
+                       </form>
                     </div>
                 </div>
             }
         </div>
         <!-- Pagination -->
         <div class="pagination">
-            <button class="page-button">«</button>
-            <button class="page-button active">1</button>
-            <button class="page-button">2</button>
-            <button class="page-button">3</button>
-            <button class="page-button">»</button>
+            @{
+                int currentPage = ViewBag.CurrentPage;
+                int totalPages = ViewBag.TotalPages;
+                if (currentPage > 1)
+                {
+                    <a href="@Url.Action("KhachHang", new { page = 1, category = ViewBag.currentCategory, search = ViewBag.SearchString })" class="page-button">&lt;&lt</a>
+                }
+                if (currentPage > 1)
+                {
+                    <a href="@Url.Action("KhachHang", new { page = ViewBag.CurrentPage - 1, category = ViewBag.CurrentCategory, search = ViewBag.SearchString })" class="page-button">&lt</a>
+                }
+                int startPage = Math.Max(1, currentPage - 2);
+                int endPage = Math.Min(totalPages, currentPage + 2);
+
+                if (endPage - startPage + 1 < 5 && totalPages >= 5)
+                {
+                    if (currentPage <= 3)
+                    {
+                        endPage = Math.Min(5, totalPages);
+                        startPage = 1;
+                    }
+                    else
+                    {
+                        startPage = Math.Max(1, totalPages - 4);
+                        endPage = totalPages;
+                    }
+                }
+                for (int i = startPage; i <= endPage; i++)
+                {
+                    <a href="@Url.Action("KhachHang", new { page = i, category = ViewBag.CurrentCategory, search = ViewBag.SearchString })" 
+                        class="page-button @(ViewBag.CurrentPage == i ? "active" : "")">@i</a>
+                }
+
+                if (currentPage < totalPages)
+                {
+                    <a href="@Url.Action("KhachHang", new { page = currentPage + 1, category = ViewBag.CurrentCategory, search = ViewBag.SearchString })" class="page-button">
+                        &gt;
+                    </a>
+                }
+                if (currentPage < totalPages)
+                {
+                    <a href="@Url.Action("KhachHang", new { page = totalPages, category = ViewBag.CurrentCategory, search = ViewBag.SearchString})" class="page-button">
+                        &gt;&gt;
+                    </a>
+                }
+            }
         </div>
     </div>
 </body>

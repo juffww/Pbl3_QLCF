@@ -2,7 +2,6 @@
     Layout = null;
 }
 @{
-    // Get the current controller and action to determine which menu item should be active
     string currentController = ViewContext.RouteData.Values["controller"]?.ToString();
     string currentAction = ViewContext.RouteData.Values["action"]?.ToString();
 }

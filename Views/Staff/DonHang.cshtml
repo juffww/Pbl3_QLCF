@@ -399,11 +399,9 @@
                     }
                     </div>
                     <div class="order-actions">
-                        <button class="btn btn-view">Xem chi tiết</button>
-                        @* <button class="btn btn-process">Xử lý đơn</button> *@
-                        <form asp-controller="Staff" asp-action="XuLyDon">
+                        <form method = "get" asp-controller="Staff" asp-action="XuLyDon">
                             <input type="hidden" name = "id" value ="@item.MaDh">
-                            <button class="btn btn-process">Xử lý đơn</button>
+                            <button class="btn btn-process" @(item.TrangThaiDh == "Mới" ? "" : "disabled")>Xử lý đơn</button>
                         </form>
                     </div>
                 </div>        

@@ -66,7 +66,6 @@ namespace pbl3_QLCF.Controllers
         [Route("ThemSanPham")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //ASP.NET Core yêu cầu một mã bảo mật trong mỗi request POST.
         public IActionResult ThemSanPham(ThucDon product)
         {
             if (ModelState.IsValid)
@@ -220,7 +219,15 @@ namespace pbl3_QLCF.Controllers
                 return NotFound();
             }
             var KH = _context.KhachHangs.FirstOrDefault(kh => kh.MaKh == order.MaKh);
-            var NV = _context.NguoiDungs.Where(nv => nv.ChucVu == "Nhân viên").FirstOrDefault(nv => nv.MaNv == order.MaNv);
+            // Xử lý thông tin nhân viên an toàn
+            string? tenNhanVien = null;
+            if (!string.IsNullOrEmpty(order.MaNv))
+            {
+                var NV = _context.NguoiDungs
+                    .Where(nv => nv.ChucVu == "Nhân viên")
+                    .FirstOrDefault(nv => nv.MaNv == order.MaNv);
+                tenNhanVien = NV?.HoTen;
+            }
             var model = new CTDHViewModel
             {
                 MaDh = order.MaDh,
@@ -229,12 +236,12 @@ namespace pbl3_QLCF.Controllers
                 TongTien = order.TongTien,
                 ThanhToan = order.ThanhToan,
                 MaNv = order.MaNv,
-                tenNv = NV.HoTen,
+                tenNv = tenNhanVien ?? "N/A", 
                 MaBan = order.MaBan,
                 MaKh = order.MaKh,
-                tenKh = KH.TenKh,
-                SDT = KH.Sdt,
-                CTDHs = order.ChiTietDonHangs.ToList()
+                tenKh = KH?.TenKh ?? "Unknown", 
+                SDT = KH?.Sdt ?? "N/A",
+                CTDHs = order.ChiTietDonHangs?.ToList() ?? new List<ChiTietDonHang>()
             };
             return View(model);
         }
@@ -264,12 +271,12 @@ namespace pbl3_QLCF.Controllers
                 return RedirectToAction("DonHang");
             }
         }
-        //---------------------------------Khách hàng---------
+        //---------------------------------Khách hàng-----------------------
         [HttpGet]
         public IActionResult KhachHang(int page = 1, string category = "all", string search = "")
         {
             IQueryable<KhachHang> query = _context.KhachHangs;
-            if(category != "all")
+            if (category != "all")
             {
                 query = query.Where(q => q.LoaiKH == category);
             }
@@ -277,12 +284,92 @@ namespace pbl3_QLCF.Controllers
             {
                 query = query.Where(q => q.TenKh.Contains(search));
             }
-            var KHs = query.ToList();
+            int totalItems = query.Count();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)PageSize);
+
+            var KHs = query
+                .Skip((page - 1) * PageSize)
+                .Take(PageSize)
+                .ToList();
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+            ViewBag.CurrentCategory = category;
+            ViewBag.SearchString = search;
+            return View(KHs);
+        }
+        [HttpGet]
+        public IActionResult lichSuMua(string id, int page = 1, string category = "all", string search = "")
+        {
+            var customer = _context.KhachHangs.FirstOrDefault(c => c.MaKh == id);
+            if (customer == null)
+            {
+                return NotFound();
+            }
+            var order = _context.DonHangs.Where(o => o.MaKh == id).ToList();
+            var model = new CTKHViewModel
+            {
+                CustomerId = id,
+                CustomerName = customer.TenKh,
+                CustomerType = customer.LoaiKH,
+                SDT = customer.Sdt,
+                LoyaltyPoints = customer.DiemTichLuy,
+                TotalSpent = order.Sum(o => o.TongTien ?? 0),
+                OrderCount = order.Count(),
+                AverageOrderValue = order.Any() ? order.Average(o => o.TongTien ?? 0) : 0,
+                LastPurchaseDate = order.Any() ? order.Max(o => o.ThoiGianDat) : null,
+                Orders = order.Select(o => new CTKHViewModel.OrderSummary
+                {
+                    OrderId = o.MaDh,
+                    OrderTime = (DateTime)o.ThoiGianDat,
+                    TotalAmount = o.TongTien ?? 0,
+                }).ToList()
+            };
 
             ViewBag.CurrentPage = page;
             ViewBag.CurrentCategory = category;
             ViewBag.SearchString = search;
-            return View(KHs);
+
+            return View(model);
+        }
+        [HttpGet]
+        public IActionResult CTLSMH()
+        {
+            return View();
+        }
+        
+        public string customerType(string id)
+        {
+            var order = _context.DonHangs.Where(o => o.MaKh == id)
+                                .OrderByDescending(o => o.ThoiGianDat)
+                                .ToList();
+            if(!order.Any())
+            {
+                return "Mới";
+            }
+            DateTime? lastPurchaseDate = order.FirstOrDefault()?.ThoiGianDat;
+            if(!lastPurchaseDate.HasValue)
+            {
+                return "Không hoạt động";
+            }
+            DateTime currentDay = DateTime.Now;
+            if((currentDay - lastPurchaseDate.Value).TotalDays > 90)
+            {
+                return "Không hoạt động";
+            }
+            if((currentDay - lastPurchaseDate.Value).TotalDays <= 7)
+            {
+                return "VIP";
+            }
+            if ((currentDay - lastPurchaseDate.Value).TotalDays <= 30)
+            {
+                return "Thường xuyên";
+            }
+            DateTime? firstOrderDate = order.LastOrDefault()?.ThoiGianDat;
+            if (firstOrderDate.HasValue && (DateTime.Now - firstOrderDate.Value).TotalDays <= 90)
+            {
+                return "Mới";
+            }
+            return "Thường xuyên";
         }
     }
 }

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("pbl3_QLCF")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a84fdeff1b7e08e41761e4e954162857b04ca980")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ee5c166b38c55918b3a5a4057400ff8edd721cf2")]
 [assembly: System.Reflection.AssemblyProductAttribute("pbl3_QLCF")]
 [assembly: System.Reflection.AssemblyTitleAttribute("pbl3_QLCF")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

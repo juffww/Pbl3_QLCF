@@ -30,7 +30,6 @@
             color: var(--text-color);
         }
 
-        /* Header */
         .header {
             display: flex;
             align-items: center;
@@ -133,13 +132,11 @@
             cursor: pointer;
         }
 
-        /* Main Container */
         .main-container {
             display: flex;
             height: calc(100vh - 75px);
         }
 
-        /* Menu Section */
         .menu-section {
             flex: 3;
             padding: 25px;
@@ -313,12 +310,9 @@
             background-color: var(--primary-dark);
         }
 
-        /* Cart Section */
         .cart-section {
             flex: 1;
             min-width: 380px;
-            /* background-color: white;
-            box-shadow: -3px 0 15px rgba(0, 0, 0, 0.08); */
             padding: 25px;
             display: flex;
             flex-direction: column;
@@ -341,7 +335,6 @@
 
         .cart-items {
             flex: 1;
-            /* overflow-y: auto; */
             margin-bottom: 20px;
         }
 
@@ -486,6 +479,128 @@
             border-top: 1px dashed #ddd;
         }
 
+        .loyalty-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+    
+        .phone-search-container {
+    display: flex;
+    gap: 10px;
+}
+
+.search-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.customer-status {
+    margin-top: 5px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    display: inline-block;
+}
+
+.customer-status.new {
+    background-color: #ff9800;
+    color: white;
+}
+
+.customer-status.existing {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.toggle-container {
+    position: relative;
+    width: 50px;
+    height: 24px;
+}
+
+.toggle-checkbox {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: .4s;
+}
+
+.toggle-label:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    border-radius: 50%;
+    transition: .4s;
+}
+
+.toggle-checkbox:checked + .toggle-label {
+    background-color: #4CAF50;
+}
+
+.toggle-checkbox:checked + .toggle-label:before {
+    transform: translateX(26px);
+}
+
+.loyalty-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.points-info {
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.points-info-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.points-input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.points-input {
+    width: 80px;
+}
+
+.points-value {
+    font-weight: bold;
+}
+    
+        .checkout-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
         .order-options {
             margin-top: 15px;
         }
@@ -626,6 +741,14 @@
 @model SanPhamViewModel
 @{
     ViewData["Title"] = "Sản phẩm";
+    string searchPhone = TempData["SearchPhone"] as string ?? "";
+    string customerName = TempData["CustomerName"] as string ?? "";
+    int customerPoints = TempData["CustomerPoints"] != null ? (int)TempData["CustomerPoints"] : 0;
+    bool isNewCustomer = TempData["IsNewCustomer"] != null ? (bool)TempData["IsNewCustomer"] : false;
+
+    double tienDuocGiam = 0;
+    double tamTinh = Model.DonHangHienTai.TongTien ?? 0;
+    double tongCong = tamTinh;
 }
 <body>
     @{
@@ -768,42 +891,89 @@
                         Items Count: @(Model.DonHangHienTai.ChiTietDonHangs?.Count ?? 0)
                     </div>
                 }
-
-                @{
-                    double tamTinh = Model.DonHangHienTai.TongTien ?? 0;
-                    double tongCong = tamTinh;
-                }
         </div>
 
-        <div class="cart-summary">
-            <div class="summary-row">
-                <div>Tạm tính:</div>
-                <div>@tamTinh.ToString("#,##0") VND</div>
+        <!-- Customer search section -->
+        @using (Html.BeginForm("timKhachHang", "Staff", FormMethod.Post))
+        {
+            <div class="option-group">
+                <label class="option-label">Số điện thoại</label>
+                <div class="phone-search-container">
+                    <input type="text" name="soDienThoai" value="@searchPhone" placeholder="Nhập số điện thoại" class="option-input" required style="width: 70%;">
+                    <button type="submit" class="search-btn">Tìm</button>
+                </div>
             </div>
-            <div class="summary-row total">
-                <div>Tổng cộng:</div>
-                <div>@tongCong.ToString("#,##0") VND</div>
-            </div>
-        </div>
-
+        }
+       
         @using (Html.BeginForm("HoanTatDonHang", "Staff", FormMethod.Post))
         {
             <div class="order-options">
                 <div class="option-group">
                     <label class="option-label">Tên khách hàng</label>
-                    <input type="text" name="tenKhachHang" placeholder="Nhập tên khách hàng" class="option-input">
+                    <input type="text" name="tenKhachHang" value="@customerName" placeholder="Nhập tên khách hàng" class="option-input">
+                @if (!string.IsNullOrEmpty(searchPhone))
+                {
+                            <div class="customer-status @(isNewCustomer ? "new" : "existing")">
+                        @(isNewCustomer ? "Khách hàng mới" : "Khách hàng đã tồn tại")
+                            </div>
+                }
                 </div>
-                <div class="option-group">
-                    <label class="option-label">Số điện thoại</label>
-                    <input type="text" name="soDienThoai" placeholder="Nhập số điện thoại" class="option-input" required>
-                </div>
+
+                <!-- Hidden input to preserve phone number -->
+                <input type="hidden" name="soDienThoai" value="@searchPhone">
+
                 <div class="option-group">
                     <label class="option-label">Bàn số</label>
                     <input type="text" name="ban" placeholder="Nhập số bàn" class="option-input">
                 </div>
-                <div class="option-group">
-                    <label class="option-label">Ghi chú đơn hàng</label>
-                    <textarea name="ghiChuDonHang" class="option-input" placeholder="Thêm ghi chú cho đơn hàng" style="height: 80px;"></textarea>
+
+                <!-- Loyalty points section -->
+                @if (!string.IsNullOrEmpty(searchPhone) && !isNewCustomer && customerPoints > 0)
+                {
+                    <div class="option-group" id="loyalty-points-section">
+                        <div class="loyalty-header">
+                            <label for="use-points-toggle" class="option-label">Sử dụng tất cả điểm tích lũy</label>
+                            <div class="toggle-container">
+                                <input type="checkbox" id="use-points-toggle" name="usePoints" class="toggle-checkbox" onchange="updatePointsDisplay()">
+                                <label for="use-points-toggle" class="toggle-label"></label>
+                            </div>
+                        </div>
+
+                        <div id="points-details" style="display: none;">
+                            <div class="points-info">
+                                <div class="points-info-item">
+                                    <span>Điểm hiện có:</span>
+                                    <span id="available-points">@customerPoints</span>
+                                </div>
+                                <div class="points-info-item">
+                                    <span>Giá trị điểm:</span>
+                                    <span>1,000 VND/điểm</span>
+                                </div>
+                                <div class="points-info-item">
+                                    <span>Tiền được giảm:</span>
+                                    <span id="points-value-display">@((customerPoints * 1000).ToString("#,##0")) VND</span>
+                                </div>
+                            </div>
+                            <!-- Hidden input to pass the total points -->
+                            <input type="hidden" name="pointsToUse" id="pointsToUse" value="@customerPoints">
+                        </div>
+                    </div>
+                    tienDuocGiam = (double)customerPoints * 1000;
+                    tongCong = (tamTinh < tienDuocGiam) ? 0 : (tamTinh - tienDuocGiam);
+                }
+                <div class="cart-summary">
+                    <div class="summary-row">
+                        <div>Tạm tính:</div>
+                        <div>@tamTinh.ToString("#,##0") VND</div>
+                    </div>
+                    <div class="summary-row">
+                        <div>Điểm quy đổi: </div>
+                        <div>@tienDuocGiam.ToString("#,##0") VND</div>
+                    </div>
+                    <div class="summary-row total">
+                        <div>Tổng cộng:</div>
+                        <div>@tongCong.ToString("#,##0") VND</div>
+                    </div>
                 </div>
             </div>
 
@@ -812,7 +982,7 @@
 
         @using (Html.BeginForm("XoaDonHang", "Staff", FormMethod.Post))
         {
-                <button type="submit" class="clear-cart-btn" @(Model.DonHangHienTai.ChiTietDonHangs.Any() ? "" : "disabled")>Xóa đơn hàng</button>
+            <button type="submit" class="clear-cart-btn" @(Model.DonHangHienTai.ChiTietDonHangs.Any() ? "" : "disabled")>Xóa đơn hàng</button>
         }
     </div>
 </div>
@@ -834,6 +1004,19 @@ function addToOrder(form) {
 
     return false; // Ngăn form submit thông thường
 }
+function updatePointsDisplay() {
+    var toggle = document.getElementById('use-points-toggle');
+    var detailsSection = document.getElementById('points-details');
+
+    if (toggle && detailsSection) {
+        detailsSection.style.display = toggle.checked ? 'block' : 'none';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize points display on page load
+    updatePointsDisplay();
+});
 </script>
 </body>
 </html>

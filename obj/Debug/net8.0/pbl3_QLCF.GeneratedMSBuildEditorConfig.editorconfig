@@ -54,6 +54,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5BY2Nlc3NcVmVyaWZ5Q29kZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/X1Gen5/OneDrive - The University of Technology/Documents/PBL3/pbl3_QLCF/Views/Manager/CTLSMH.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFuYWdlclxDVExTTUguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/X1Gen5/OneDrive - The University of Technology/Documents/PBL3/pbl3_QLCF/Views/Manager/DonHang.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFuYWdlclxEb25IYW5nLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -64,6 +68,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/X1Gen5/OneDrive - The University of Technology/Documents/PBL3/pbl3_QLCF/Views/Manager/KhachHang.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFuYWdlclxLaGFjaEhhbmcuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/X1Gen5/OneDrive - The University of Technology/Documents/PBL3/pbl3_QLCF/Views/Manager/lichSuMua.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFuYWdlclxsaWNoU3VNdWEuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/X1Gen5/OneDrive - The University of Technology/Documents/PBL3/pbl3_QLCF/Views/Manager/magDashboard.cshtml]
@@ -108,6 +116,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/X1Gen5/OneDrive - The University of Technology/Documents/PBL3/pbl3_QLCF/Views/Staff/staffDashboard.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhZmZcc3RhZmZEYXNoYm9hcmQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/X1Gen5/OneDrive - The University of Technology/Documents/PBL3/pbl3_QLCF/Views/Staff/XuLyDon.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhZmZcWHVMeURvbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/X1Gen5/OneDrive - The University of Technology/Documents/PBL3/pbl3_QLCF/Views/_ViewImports.cshtml]

@@ -1,0 +1,568 @@
+﻿@{
+    ViewData["Title"] = "Chi tiết đơn hàng " + Model.MaDh;
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" type="text/css" href="~/css/Staff/Dashboard.css" />
+    <style>
+        :root {
+            --primary: #8B5A2B;
+            --light-primary: #A67C52;
+            --secondary: #F5F5DC;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --pending: #6c757d;
+            --completed: #198754;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        header {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-right: 30px;
+        }
+
+        .logo-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .nav {
+            display: flex;
+            gap: 20px;
+            margin-left: auto;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: #333;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .nav-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .nav-item.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .user {
+            display: flex;
+            align-items: center;
+            margin-left: 20px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .page-content {
+            padding: 30px 0;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 22px;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .order-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            margin-bottom: 15px;
+        }
+
+        .info-label {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .status-new {
+            background-color: #cfe2ff;
+            color: #0d6efd;
+        }
+
+        .status-processing {
+            background-color: #fff3cd;
+            color: #ffc107;
+        }
+
+        .status-completed {
+            background-color: #d1e7dd;
+            color: #198754;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th, .table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .table th {
+            font-weight: 600;
+            color: white;
+            background-color: #8C5E2A;
+        }
+
+        .table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--light-primary);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid #ced4da;
+            color: #495057;
+        }
+
+        .btn-outline:hover {
+            background-color: #f8f9fa;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .btn-success {
+            background-color: var(--success) !important;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+
+        .breadcrumb {
+            display: flex;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .breadcrumb-item {
+            color: #6c757d;
+        }
+
+        .breadcrumb-item a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .breadcrumb-separator {
+            margin: 0 10px;
+            color: #6c757d;
+        }
+
+        .summary-card {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .summary-row.total {
+            border-top: 1px solid #dee2e6;
+            padding-top: 10px;
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .note-section {
+            margin-top: 20px;
+        }
+
+        .note-text {
+            padding: 10px;
+            background-color: #fff3cd;
+            border-radius: 5px;
+            font-style: italic;
+        }
+    </style>
+</head>
+@model pbl3_QLCF.ViewModels.CTDHViewModel;
+<body>
+    @{
+        Html.RenderPartial("~/Views/Staff/sharedAll.cshtml");
+    }
+
+    <div class="container page-content">
+        <div class="breadcrumb">
+            <span class="breadcrumb-item"><a href="/dashboard">Dashboard</a></span>
+            <span class="breadcrumb-separator">></span>
+            <span class="breadcrumb-item"><a href="/donhang">Quản lý đơn hàng</a></span>
+            <span class="breadcrumb-separator">></span>
+            <span class="breadcrumb-item">Chi tiết đơn hàng @Model.MaDh</span>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h1 class="card-title">Chi tiết đơn hàng #@Model.MaDh</h1>
+                <span class="status status-@(
+                    Model.TrangThaiDh == "Mới" ? "new" :
+                    Model.TrangThaiDh == "Đang xử lý" ? "processing" : "completed"
+                )">@Model.TrangThaiDh</span>
+            </div>
+
+            <div class="order-info">
+                <div>
+                    <div class="info-item">
+                        <div class="info-label">Mã đơn hàng</div>
+                        <div class="info-value">#@Model.MaDh</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Thời gian đặt</div>
+                        <div class="info-value">@Model.ThoigianDat</div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="info-item">
+                        <div class="info-label">Khách hàng</div>
+                        <div class="info-value">@Model.tenKh</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Mã khách hàng</div>
+                        <div class="info-value">@Model.MaKh</div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="info-item">
+                        <div class="info-label">Nhân viên phục vụ</div>
+                        <div class="info-value">@Model.tenNv</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Bàn</div>
+                        <div class="info-value">@Model.MaBan</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-bottom: 15px; color: var(--primary);">Danh sách sản phẩm</h3>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="width: 5%">#</th>
+                        <th style="width: 35%">Tên sản phẩm</th>
+                        <th style="width: 15%">Đơn giá</th>
+                        <th style="width: 10%">Số lượng</th>
+                        <th style="width: 15%">Thành tiền</th>
+                        <th style="width: 20%">Ghi chú</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{int i = 1;}
+                    @foreach(var item in Model.CTDHs)
+                    {
+                        <tr>
+                            <td>@(i++)</td>
+                            <td>@item.MaMonNavigation.TenMon</td>
+                            <td>@item.GiaBan?.ToString("#,##0").Replace(",", ".")</td>
+                            <td>@item.SoLuong</td>
+                            <td>@((item.GiaBan * item.SoLuong)?.ToString("#,##0").Replace(",", "."))</td>
+                            <td>@item.GhiChu</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="summary-card">
+                <div class="summary-row">
+                    <span>Tổng số lượng:</span>
+                    <span>@(Model.CTDHs?.Count() ?? 0)</span>
+                </div>
+                <div class="summary-row">
+                    <span>Tạm tính:</span>
+                    <span>@Model.TongTien?.ToString("#,##0").Replace(",", ".") VND</span>
+                </div>
+                <div class="summary-row">
+                    <span>Giảm giá:</span>
+                    <span>0 VND</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Tổng tiền:</span>
+                    <span>@Model.TongTien?.ToString("#,##0").Replace(",", ".") VND</span>
+                </div>
+            </div>
+
+            <div class="note-section">
+                <h4 style="margin-bottom: 10px; color: var(--primary);">Thông tin thanh toán</h4>
+                <div class="info-item">
+                    <div class="info-label">Phương thức thanh toán</div>
+                    <div class="info-value">Tiền mặt</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Trạng thái thanh toán</div>
+                    <div class="info-value">Đã thanh toán</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Thời gian thanh toán</div>
+                    <div class="info-value">@Model.ThoigianDat</div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-outline" onclick="window.history.back()">Quay lại</button>
+                <button class="btn btn-primary" onclick="printOrder()">In hóa đơn</button>
+                <form method = "post" asp-action="capNhatTrangThai" asp-controller="Staff">
+                    <input type="hidden" name = "id" value ="@Model.MaDh">
+                    <button class="btn btn-success" onclick="updateStatus()">Cập nhật trạng thái</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+            function printOrder() {
+            // Create a new window for printing
+        const printWindow = window.open('', '_blank', 'width=800,height=600');
+
+        // Get current values
+        const orderNumber = document.querySelector('.card-header .card-title').textContent.split('#')[1];
+        const orderDate = document.querySelector('.order-info .info-item:nth-child(2) .info-value').textContent;
+        const customerName = document.querySelector('.order-info div:nth-child(2) .info-item:nth-child(1) .info-value').textContent;
+        const customerId = document.querySelector('.order-info div:nth-child(2) .info-item:nth-child(2) .info-value').textContent;
+        const tableNumber = document.querySelector('.order-info div:nth-child(3) .info-item:nth-child(1) .info-value').textContent;
+
+        // Clone product table and summary for the print
+        const productTable = document.querySelector('.table').cloneNode(true);
+        const summary = document.querySelector('.summary-card').cloneNode(true);
+
+        // Create print document
+        printWindow.document.write(`
+            <html>
+            <head>
+                <title>Đơn hàng #${orderNumber}</title>
+                <style>
+                    body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+                    .header { text-align: center; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
+                    .shop-name { font-size: 18px; font-weight: bold; margin: 5px 0; }
+                    .order-info { display: flex; flex-wrap: wrap; justify-content: space-between; margin: 20px 0; }
+                    .info-section { width: 48%; margin-bottom: 15px; }
+                    .info-row { margin-bottom: 5px; }
+                    .info-label { font-weight: bold; }
+                    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                    table, th, td { border: 1px solid #ddd; }
+                    th, td { padding: 8px; text-align: left; }
+                    th { background-color: #f2f2f2; }
+                    .summary { margin-top: 20px; width: 40%; margin-left: auto; }
+                    .summary-row { display: flex; justify-content: space-between; padding: 5px 0; }
+                    .total { font-weight: bold; font-size: 1.2em; border-top: 1px solid #ddd; padding-top: 5px; margin-top: 5px; }
+                    .footer { margin-top: 30px; text-align: center; font-style: italic; }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h1>HÓA ĐƠN BÁN HÀNG</h1>
+                    <div class="shop-name">AromaCafe</div>
+                </div>
+
+                <div class="order-info">
+                    <div class="info-section">
+                        <div class="info-row">
+                            <span class="info-label">Mã đơn hàng:</span>
+                            <span>#${orderNumber}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Thời gian đặt:</span>
+                            <span>${orderDate}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Bàn:</span>
+                            <span>${tableNumber}</span>
+                        </div>
+                    </div>
+                    <div class="info-section">
+                        <div class="info-row">
+                            <span class="info-label">Khách hàng:</span>
+                            <span>${customerName}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Mã khách hàng:</span>
+                            <span>${customerId}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Phương thức thanh toán:</span>
+                            <span>Tiền mặt</span>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Danh sách sản phẩm</h3>
+                ${productTable.outerHTML}
+
+                <div class="summary">
+                    <div class="summary-row">
+                        <span>Tổng số lượng:</span>
+                        <span>${document.querySelector('.summary-card .summary-row:first-child span:last-child').textContent}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tạm tính:</span>
+                        <span>${document.querySelector('.summary-card .summary-row:nth-child(2) span:last-child').textContent}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Giảm giá:</span>
+                        <span>${document.querySelector('.summary-card .summary-row:nth-child(3) span:last-child').textContent}</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Tổng tiền:</span>
+                        <span>${document.querySelector('.summary-card .summary-row:last-child span:last-child').textContent}</span>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <p>Cảm ơn quý khách đã sử dụng dịch vụ!</p>
+                </div>
+            </body>
+            </html>
+        `);
+
+            // Wait for content to load then print
+            printWindow.document.close();
+            printWindow.focus();
+
+            // Print after a slight delay to ensure CSS is loaded
+            setTimeout(() => {
+                printWindow.print();
+                // Close the window after printing (optional)
+                printWindow.close();
+            }, 500);
+        }
+
+        function updateStatus() {
+            alert('Cập nhật trạng thái thành công!');
+        }
+    </script>
+</body>
+</html>

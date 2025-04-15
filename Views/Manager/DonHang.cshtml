@@ -23,87 +23,6 @@
             background-color: white;
             border-bottom: 1px solid #e0e0e0;
         }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            margin-right: 30px;
-        }
-
-        .logo-circle {
-            width: 50px;
-            height: 50px;
-            background-color: #6d4c41;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-
-        .logo-text {
-            font-size: 24px;
-            font-weight: bold;
-            color: #6d4c41;
-        }
-
-        .nav-menu {
-            display: flex;
-            flex-grow: 1;
-        }
-
-        .nav-menu a {
-            padding: 10px 15px;
-            text-decoration: none;
-            color: #333;
-            font-weight: bold;
-        }
-
-        .nav-menu a.active {
-            background-color: #6d4c41;
-            color: white;
-            border-radius: 4px;
-        }
-
-        .user-section {
-            display: flex;
-            align-items: center;
-        }
-
-        .notification-icon {
-            margin-right: 15px;
-            font-size: 20px;
-            color: #6d4c41;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            background-color: #6d4c41;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 50px;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #6d4c41;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-
-        .user-role {
-            font-size: 12px;
-            opacity: 0.8;
-        }
-
         .content {
             padding: 20px;
         }
@@ -377,7 +296,7 @@
                         <td>@item.MaNv</td>
                         <td>@item.MaBan</td>
                         <td>@(item.ThoiGianDat?.ToString("dd/MM/yyyy HH:mm"))</td>
-                        <td>@item.TongTien?.ToString("#,###") VND</td>
+                        <td>@item.TongTien?.ToString("#,###").Replace(",", ".") VND</td>
                         <td>@item.ThanhToan</td>
                             <td><span class="status status-@(item.TrangThaiDh?.ToLower().Replace(" ", "-"))">@item.TrangThaiDh</span></td>
                         <td>

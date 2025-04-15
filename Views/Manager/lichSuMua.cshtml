@@ -1,0 +1,489 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="~/css/Manager/magDashboard.css" />
+    <title>AromaCafé - Lịch Sử Mua Hàng</title>
+    <style>
+        :root {
+            --primary-color: #8B6E4E;
+            --secondary-color: #E6D7C3;
+            --success-color: #4CAF50;
+            --warning-color: #FF9800;
+            --danger-color: #F44336;
+            --light-bg: #F9F5F0;
+            --dark-text: #54433A;
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+        }
+
+        .header {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .content {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title h1 {
+            font-size: 24px;
+            color: var(--primary-color);
+        }
+
+        .back-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .customer-info-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .customer-details {
+            flex: 1;
+        }
+
+        .customer-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .customer-id, .customer-phone {
+            color: #777;
+            margin-bottom: 5px;
+        }
+
+        .customer-points {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .points-badge {
+            background-color: var(--secondary-color);
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .customer-type {
+            background-color: #E0F2F1;
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+
+        .customer-type.regular {
+            background-color: #E0F2F1;
+            color: #00897B;
+        }
+
+        .customer-type.new {
+            background-color: #E8F5E9;
+            color: #43A047;
+        }
+
+        .customer-type.vip {
+            background-color: #FFF8E1;
+            color: #FFB300;
+        }
+
+        .customer-type h3 {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .customer-type .type-value {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .filter-section {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .filter-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-input label {
+            font-weight: 500;
+        }
+
+        .filter-input input, .filter-input select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .filter-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: auto;
+        }
+
+        .orders-table {
+            width: 100%;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .orders-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .orders-table th {
+            background-color: var(--primary-color);
+            color: white !important;
+            text-align: left;
+            padding: 12px 15px;
+        }
+
+        .orders-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .orders-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-completed {
+            background-color: #E8F5E9;
+            color: #43A047;
+        }
+
+        .status-processing {
+            background-color: #FFF8E1;
+            color: #FFB300;
+        }
+
+        .status-cancelled {
+            background-color: #FFEBEE;
+            color: #E53935;
+        }
+
+        .payment-cash {
+            color: #43A047;
+        }
+
+        .payment-card {
+            color: #1E88E5;
+        }
+
+        .payment-momo {
+            color: #D81B60;
+        }
+
+        .actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .view-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .pagination {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .pagination-button {
+            width: 35px;
+            height: 35px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .pagination-button.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .summary-section {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .summary-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .summary-cards {
+            display: flex;
+            gap: 20px;
+        }
+
+        .summary-card {
+            flex: 1;
+            background-color: #f9f9f9;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            text-align: center;
+        }
+
+        .summary-card h3 {
+            font-size: 14px;
+            color: #777;
+            margin-bottom: 8px;
+        }
+
+        .summary-card .value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--dark-text);
+        }
+
+        .summary-card.total-spent {
+            background-color: #E3F2FD;
+        }
+
+        .summary-card.total-spent .value {
+            color: #1976D2;
+        }
+
+        .summary-card.total-orders {
+            background-color: #E8F5E9;
+        }
+
+        .summary-card.total-orders .value {
+            color: #43A047;
+        }
+
+        .summary-card.avg-order {
+            background-color: #FFF8E1;
+        }
+
+        .summary-card.avg-order .value {
+            color: #FF8F00;
+        }
+
+        .summary-card.last-visit {
+            background-color: #F3E5F5;
+        }
+
+        .summary-card.last-visit .value {
+            color: #8E24AA;
+            font-size: 16px;
+        }
+
+        .chart-container {
+            height: 300px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+@model pbl3_QLCF.ViewModels.CTKHViewModel;
+<body>
+    <!-- Header -->
+    @{
+        Html.RenderPartial("~/Views/Manager/sharedAll.cshtml");
+    }
+    <!-- Content -->
+    <div class="content">
+        <div class="page-title">
+            <h1>Lịch Sử Mua Hàng Khách Hàng</h1>
+            <button class="back-button" onclick="window.location.href='@Url.Action("KhachHang", new { page = ViewBag.CurrentPage, category = ViewBag.CurrentCategory, search = ViewBag.SearchString })'">
+                Quay lại danh sách khách hàng
+            </button>
+        </div>
+
+        <!-- Customer Information Card -->
+        <div class="customer-info-card">
+            <div class="customer-details">
+                <div class="customer-name" id="customerName">@Model.CustomerName</div>
+                <div class="customer-id" id="customerId">Mã KH: @Model.CustomerId</div>
+                <div class="customer-phone" id="customerPhone">SĐT: @Model.SDT</div>
+                <div class="customer-points">
+                    <span>Điểm tích lũy:</span>
+                    <span class="points-badge" id="customerPoints">@Model.LoyaltyPoints</span>
+                </div>
+            </div>
+            <div class="customer-type regular" id="customerTypeCard">
+                <h3>Loại khách hàng</h3>
+                <div class="type-value" id="customerType">@Model.CustomerType</div>
+            </div>
+        </div>
+
+        <!-- Summary Section -->
+        <div class="summary-section">
+            <div class="summary-title">Tổng quan</div>
+            <div class="summary-cards">
+                <div class="summary-card total-spent">
+                    <h3>Tổng chi tiêu</h3>
+                    <div class="value" id="totalSpent">@Model.TotalSpent.ToString("#,##0").Replace(",", ".")</div>
+                </div>
+                <div class="summary-card total-orders">
+                    <h3>Số đơn hàng</h3>
+                    <div class="value" id="totalOrders">@Model.OrderCount</div>
+                </div>
+                <div class="summary-card avg-order">
+                    <h3>Giá trị đơn trung bình</h3>
+                    <div class="value" id="avgOrder">@Model.AverageOrderValue.ToString("#,##0").Replace(",", ".") VND</div>
+                </div>
+                <div class="summary-card last-visit">
+                    <h3>Lần mua gần nhất</h3>
+                    <div class="value" id="lastVisit">@Model.LastPurchaseDate</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="filter-input">
+                <label for="fromDate">Từ ngày:</label>
+                <input type="date" id="fromDate">
+            </div>
+            <div class="filter-input">
+                <label for="toDate">Đến ngày:</label>
+                <input type="date" id="toDate">
+            </div>
+            <div class="filter-input">
+                <label for="orderStatus">Trạng thái:</label>
+                <select id="orderStatus">
+                    <option value="">Tất cả</option>
+                    <option value="Hoàn thành">Hoàn thành</option>
+                    <option value="Đang xử lý">Đang xử lý</option>
+                    <option value="Đã hủy">Đã hủy</option>
+                </select>
+            </div>
+            <button class="filter-button" onclick="filterOrders()">Lọc</button>
+        </div>
+
+        <!-- Orders Table -->
+        <div class="orders-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mã đơn hàng</th>
+                        <th>Thời gian đặt</th>
+                        <th>Tổng tiền</th>
+                        @* <th>Thao tác</th> *@
+                    </tr>
+                </thead>
+                <tbody id="ordersTableBody">
+                    @foreach(var item in Model.Orders)
+                    {
+                        <tr>
+                            <td>@item.OrderId</td>
+                            <td>@item.OrderTime</td>
+                            <td>@item.TotalAmount?.ToString("#,##0").Replace(",", ".")</td>
+                        </tr>
+                    }
+                    @* <tr>
+                        <td>DH001</td>
+                        <td>10/04/2025 14:30</td>
+                        <td>85,000đ</td>
+                        <td>
+                            <div class="actions">
+                                <form method="get" action="@Url.Action("CTLSMH")">
+                                    <button class="view-button">Chi tiết</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr> *@
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            <div class="pagination-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                </svg>
+            </div>
+            <div class="pagination-button active">1</div>
+            <div class="pagination-button">2</div>
+            <div class="pagination-button">3</div>
+            <div class="pagination-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

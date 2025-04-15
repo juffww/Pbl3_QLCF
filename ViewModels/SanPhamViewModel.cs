@@ -12,5 +12,6 @@ namespace pbl3_QLCF.ViewModels
         public DonHang DonHangHienTai { get; set; }
         public List<string> ProductTypes { get; set; } = new List<string>();
         public string SearchString { get; set; }
+        public int DTL { get; set; }
     }
 }
