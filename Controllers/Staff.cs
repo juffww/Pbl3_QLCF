@@ -26,19 +26,15 @@ namespace pbl3_QLCF.Controllers
         {
             var donHang = GetOrCreateDonHang();
 
-            // Get all product IDs in the cart
             var cartProductIds = donHang.ChiTietDonHangs.Select(c => c.MaMon).ToList();
 
-            // Get filtered products based on category/search
             var filteredProducts = string.IsNullOrEmpty(search)
                 ? GetThucDons(loaiSanPham)
                 : _context.ThucDons.Where(t => (t.TenMon.Contains(search) || t.TenLoai.Contains(search)) &&
                                       (string.IsNullOrEmpty(loaiSanPham) || t.TenLoai == loaiSanPham)).ToList();
 
-            // Get the IDs of filtered products
             var filteredProductIds = filteredProducts.Select(p => p.MaMon).ToList();
 
-            // Get ALL products in cart
             var cartProducts = _context.ThucDons
                 .Where(t => cartProductIds.Contains(t.MaMon))
                 .ToList();
@@ -64,7 +60,6 @@ namespace pbl3_QLCF.Controllers
                 DTL = diemTichLuy
             };
 
-            // Store selected category in TempData
             TempData["SelectedCategory"] = loaiSanPham;
             TempData["SearchString"] = search;
 
@@ -199,7 +194,7 @@ namespace pbl3_QLCF.Controllers
             return RedirectToAction("SanPham");
         }
         [HttpPost]
-        public IActionResult HoanTatDonHang(string tenKhachHang, string soDienThoai, string ghiChuDonHang, string ban = null, bool usePoints = false, int pointsToUse = 0)
+        public IActionResult HoanTatDonHang(string tenKhachHang, string soDienThoai, string ghiChuDonHang, string ban = null, bool usePoints = false)
         {
             var donHang = HttpContext.Session.GetObjectFromJson<DonHang>("DonHangHienTai");
             if (donHang == null || !donHang.ChiTietDonHangs.Any())
@@ -208,6 +203,11 @@ namespace pbl3_QLCF.Controllers
             }
 
             string? maKh = null;
+            if (string.IsNullOrWhiteSpace(tenKhachHang) || string.IsNullOrWhiteSpace(soDienThoai))
+            {
+                TempData["ErrorMessage"] = "Vui lòng nhập đầy đủ thông tin khách hàng.";
+                return RedirectToAction("SanPham");
+            }
             if (!string.IsNullOrEmpty(tenKhachHang) && !string.IsNullOrEmpty(soDienThoai))
             {
                 var khachHang = _context.KhachHangs.FirstOrDefault(k => k.Sdt == soDienThoai);
@@ -224,30 +224,23 @@ namespace pbl3_QLCF.Controllers
                 }
 
                 maKh = khachHang.MaKh;
-
                 // If using points, calculate how many points can actually be used
                 if (usePoints && khachHang.DiemTichLuy > 0)
                 {
                     double originalTotal = donHang.TongTien ?? 0;
                     int availablePoints = khachHang.DiemTichLuy ?? 0;
 
-                    // Calculate maximum points that can be used (1 point = 1000 VND)
                     int maxUsablePoints = (int)Math.Ceiling(originalTotal / 1000);
                     int pointsToDeduct = Math.Min(availablePoints, maxUsablePoints);
-
                     // Calculate discount amount
                     double discountAmount = pointsToDeduct * 1000;
 
                     // Apply discount
                     donHang.TongTien -= discountAmount;
                     if (donHang.TongTien < 0) donHang.TongTien = 0;
-
+                    
                     // Update customer points
                     khachHang.DiemTichLuy -= pointsToDeduct;
-
-                    // Store used points for receipt/history
-                    donHang.TongTien = pointsToDeduct;
-                    TempData["tienDuocGiam"] = discountAmount;
                 }
 
                 // Calculate new points based on the final amount (after discount)
@@ -255,7 +248,7 @@ namespace pbl3_QLCF.Controllers
                 khachHang.DiemTichLuy += newPoints;
                 _context.SaveChanges();
             }
-
+            
             var maNV = HttpContext.Session.GetString("maNV");
             var orderToSave = new DonHang
             {
@@ -264,7 +257,7 @@ namespace pbl3_QLCF.Controllers
                 MaNv = maNV,
                 ThoiGianDat = DateTime.Now,
                 TongTien = donHang.TongTien,
-                ThanhToan = "Chưa thanh toán",
+                ThanhToan = "Đã thanh toán",
                 TrangThaiDh = "Mới",
                 MaBan = ban
             };
@@ -470,25 +463,24 @@ namespace pbl3_QLCF.Controllers
             return View(model);
         }
         [HttpPost]
-        public IActionResult timKhachHang(string soDienThoai)  // Match the form parameter name
+        public IActionResult timKhachHang(string soDienThoai)  
         {
-            TempData["SearchPhone"] = soDienThoai;  // Use consistent naming (SearchPhone)
+            TempData["SearchPhone"] = soDienThoai; 
 
             var customer = _context.KhachHangs.FirstOrDefault(c => c.Sdt == soDienThoai);
             if (customer != null)
             {
                 TempData["CustomerName"] = customer.TenKh;
-                TempData["CustomerPoints"] = customer.DiemTichLuy ?? 0;  // Use consistent naming
+                TempData["CustomerPoints"] = customer.DiemTichLuy ?? 0;  
                 TempData["IsNewCustomer"] = false;
             }
             else
             {
-                TempData["CustomerName"] = "";  // Set empty name for new customers
-                TempData["CustomerPoints"] = 0;  // Set zero points for new customers
+                TempData["CustomerName"] = "";  
+                TempData["CustomerPoints"] = 0;  
                 TempData["IsNewCustomer"] = true;
             }
 
-            // Preserve search state
             TempData.Keep("SelectedCategory");
             TempData.Keep("SearchString");
 

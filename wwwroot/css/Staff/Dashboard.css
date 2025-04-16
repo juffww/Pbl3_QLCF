@@ -197,15 +197,15 @@ body {
     font-size: 0.9rem;
 }
 
-    .tab.active {
-        background-color: #8b5a2b; /* Màu nâu cà phê đậm */
-        color: white;
-    }
+.tab.active {
+    background-color: #8b5a2b; /* Màu nâu cà phê đậm */
+    color: white;
+}
 
-    .tab:not(.active) {
-        background-color: #f5efe0; /* Màu kem nhạt */
-        color: #6b4423; /* Màu nâu cho text */
-    }
+.tab:not(.active) {
+    background-color: #f5efe0; /* Màu kem nhạt */
+    color: #6b4423; /* Màu nâu cho text */
+}
 
 .order-list {
     display: flex;
@@ -273,11 +273,11 @@ body {
     text-align: center;
 }
 
-    .action-btn:hover {
-        opacity: 0.9;
-        transform: translateY(-2px);
-        transition: transform 0.2s, opacity 0.3s;
-    }
+.action-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    transition: transform 0.2s, opacity 0.3s;
+}
 
 .btn-primary {
     background-color: #8b5a2b; /* Màu nâu cà phê đậm */

@@ -735,6 +735,11 @@
             background-color: #dff0d8;
             border-color: #d6e9c6;
         }
+        .alert-danger {
+            color: #a94442;
+            background-color: #f2dede;
+            border-color: #ebccd1;
+        }
     </style>
 </head>
 @using pbl3_QLCF.ViewModels;
@@ -757,7 +762,13 @@
     @if (TempData["SuccessMessage"] != null)
     {
         <div class="alert alert-success">
-            @TempData["SuccessMessage"]
+            @TempData["SuccessMessage"] 
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
         </div>
     }
     <div class="main-container">
@@ -911,12 +922,12 @@
                 <div class="option-group">
                     <label class="option-label">Tên khách hàng</label>
                     <input type="text" name="tenKhachHang" value="@customerName" placeholder="Nhập tên khách hàng" class="option-input">
-                @if (!string.IsNullOrEmpty(searchPhone))
-                {
-                            <div class="customer-status @(isNewCustomer ? "new" : "existing")">
-                        @(isNewCustomer ? "Khách hàng mới" : "Khách hàng đã tồn tại")
-                            </div>
-                }
+                    @if (!string.IsNullOrEmpty(searchPhone))
+                    {
+                        <div class="customer-status @(isNewCustomer ? "new" : "existing")">
+                            @(isNewCustomer ? "Khách hàng mới" : "Khách hàng đã tồn tại")
+                        </div>
+                    }
                 </div>
 
                 <!-- Hidden input to preserve phone number -->
@@ -950,7 +961,7 @@
                                     <span>1,000 VND/điểm</span>
                                 </div>
                                 <div class="points-info-item">
-                                    <span>Tiền được giảm:</span>
+                                    <span>Tiền quy đổi:</span>
                                     <span id="points-value-display">@((customerPoints * 1000).ToString("#,##0")) VND</span>
                                 </div>
                             </div>
@@ -958,8 +969,6 @@
                             <input type="hidden" name="pointsToUse" id="pointsToUse" value="@customerPoints">
                         </div>
                     </div>
-                    tienDuocGiam = (double)customerPoints * 1000;
-                    tongCong = (tamTinh < tienDuocGiam) ? 0 : (tamTinh - tienDuocGiam);
                 }
                 <div class="cart-summary">
                     <div class="summary-row">
@@ -967,13 +976,14 @@
                         <div>@tamTinh.ToString("#,##0") VND</div>
                     </div>
                     <div class="summary-row">
-                        <div>Điểm quy đổi: </div>
-                        <div>@tienDuocGiam.ToString("#,##0") VND</div>
+                        <div>Tiền được giảm: </div>
+                        <div id="discount-amount">@tienDuocGiam.ToString("#,##0") VND</div>
                     </div>
                     <div class="summary-row total">
                         <div>Tổng cộng:</div>
-                        <div>@tongCong.ToString("#,##0") VND</div>
+                        <div id="total-amount">@tongCong.ToString("#,##0") VND</div>
                     </div>
+
                 </div>
             </div>
 
@@ -987,36 +997,59 @@
     </div>
 </div>
 <script>
-function addToOrder(form) {
-    var formData = new FormData(form);
+    function addToOrder(form) {
+        var formData = new FormData(form);
 
-    fetch(form.action, {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.text())
-    .then(html => {
-        // Cập nhật phần đơn hàng từ response
-        document.querySelector('.cart-section').innerHTML = 
-            new DOMParser().parseFromString(html, 'text/html')
-            .querySelector('.cart-section').innerHTML;
-    });
+        fetch(form.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(html => {
+            document.querySelector('.cart-section').innerHTML = 
+                new DOMParser().parseFromString(html, 'text/html')
+                .querySelector('.cart-section').innerHTML;
+        });
 
-    return false; // Ngăn form submit thông thường
-}
-function updatePointsDisplay() {
-    var toggle = document.getElementById('use-points-toggle');
-    var detailsSection = document.getElementById('points-details');
-
-    if (toggle && detailsSection) {
-        detailsSection.style.display = toggle.checked ? 'block' : 'none';
+        return false; 
     }
-}
+    function updatePointsDisplay() {
+        var toggle = document.getElementById('use-points-toggle');
+        var detailsSection = document.getElementById('points-details');
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize points display on page load
-    updatePointsDisplay();
-});
+        if (toggle && detailsSection) {
+            detailsSection.style.display = toggle.checked ? 'block' : 'none';
+        }
+
+        // Lấy các phần tử liên quan
+        var availablePoints = parseInt(document.getElementById("available-points").textContent || "0");
+        var tamTinh = parseInt('@tamTinh'); // Razor truyền xuống
+        var discountDisplay = document.getElementById("discount-amount");
+        var totalDisplay = document.getElementById("total-amount");
+        var pointsToUseInput = document.getElementById("pointsToUse");
+
+        if (toggle.checked) {
+            var pointsToDeduct = Math.min(availablePoints, Math.floor(tamTinh / 1000));
+            var tienDuocGiam = pointsToDeduct * 1000;
+            var tongCong = tamTinh - tienDuocGiam;
+
+            if (discountDisplay) discountDisplay.textContent = formatCurrency(tienDuocGiam);
+            if (totalDisplay) totalDisplay.textContent = formatCurrency(tongCong);
+            if (pointsToUseInput) pointsToUseInput.value = pointsToDeduct;
+        } else {
+            if (discountDisplay) discountDisplay.textContent = formatCurrency(0);
+            if (totalDisplay) totalDisplay.textContent = formatCurrency(tamTinh);
+            if (pointsToUseInput) pointsToUseInput.value = 0;
+        }
+    }
+
+    function formatCurrency(value) {
+        return value.toLocaleString('vi-VN') + " VND";
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        updatePointsDisplay();
+    });
 </script>
 </body>
 </html>

@@ -11,13 +11,16 @@
   <title>CaféManager - Dashboard</title>
   <link rel="stylesheet" type="text/css" href="~/css/Staff/Dashboard.css" />
   <style>
-      .top-menu-item {
-              color: black !important;
-          }
+        .top-menu-item {
+            color: black !important;
+        }
 
         .top-menu-item:hover, .top-menu-item.active {
             background-color: #8b5a2b !important;
             color: white !important;
+        }
+        .action-btn {
+            text-decoration: none !important;
         }
   </style>
 </head>
@@ -97,9 +100,9 @@
         <div class="card">
           <div class="card-title">Thao tác nhanh</div>
           <div class="quick-actions">
-            <button class="action-btn btn-primary">Tạo đơn hàng mới</button>
-            <button class="action-btn btn-info">Quản lý khách hàng</button>
-            <button class="action-btn btn-success">Báo cáo ca làm</button>
+            <a asp-action="SanPham" asp-controller="Staff" class="action-btn btn-primary">Tạo đơn hàng mới</a>
+            <a asp-action="SanPham" asp-controller="Staff" class="action-btn btn-info">Quản lý khách hàng</a>
+            <a asp-action="SanPham" asp-controller="Staff" class="action-btn btn-success">Báo cáo ca làm</a>
           </div>
         </div>
 

@@ -15,6 +15,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - pbl3_QLCF</title>
     <link rel="stylesheet" type="text/css" href="~/css/Manager/magDashboard.css" />
+    <style>
+        /* Tạo dropdown khi hover vào user menu */
+        .user-menu {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 200px; /* Add a defined width */
+            background-color: #ffffff; /* Add background color */
+            border: 1px solid #e0d6c2; /* Add border */
+            border-radius: 6px; /* Add rounded corners */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Add shadow */
+            padding: 8px 0; /* Add padding */
+            z-index: 100;
+            display: none;
+        }
+
+        .user-menu:hover .user-dropdown {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 0.7rem 1rem;
+            color: #4a2c0f;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background-color: #fff8ea;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background-color: #f0e6d2;
+            margin: 0.3rem 0;
+        }
+    </style>
 </head>
 <body>
     <!-- Top Navigation Bar (horizontal menu) -->
@@ -53,11 +96,17 @@
             <div class="icons">
                 <div class="icon">🔔</div>
             </div>
-            <div class="user-info">
-                <div class="user-avatar">QL</div>
-                <div>
-                    <div class="user-name">@Context.Session.GetString("Ten")</div>
-                    <div class="user-role">@Context.Session.GetString("UserRole")</div>
+            <div class="user-menu">
+                <div class="user-info">
+                    <div class="user-avatar">QL</div>
+                    <div>
+                        <div class="user-name">@Context.Session.GetString("Ten")</div>
+                        <div class="user-role">@Context.Session.GetString("UserRole")</div>
+                    </div>
+                </div>
+                <div class="user-dropdown">
+                    <a href="/Staff/Profile" class="dropdown-item">Thông tin cá nhân</a>
+                    <a href="/LoginAccess/Login" class="dropdown-item">Đăng xuất</a>
                 </div>
             </div>
         </div>
