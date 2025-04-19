@@ -21,5 +21,7 @@ namespace pbl3_QLCF.ViewModels
         public string SDT { get; set; }
         //orderDetail
         public List<ChiTietDonHang>? CTDHs { get; set; } = new List<ChiTietDonHang>();
+        //
+        public int? Giam { get; set; }
     }
 }

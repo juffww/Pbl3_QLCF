@@ -194,7 +194,7 @@ namespace pbl3_QLCF.Controllers
             return RedirectToAction("SanPham");
         }
         [HttpPost]
-        public IActionResult HoanTatDonHang(string tenKhachHang, string soDienThoai, string ghiChuDonHang, string ban = null, bool usePoints = false)
+        public IActionResult HoanTatDonHang(string tenKhachHang, string soDienThoai, string ghiChuDonHang, string ban = null, bool usePoints = true, int pointsToUse = 0)
         {
             var donHang = HttpContext.Session.GetObjectFromJson<DonHang>("DonHangHienTai");
             if (donHang == null || !donHang.ChiTietDonHangs.Any())
@@ -224,21 +224,18 @@ namespace pbl3_QLCF.Controllers
                 }
 
                 maKh = khachHang.MaKh;
-                // If using points, calculate how many points can actually be used
-                if (usePoints && khachHang.DiemTichLuy > 0)
+                if (usePoints && khachHang.DiemTichLuy > 0 && pointsToUse > 0)
                 {
-                    double originalTotal = donHang.TongTien ?? 0;
                     int availablePoints = khachHang.DiemTichLuy ?? 0;
+                    int pointsToDeduct = Math.Min(availablePoints, pointsToUse);
 
-                    int maxUsablePoints = (int)Math.Ceiling(originalTotal / 1000);
-                    int pointsToDeduct = Math.Min(availablePoints, maxUsablePoints);
                     // Calculate discount amount
                     double discountAmount = pointsToDeduct * 1000;
 
                     // Apply discount
                     donHang.TongTien -= discountAmount;
                     if (donHang.TongTien < 0) donHang.TongTien = 0;
-                    
+
                     // Update customer points
                     khachHang.DiemTichLuy -= pointsToDeduct;
                 }
@@ -430,13 +427,14 @@ namespace pbl3_QLCF.Controllers
             {
                 return NotFound();
             }
+
             if (order.TrangThaiDh == "Mới")
             {
                 order.TrangThaiDh = "Đang xử lý";
                 _context.SaveChanges();
             }
-            var KH = _context.KhachHangs.FirstOrDefault(kh => kh.MaKh == order.MaKh);
 
+            var KH = _context.KhachHangs.FirstOrDefault(kh => kh.MaKh == order.MaKh);
             string? tenNhanVien = null;
             if (!string.IsNullOrEmpty(order.MaNv))
             {
@@ -444,6 +442,12 @@ namespace pbl3_QLCF.Controllers
                     .FirstOrDefault(nv => nv.MaNv == order.MaNv && nv.ChucVu == "Nhân viên");
                 tenNhanVien = NV?.HoTen;
             }
+
+            // Calculate the original total based on order items
+            double originalTotal = order.ChiTietDonHangs.Sum(c => c.GiaBan * c.SoLuong) ?? 0;
+
+            // Calculate discount - the difference between original total and final total
+            double discountAmount = Math.Max(0, originalTotal - (order.TongTien ?? 0));
 
             var model = new CTDHViewModel
             {
@@ -453,13 +457,15 @@ namespace pbl3_QLCF.Controllers
                 TongTien = order.TongTien,
                 ThanhToan = order.ThanhToan,
                 MaNv = order.MaNv,
-                tenNv = tenNhanVien ?? "N/A", 
+                tenNv = tenNhanVien ?? "N/A",
                 MaBan = order.MaBan,
                 MaKh = order.MaKh,
                 tenKh = KH?.TenKh ?? "Unknown",
                 SDT = KH?.Sdt ?? "N/A",
-                CTDHs = order.ChiTietDonHangs?.ToList() ?? new List<ChiTietDonHang>()
+                CTDHs = order.ChiTietDonHangs?.ToList() ?? new List<ChiTietDonHang>(),
+                Giam = (int)discountAmount  // Store discount amount
             };
+
             return View(model);
         }
         [HttpPost]

@@ -296,7 +296,7 @@
                         <td>@item.MaNv</td>
                         <td>@item.MaBan</td>
                         <td>@(item.ThoiGianDat?.ToString("dd/MM/yyyy HH:mm"))</td>
-                        <td>@item.TongTien?.ToString("#,###").Replace(",", ".") VND</td>
+                        <td>@item.TongTien?.ToString("#,##0").Replace(",", ".") VND</td>
                         <td>@item.ThanhToan</td>
                             <td><span class="status status-@(item.TrangThaiDh?.ToLower().Replace(" ", "-"))">@item.TrangThaiDh</span></td>
                         <td>

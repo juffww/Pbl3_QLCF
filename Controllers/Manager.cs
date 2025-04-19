@@ -228,6 +228,12 @@ namespace pbl3_QLCF.Controllers
                     .FirstOrDefault(nv => nv.MaNv == order.MaNv);
                 tenNhanVien = NV?.HoTen;
             }
+            // Calculate the original total based on order items
+            double originalTotal = order.ChiTietDonHangs.Sum(c => c.GiaBan * c.SoLuong) ?? 0;
+
+            // Calculate discount - the difference between original total and final total
+            double discountAmount = Math.Max(0, originalTotal - (order.TongTien ?? 0));
+
             var model = new CTDHViewModel
             {
                 MaDh = order.MaDh,
@@ -241,7 +247,8 @@ namespace pbl3_QLCF.Controllers
                 MaKh = order.MaKh,
                 tenKh = KH?.TenKh ?? "Unknown", 
                 SDT = KH?.Sdt ?? "N/A",
-                CTDHs = order.ChiTietDonHangs?.ToList() ?? new List<ChiTietDonHang>()
+                CTDHs = order.ChiTietDonHangs?.ToList() ?? new List<ChiTietDonHang>(),
+                Giam = (int)discountAmount
             };
             return View(model);
         }

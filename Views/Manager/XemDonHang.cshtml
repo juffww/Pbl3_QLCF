@@ -125,9 +125,50 @@
             background-color: #f2f2f2;
         }
 
-        .total-row {
+        .order-summary {
+            margin-top: 20px;
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .order-summary td {
+            padding: 10px 15px;
+            border: none;
+        }
+
+        .summary-row {
+            background-color: #f5f5f5;
+        }
+
+        .summary-label {
+            text-align: right;
             font-weight: bold;
-            background-color: var(--secondary-color) !important;
+            width: 80%;
+            color: #666;
+        }
+
+        .summary-value {
+            font-weight: bold;
+            text-align: right;
+            width: 20%;
+        }
+
+        .discount-row {
+            color: #d9534f;
+        }
+
+        .total-row {
+            background-color: var(--secondary-color);
+            font-size: 16px;
+            color: var(--accent-color);
+        }
+
+        .total-row .summary-label,
+        .total-row .summary-value {
+            padding: 12px 15px;
+            font-weight: bold;
+            color: var(--accent-color);
         }
 
         .btn-group {
@@ -167,12 +208,6 @@
             background-color: var(--success-color);
             color: white;
         }
-
-        .notes {
-            background-color: #f9f9f9;
-            padding: 15px;
-            border-left: 4px solid var(--primary-color);
-            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -268,22 +303,26 @@
                             <td>@item.GhiChu</td>
                         </tr>
                     }
-                    <tr class="total-row">
-                        <td colspan="5" style="text-align: right;">Tổng Cộng:</td>
-                        <td>@Model.TongTien?.ToString("#,##0").Replace(",", ".") VND</td>
-                        <td></td>
-                    </tr>
                 </tbody>
             </table>
 
-            <div class="notes">
-                <h3>Ghi Chú</h3>
-                <p>Khách hàng thân thiết, ưu tiên phục vụ nhanh.</p>
-            </div>
+            <table class="order-summary">
+                <tr class="summary-row">
+                    <td class="summary-label">Tạm tính:</td>
+                    <td class="summary-value">@((Model.CTDHs?.Sum(c => c.GiaBan * c.SoLuong))?.ToString("#,##0").Replace(",", ".")) VND</td>
+                </tr>
+                <tr class="summary-row discount-row">
+                    <td class="summary-label">Giảm:</td>
+                    <td class="summary-value">@Model.Giam?.ToString("#,##0").Replace(",", ".") VND</td>
+                </tr>
+                <tr class="total-row">
+                    <td class="summary-label">Tổng Cộng:</td>
+                    <td class="summary-value">@Model.TongTien?.ToString("#,##0").Replace(",", ".") VND</td>
+                </tr>
+            </table>
 
             <div class="btn-group">
                 <button class="btn btn-primary" onclick="location.href='SuaDonHang?id=DH001'">Sửa Đơn Hàng</button>
-                @* <button class="btn btn-success">Xác Nhận Thanh Toán</button> *@
                 <a asp-action="Donhang" asp-controller="Manager" class="btn btn-secondary">Quay lại</a>
                 <form method="post" action="@Url.Action("XoaDonHang", new { id = Model.MaDh})" style="display: inline;"
                                 onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này không?');">

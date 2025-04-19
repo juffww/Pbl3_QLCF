@@ -404,11 +404,11 @@
                 </div>
                 <div class="summary-row">
                     <span>Tạm tính:</span>
-                    <span>@Model.TongTien?.ToString("#,##0").Replace(",", ".") VND</span>
+                    <span>@((Model.CTDHs?.Sum(c => c.GiaBan * c.SoLuong))?.ToString("#,##0").Replace(",", ".")) VND</span>
                 </div>
                 <div class="summary-row">
-                    <span>Giảm giá:</span>
-                    <span>0 VND</span>
+                    <span>Giảm:</span>
+                    <span>@(Model.Giam?.ToString("#,##0").Replace(",", ".") ?? "0") VND</span>
                 </div>
                 <div class="summary-row total">
                     <span>Tổng tiền:</span>
