@@ -9,7 +9,7 @@ namespace pbl3_QLCF.ViewModels
         public string MaDh { get; set; }
         public DateTime? ThoigianDat { get; set; }
         public string TrangThaiDh { get; set; }
-        public double? TongTien { get; set; }
+        public int? TongTien { get; set; }
         public string ThanhToan { get; set; }
         //NV info
         public string? MaNv { get; set; }

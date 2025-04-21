@@ -16,6 +16,7 @@
         }
     </style>
 </head>
+@model pbl3_QLCF.ViewModels.DashboardMagViewModel
 <body>
     @{
         Html.RenderPartial("~/Views/Manager/sharedAll.cshtml");
@@ -28,18 +29,57 @@
         <div class="dashboard-grid">
             <div class="card">
                 <div class="card-title">Doanh thu hôm nay</div>
-                <div class="card-value">6.4M <span class="card-unit">VND</span></div>
-                <div class="card-trend">↑ 12% so với hôm qua</div>
+                <div class="card-value">@(Model.todayRevenue.ToString("#,##0").Replace(",", ".")) <span class="card-unit">VND</span></div>
+                <div class="card-trend">
+                    @if (Model.todayPercent > 0)
+                    {
+                        <span style="color: green;">↑ @(Math.Abs(Model.todayPercent))% so với tuần trước</span>
+                    }
+                    else if (Model.todayPercent < 0)
+                    {
+                        <span style="color: red;">↓ @(Math.Abs(Model.todayPercent))% so với tuần trước</span>
+                    }
+                    else
+                    {
+                        <span>0% so với tuần trước</span>
+                    }
+                 </div>
             </div>
             <div class="card">
                 <div class="card-title">Đơn hàng hôm nay</div>
-                <div class="card-value">42 <span class="card-unit">đơn</span></div>
-                <div class="card-trend">↑ 8% so với hôm qua</div>
+                <div class="card-value">@Model.todayOrder <span class="card-unit">đơn</span></div>
+                <div class="card-trend">
+                    @if (Model.orderPercent > 0)
+                    {
+                        <span style="color: green;">↑ @(Math.Abs(Model.orderPercent))% so với tuần trước</span>
+                    }
+                    else if (Model.orderPercent < 0)
+                    {
+                        <span style="color: red;">↓ @(Math.Abs(Model.orderPercent))% so với tuần trước</span>
+                    }
+                    else
+                    {
+                        <span>0% so với tuần trước</span>
+                    }
+                 </div>
             </div>
             <div class="card">
                 <div class="card-title">Khách hàng mới</div>
-                <div class="card-value">15 <span class="card-unit">người</span></div>
-                <div class="card-trend">↑ 25% so với tuần trước</div>
+                <div class="card-value">@Model.newCustomerCount <span class="card-unit">người</span></div>
+                <div class="card-trend">
+                    @if (Model.customerPercent > 0)
+                    {
+                        <span style="color: green;">↑ @(Math.Abs(Model.customerPercent))% so với tuần trước</span>
+                    }
+                    else if (Model.customerPercent < 0)
+                    {
+                        <span style="color: red;">↓ @(Math.Abs(Model.customerPercent))% so với tuần trước</span>
+                    }
+                    else
+                    {
+                        <span>0% so với tuần trước</span>
+                    }
+                 </div>
             </div>
             <div class="card graph-card">
                 <div class="card-title">Xu hướng doanh thu</div>
@@ -69,26 +109,13 @@
             <div class="card product-card">
                 <div class="card-title">Sản phẩm bán chạy</div>
                 <div class="product-list">
-                    <div class="product-item">
-                        <div class="product-name">Cà phê sữa</div>
-                        <div class="product-quantity">150</div>
-                    </div>
-                    <div class="product-item">
-                        <div class="product-name">Americano</div>
-                        <div class="product-quantity">140</div>
-                    </div>
-                    <div class="product-item">
-                        <div class="product-name">Cappuccino</div>
-                        <div class="product-quantity">120</div>
-                    </div>
-                    <div class="product-item">
-                        <div class="product-name">Trà đào</div>
-                        <div class="product-quantity">100</div>
-                    </div>
-                    <div class="product-item">
-                        <div class="product-name">Bánh sô-cô-la</div>
-                        <div class="product-quantity">80</div>
-                    </div>
+                    @foreach(var item in Model.topSellingProduct)
+                    {
+                        <div class="product-item">
+                            <div class="product-name">@item.productName</div>
+                            <div class="product-quantity">@item.quantity</div>
+                        </div>
+                    }
                 </div>
             </div>
             <div class="card orders-card">
@@ -102,26 +129,17 @@
                             <th>Trạng thái</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>#1025</td>
-                            <td>Nguyễn Văn A</td>
-                            <td>320,000 VND</td>
-                            <td>Hoàn thành</td>
-                        </tr>
-                        <tr>
-                            <td>#1024</td>
-                            <td>Trần Thị B</td>
-                            <td>175,000 VND</td>
-                            <td>Đang xử lý</td>
-                        </tr>
-                        <tr>
-                            <td>#1023</td>
-                            <td>Lê Văn C</td>
-                            <td>420,000 VND</td>
-                            <td>Hoàn thành</td>
-                        </tr>
-                    </tbody>
+                    @foreach (var item in Model.recentOrders)
+                    {
+                        <tbody>
+                            <tr>
+                                <td>@item.orderID</td>
+                                <td>@item.customerName</td>
+                                <td>@item.tongTien</td>
+                                <td>@item.status</td>
+                            </tr>
+                        </tbody>
+                    }
                 </table>
             </div>
         </div>

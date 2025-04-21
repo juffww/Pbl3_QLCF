@@ -132,7 +132,7 @@ namespace pbl3_QLCF.Migrations
                     MaNV = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     MaBan = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     ThoiGianDat = table.Column<DateTime>(type: "datetime", nullable: true),
-                    TongTien = table.Column<double>(type: "float", nullable: true),
+                    TongTien = table.Column<int>(type: "int", nullable: true),
                     ThanhToan = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     TrangThaiDH = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true)
                 },
@@ -231,7 +231,7 @@ namespace pbl3_QLCF.Migrations
                     MaDH = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     MaMon = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     SoLuong = table.Column<int>(type: "int", nullable: true),
-                    GiaBan = table.Column<double>(type: "float", nullable: true),
+                    GiaBan = table.Column<int>(type: "int", nullable: true),
                     GhiChu = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true)
                 },
                 constraints: table =>

@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using pbl3_QLCF.Data;
+using pbl3_QLCF.Interface;
 using pbl3_QLCF.Models;
 using pbl3_QLCF.Service;
-//using pbl3_QLCF.Service;
 using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,7 +22,8 @@ builder.Services.AddTransient<IMyEmailSender>(provider =>
         "baoho1503@gmail.com",  
         "xbuy fprn swrn ilhu"          
     ));
-
+// In Program.cs or Startup.cs
+builder.Services.AddScoped<pbl3_QLCF.Service.CustomerService>();
 builder.Services.AddControllersWithViews();
 // Các cấu hình khác...
 builder.Services.AddHttpContextAccessor();

@@ -1,5 +1,5 @@
 ﻿using System;
-namespace pbl3_QLCF.Service
+namespace pbl3_QLCF.Interface
 {
     public interface IMyEmailSender
     {

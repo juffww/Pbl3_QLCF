@@ -20,10 +20,6 @@ namespace pbl3_QLCF.Controllers
             _context = context;
         }
 
-        public IActionResult magDashboard()
-        {
-            return View();
-        }
         [HttpGet]
         public IActionResult SanPham(int page = 1, string category = "all", string search = "")
         {
@@ -229,10 +225,10 @@ namespace pbl3_QLCF.Controllers
                 tenNhanVien = NV?.HoTen;
             }
             // Calculate the original total based on order items
-            double originalTotal = order.ChiTietDonHangs.Sum(c => c.GiaBan * c.SoLuong) ?? 0;
+            int originalTotal = order.ChiTietDonHangs.Sum(c => c.GiaBan * c.SoLuong) ?? 0;
 
             // Calculate discount - the difference between original total and final total
-            double discountAmount = Math.Max(0, originalTotal - (order.TongTien ?? 0));
+            int discountAmount = Math.Max(0, originalTotal - (order.TongTien ?? 0));
 
             var model = new CTDHViewModel
             {
@@ -248,7 +244,7 @@ namespace pbl3_QLCF.Controllers
                 tenKh = KH?.TenKh ?? "Unknown", 
                 SDT = KH?.Sdt ?? "N/A",
                 CTDHs = order.ChiTietDonHangs?.ToList() ?? new List<ChiTietDonHang>(),
-                Giam = (int)discountAmount
+                Giam = discountAmount
             };
             return View(model);
         }
@@ -339,44 +335,117 @@ namespace pbl3_QLCF.Controllers
             return View(model);
         }
         [HttpGet]
-        public IActionResult CTLSMH()
+        public IActionResult magDashboard()
         {
-            return View();
-        }
-        
-        public string customerType(string id)
-        {
-            var order = _context.DonHangs.Where(o => o.MaKh == id)
+            var model = new DashboardMagViewModel();
+            var today = DateTime.Today;
+            var yesterday = DateTime.Now.AddDays(-1);
+            var thisWeek = DateTime.Now.AddDays(-7);
+
+            //Doanh thu hom nay
+            model.todayRevenue = _context.DonHangs.Where(o => o.ThoiGianDat.Value.Date == today)
+                                    .Sum(o => (int)o.TongTien);
+            var yesterdayRevenue = _context.DonHangs.Where(o => o.ThoiGianDat.Value.Date == yesterday)
+                                    .Sum(o => (int)o.TongTien);
+            if(yesterdayRevenue > 0)
+            {
+                model.todayPercent = (double)(model.todayRevenue - yesterdayRevenue) / yesterdayRevenue * 100;
+                model.todayPercent = Math.Round(model.todayPercent, 2);
+            }
+            //Don hang hom nay
+            model.todayOrder = _context.DonHangs.Where(o => o.ThoiGianDat.Value.Date == today)
+                                    .Count();
+            var yesterdayOrder = _context.DonHangs.Where(o => o.ThoiGianDat.Value.Date == yesterday)
+                                    .Count();
+            if(yesterdayOrder > 0)
+            {
+                model.orderPercent = (double )(model.todayOrder - yesterdayOrder) / yesterdayOrder * 100;
+                model.orderPercent = Math.Round(model.orderPercent, 2);
+            }
+            //KH moi
+            var allCustomer = _context.KhachHangs.ToList();
+            var newCustomerThisWeek = new List<KhachHang>();
+            foreach(var customer in allCustomer)
+            {
+                var firstOrder = _context.DonHangs
+                                .Where(o => o.MaKh == customer.MaKh)
                                 .OrderByDescending(o => o.ThoiGianDat)
-                                .ToList();
-            if(!order.Any())
-            {
-                return "Mới";
+                                .FirstOrDefault();  
+                if(firstOrder != null && firstOrder.ThoiGianDat >= thisWeek && firstOrder.ThoiGianDat <= today)
+                {
+                    newCustomerThisWeek.Add(customer);
+                }
             }
-            DateTime? lastPurchaseDate = order.FirstOrDefault()?.ThoiGianDat;
-            if(!lastPurchaseDate.HasValue)
+            model.newCustomerCount = newCustomerThisWeek.Count();
+            var lastWeek = thisWeek.AddDays(-7);
+            var newCustomerLastWeek = 0;
+            foreach(var customer in allCustomer)
             {
-                return "Không hoạt động";
+                var firstOrder = _context.DonHangs
+                                .Where(d => d.MaKh == customer.MaKh)
+                                .OrderBy(d => d.ThoiGianDat)
+                                .FirstOrDefault();
+
+                if (firstOrder != null && firstOrder.ThoiGianDat >= lastWeek && firstOrder.ThoiGianDat < thisWeek)
+                {
+                    newCustomerLastWeek++;
+                }
             }
-            DateTime currentDay = DateTime.Now;
-            if((currentDay - lastPurchaseDate.Value).TotalDays > 90)
+            if (newCustomerLastWeek > 0)
             {
-                return "Không hoạt động";
+                model.customerPercent = (double)(model.newCustomerCount - newCustomerLastWeek) / newCustomerLastWeek * 100;
+                model.customerPercent = Math.Round(model.customerPercent, 2);
             }
-            if((currentDay - lastPurchaseDate.Value).TotalDays <= 7)
+            //San pham ban chay
+            var month = DateTime.Now.AddDays(-30);
+            model.topSellingProduct = _context.ChiTietDonHangs.Where(ct => ct.MaDhNavigation.ThoiGianDat.Value.Date >= month)
+                                        .GroupBy(ct => new { ct.MaMonNavigation.TenMon })
+                                        .Select(g => new topSelling()
+                                        {
+                                            productName = g.Key.TenMon,
+                                            quantity = g.Sum(ct => ct.SoLuong.HasValue ? ct.SoLuong.Value : 0)
+                                        })
+                                        .OrderByDescending(x => x.quantity)
+                                        .Take(5)
+                                        .ToList();
+            //Lay don hang gan nhat
+            model.recentOrders = _context.DonHangs
+                                 .OrderByDescending(o => o.ThoiGianDat)
+                                 .Take(10)
+                                 .Select(o => new recentOrder()
+                                 {
+                                     orderID = o.MaDh,
+                                     customerName = o.MaKhNavigation.TenKh,
+                                     tongTien = o.TongTien ?? 0,
+                                     status = o.TrangThaiDh
+                                 })
+                                 .ToList();
+            //Xu huong doanh thu
+            model.revenueTrend = new List<revenueTrendItem>();
+            DateTime startDate = DateTime.Today.AddDays(-9);
+            for (int i = 0; i < 9; i++)
             {
-                return "VIP";
+                DateTime date = startDate.AddDays(i);
+                string dayName = date.DayOfWeek.ToString();
+                switch (dayName)
+                {
+                    case "Monday": dayName = "T2"; break;
+                    case "Tuesday": dayName = "T3"; break;
+                    case "Wednesday": dayName = "T4"; break;
+                    case "Thursday": dayName = "T5"; break;
+                    case "Friday": dayName = "T6"; break;
+                    case "Saturday": dayName = "T7"; break;
+                    case "Sunday": dayName = "CN"; break;
+                }
+                int revenue = _context.DonHangs.Where(o => o.ThoiGianDat == date)
+                                .Sum(o => o.TongTien ?? 0);
+                model.revenueTrend.Add(new revenueTrendItem()
+                {
+                    time = dayName,
+                    revenue = revenue
+                });
             }
-            if ((currentDay - lastPurchaseDate.Value).TotalDays <= 30)
-            {
-                return "Thường xuyên";
-            }
-            DateTime? firstOrderDate = order.LastOrDefault()?.ThoiGianDat;
-            if (firstOrderDate.HasValue && (DateTime.Now - firstOrderDate.Value).TotalDays <= 90)
-            {
-                return "Mới";
-            }
-            return "Thường xuyên";
+            return View(model);
         }
     }
 }

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "3RTfmXEMujM7/0oYvR2L7VAfJye1+vjorA7rfaEcyxw=",
+  "Hash": "2AhVPfN+1ss9nPMuIWAdOM6/GHqgv308gB1PDjqgILA=",
   "Source": "pbl3_QLCF",
   "BasePath": "_content/pbl3_QLCF",
   "Mode": "Default",
@@ -91,25 +91,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\Manager\\magDashboard.css"
-    },
-    {
-      "Identity": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\wwwroot\\css\\Manager\\TSTC.png",
-      "SourceId": "pbl3_QLCF",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\wwwroot\\",
-      "BasePath": "_content/pbl3_QLCF",
-      "RelativePath": "css/Manager/TSTC.png",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\css\\Manager\\TSTC.png"
     },
     {
       "Identity": "C:\\Users\\X1Gen5\\OneDrive - The University of Technology\\Documents\\PBL3\\pbl3_QLCF\\wwwroot\\css\\site.css",

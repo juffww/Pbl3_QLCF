@@ -11,7 +11,7 @@ public partial class ChiTietDonHang
 
     public int? SoLuong { get; set; }
 
-    public double? GiaBan { get; set; }
+    public int? GiaBan { get; set; }
 
     public string? GhiChu { get; set; }
 

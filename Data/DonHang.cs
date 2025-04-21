@@ -15,7 +15,7 @@ public partial class DonHang
 
     public DateTime? ThoiGianDat { get; set; }
 
-    public double? TongTien { get; set; }
+    public int? TongTien { get; set; }
 
     public string? ThanhToan { get; set; }
 

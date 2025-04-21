@@ -5,6 +5,7 @@ using System.Net;
 using pbl3_QLCF.Models;
 using pbl3_QLCF.Service;
 using pbl3_QLCF.ViewModels;
+using pbl3_QLCF.Interface;
 
 namespace pbl3_QLCF.Controllers
 {
@@ -12,10 +13,12 @@ namespace pbl3_QLCF.Controllers
     {
         private readonly Pbl3Context db = new Pbl3Context();
         private readonly IMyEmailSender _emailSender;
-        public LoginAccess(Pbl3Context db, IMyEmailSender emailSender)
+        private CustomerService customerService;
+        public LoginAccess(Pbl3Context db, IMyEmailSender emailSender, CustomerService customerService)
         {
             this.db = db;
             _emailSender = emailSender;
+            this.customerService = customerService;
         }
 
         [HttpGet]
@@ -58,6 +61,7 @@ namespace pbl3_QLCF.Controllers
                     HttpContext.Session.SetString("maNV", u.MaNv.ToString());
                     if (u.ChucVu.Equals("Quản lý"))
                     {
+                        customerService.UpdateCustomerTypes();
                         return RedirectToAction("magDashboard", "Manager");
                     }
                     else

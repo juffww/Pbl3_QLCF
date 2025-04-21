@@ -411,7 +411,7 @@
         </div>
 
         <!-- Filter Section -->
-        <div class="filter-section">
+        @* <div class="filter-section">
             <div class="filter-input">
                 <label for="fromDate">Từ ngày:</label>
                 <input type="date" id="fromDate">
@@ -430,7 +430,7 @@
                 </select>
             </div>
             <button class="filter-button" onclick="filterOrders()">Lọc</button>
-        </div>
+        </div> *@
 
         <!-- Orders Table -->
         <div class="orders-table">
@@ -440,7 +440,7 @@
                         <th>Mã đơn hàng</th>
                         <th>Thời gian đặt</th>
                         <th>Tổng tiền</th>
-                        @* <th>Thao tác</th> *@
+                        <th>Thao tác</th>
                     </tr>
                 </thead>
                 <tbody id="ordersTableBody">
@@ -450,6 +450,13 @@
                             <td>@item.OrderId</td>
                             <td>@item.OrderTime</td>
                             <td>@item.TotalAmount?.ToString("#,##0").Replace(",", ".")</td>
+                            <td>
+                                <div class="actions">
+                                    <form method="get" action="@Url.Action("XemDonHang", new {id = item.OrderId})">
+                                        <button class="view-button">Chi tiết</button>
+                                    </form>
+                                </div>
+                            </td>
                         </tr>
                     }
                     @* <tr>

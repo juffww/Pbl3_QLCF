@@ -301,7 +301,6 @@
                             <td><span class="status status-@(item.TrangThaiDh?.ToLower().Replace(" ", "-"))">@item.TrangThaiDh</span></td>
                         <td>
                             <a href="@Url.Action("XemDonHang", new { id = item.MaDh})" class="action-btn view-btn">Xem</a>
-                            <a href="@Url.Action("SuaDonHang", new { id = item.MaDh})" class="action-btn edit-btn">Sửa</a>
                             <form method="post" action="@Url.Action("XoaDonHang", new { id = item.MaDh})" style="display: inline;"
                                 onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này không?');">
                                     @Html.AntiForgeryToken()

@@ -230,7 +230,7 @@ namespace pbl3_QLCF.Controllers
                     int pointsToDeduct = Math.Min(availablePoints, pointsToUse);
 
                     // Calculate discount amount
-                    double discountAmount = pointsToDeduct * 1000;
+                    int discountAmount = pointsToDeduct * 1000;
 
                     // Apply discount
                     donHang.TongTien -= discountAmount;
@@ -362,10 +362,10 @@ namespace pbl3_QLCF.Controllers
 
         private void CapNhatTongTien(DonHang donHang)
         {
-            double tongTien = 0;
+            int tongTien = 0;
             foreach (var item in donHang.ChiTietDonHangs)
             {
-                tongTien += (double)(item.GiaBan * item.SoLuong);
+                tongTien += (int)(item.GiaBan * item.SoLuong);
             }
             donHang.TongTien = tongTien;
 

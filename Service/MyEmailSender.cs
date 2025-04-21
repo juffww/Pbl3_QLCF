@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Net;
 using System.Web;
-using pbl3_QLCF.Service;
+using pbl3_QLCF.Interface;
 
 namespace pbl3_QLCF.Service
 {

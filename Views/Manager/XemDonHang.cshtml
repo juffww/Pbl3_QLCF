@@ -322,7 +322,6 @@
             </table>
 
             <div class="btn-group">
-                <button class="btn btn-primary" onclick="location.href='SuaDonHang?id=DH001'">Sửa Đơn Hàng</button>
                 <a asp-action="Donhang" asp-controller="Manager" class="btn btn-secondary">Quay lại</a>
                 <form method="post" action="@Url.Action("XoaDonHang", new { id = Model.MaDh})" style="display: inline;"
                                 onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này không?');">

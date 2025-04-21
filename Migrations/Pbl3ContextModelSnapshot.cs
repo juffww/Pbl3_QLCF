@@ -102,8 +102,8 @@ namespace pbl3_QLCF.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<double?>("GiaBan")
-                        .HasColumnType("float");
+                    b.Property<int?>("GiaBan")
+                        .HasColumnType("int");
 
                     b.Property<int?>("SoLuong")
                         .HasColumnType("int");
@@ -166,8 +166,8 @@ namespace pbl3_QLCF.Migrations
                     b.Property<DateTime?>("ThoiGianDat")
                         .HasColumnType("datetime");
 
-                    b.Property<double?>("TongTien")
-                        .HasColumnType("float");
+                    b.Property<int?>("TongTien")
+                        .HasColumnType("int");
 
                     b.Property<string>("TrangThaiDh")
                         .HasMaxLength(20)

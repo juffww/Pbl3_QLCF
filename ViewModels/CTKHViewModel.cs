@@ -10,7 +10,7 @@
         public string CustomerType { get; set; }
 
         // Summary Info
-        public double TotalSpent { get; set; }
+        public int TotalSpent { get; set; }
         public int OrderCount { get; set; }
         public double AverageOrderValue { get; set; }
         public DateTime? LastPurchaseDate { get; set; }
@@ -22,7 +22,7 @@
         {
             public string OrderId { get; set; }
             public DateTime OrderTime { get; set; }
-            public double? TotalAmount { get; set; }
+            public int? TotalAmount { get; set; }
         }
     }
 }
