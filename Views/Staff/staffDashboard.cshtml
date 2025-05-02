@@ -24,6 +24,7 @@
         }
   </style>
 </head>
+@model pbl3_QLCF.ViewModels.DashboardStaffViewModel
 <body>
     @{
         Html.RenderPartial("~/Views/Staff/sharedAll.cshtml");
@@ -34,7 +35,7 @@
       <div class="stat-card">
         <div class="stat-header stat-blue">Đơn hàng hôm nay</div>
         <div class="stat-content">
-          <div class="stat-value">24</div>
+          <div class="stat-value">@Model.todayOrder</div>
           <div class="stat-unit">đơn</div>
         </div>
         <div class="indicator">
@@ -45,7 +46,7 @@
       <div class="stat-card">
         <div class="stat-header stat-blue">Đơn hàng đã hoàn thành</div>
         <div class="stat-content">
-          <div class="stat-value">19</div>
+          <div class="stat-value">@Model.orderCompleted</div>
           <div class="stat-unit">đơn</div>
         </div>
         <div class="indicator">
@@ -54,9 +55,9 @@
       </div>
       @* orange *@
       <div class="stat-card">
-        <div class="stat-header stat-blue">Đơn đang xử lý</div>
+        <div class="stat-header stat-blue">Đơn hàng đang xử lý</div>
         <div class="stat-content">
-          <div class="stat-value">5</div>
+          <div class="stat-value">@Model.proOrderCount</div>
           <div class="stat-unit">đơn</div>
         </div>
         <div class="indicator">
@@ -69,31 +70,36 @@
     <div class="grid">
       <div class="card">
         <div class="card-title">Đơn hàng đang xử lý</div>
-        <div class="tabs">
-          <div class="tab active">Tất cả</div>
-          <div class="tab">Mới</div>
-          <div class="tab">Đang xử lý</div>
-        </div>
-        <div class="order-list">
-          <div class="order-item">
-            <div class="order-name">#1010 - Nguyễn Văn A</div>
-            <div class="order-details">Americano (x1), Cappuccino (x1)</div>
-            <div class="order-time">09:30 - Hôm nay</div>
-            <div class="order-status status-new">Mới</div>
-          </div>
-          <div class="order-item">
-            <div class="order-name">#1011 - Trần Thị B</div>
-            <div class="order-details">Latte (x2), Bánh chocolate (x1)</div>
-            <div class="order-time">09:45 - Hôm nay</div>
-            <div class="order-status status-processing">Đang làm</div>
-          </div>
-          <div class="order-item">
-            <div class="order-name">#1012 - Lê Văn C</div>
-            <div class="order-details">Cà phê đen (x1), Cà phê sữa (x1)</div>
-            <div class="order-time">10:05 - Hôm nay</div>
-            <div class="order-status status-new">Mới</div>
-          </div>
-        </div>
+            <div class="tabs">
+              <div class="tab active">Tất cả</div>
+              <div class="tab">Mới</div>
+              <div class="tab">Đang xử lý</div>
+            </div>
+            <div class="order-list"> 
+                @foreach(var item in Model.processOrders)
+                {
+                    <div class="order-item">
+                        <div class="order-name">#@(item.orderId) - @(item.customerName)</div>
+                        <div class="order-details">
+                            @if (item.items != null && item.items.Any())
+                            {
+                                var productTexts = new List<string>();
+                                @foreach (var product in item.items)
+                                {
+                                    productTexts.Add($"{product.productName} (x{product.quantity})");
+                                }
+                                @string.Join(", ", productTexts)
+                            }
+                            else
+                            {
+                                <span>Không có sản phẩm</span>
+                            }
+                        </div>
+                        <div class="order-time">@item.orderTime.ToString("HH:mm - dd/MM/yyyy")</div>
+                        <div class="order-status status-@(item.status=="Mới" ? "new" : "processing")">@item.status</div>
+                    </div>
+                }
+            </div>
       </div>
 
       <div>

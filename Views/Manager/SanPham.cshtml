@@ -467,17 +467,6 @@
                     </a>
                 }
 
-                // Hiển thị các trang gần đó
-                // int startPage = Math.Max(1, currentPage - 1);
-                // int endPage = Math.Min(totalPages, currentPage + 1);
-                // for (int i = startPage; i <= endPage; i++)
-                // {
-                //     <a class="@(i == currentPage ? "active" : "")" 
-                //        href="@Url.Action("SanPham", new { page = i, category = ViewBag.CurrentCategory, search = ViewBag.SearchString })">
-                //         @i
-                //     </a>
-                // }
-
                 // Hiển thị các trang gần đó (5 trang)
                 int startPage = Math.Max(1, currentPage - 2); // Show 2 pages before current
                 int endPage = Math.Min(totalPages, currentPage + 2); // Show 2 pages after current
@@ -520,7 +509,6 @@
                         &gt;&gt;
                     </a>
                 }
-                
             }
         </div>
     </div>

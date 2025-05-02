@@ -1,0 +1,287 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CaféManager - Thêm Nhân Viên</title>
+    <style>
+        :root {
+            --primary-color: #8D6E63;
+            --primary-dark: #6D4C41;
+            --primary-light: #D7CCC8;
+            --accent-color: #FFCC80;
+            --text-color: #212121;
+            --text-light: #757575;
+            --bg-color: #FFF8E1;
+            --card-bg: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .content {
+            padding: 1rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+            overflow: hidden;
+            padding: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-col {
+            flex: 1;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background-color: #9E9E9E;
+        }
+
+        .btn-secondary:hover {
+            background-color: #757575;
+        }
+
+        .form-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .section-title {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-dark);
+        }
+
+        select.form-control {
+            height: 2.8rem;
+        }
+
+        input[type="date"].form-control {
+            height: 2.8rem;
+        }
+
+        /* Required field indicator */
+        .required::after {
+            content: "*";
+            color: red;
+            margin-left: 0.25rem;
+        }
+        .alert {
+                padding: 15px;
+                margin-bottom: 20px;
+                border: 1px solid transparent;
+                border-radius: 4px;
+        }
+
+        .alert-success {
+            color: #3c763d;
+            background-color: #dff0d8;
+            border-color: #d6e9c6;
+        }
+
+        .alert-danger {
+            color: #a94442;
+            background-color: #f2dede;
+            border-color: #ebccd1;
+        }
+    </style>
+</head>
+@model pbl3_QLCF.Data.NguoiDung;
+<body>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+    @{
+        Html.RenderPartial("~/Views/Manager/sharedAll.cshtml");
+    }
+    <!-- Content -->
+    <div class="content">
+        <h1 class="page-title">Thêm Nhân Viên Mới</h1>
+
+        <div class="card">
+            <form asp-action = "ThemNhanVien" method="post">
+                <h3 class="section-title">Thông tin cá nhân</h3>
+
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label asp-for="MaNv" class="required">Mã Nhân Viên</label>
+                            <input asp-for="MaNv" type="text" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label asp-for="HoTen" class="required">Họ Tên</label>
+                            <input asp-for="HoTen" type="text" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label asp-for="NgaySinh">Ngày Sinh</label>
+                            <input asp-for="NgaySinh" type="date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label asp-for="GioiTinh">Giới Tính</label>
+                            <select asp-for ="GioiTinh" class="form-control">
+                                <option value="">-- Chọn giới tính --</option>
+                                <option value="true">Nam</option>
+                                <option value="false">Nữ</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label asp-for="Sdt">Số Điện Thoại</label>
+                            <input asp-for="Sdt" type="tel" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label asp-for="Email">Email</label>
+                            <input asp-for="Email" type="email" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="DiaChi">Địa Chỉ</label>
+                    <input asp-for="DiaChi" type="text" class="form-control">
+                </div>
+
+                <h3 class="section-title">Thông tin công việc</h3>
+
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label asp-for="ChucVu">Chức Vụ</label>
+                            <select asp-for="ChucVu" class="form-control">
+                                <option value="">-- Chọn chức vụ --</option>
+                                <option value="Quản lý">Quản lý</option>
+                                <option value="Thu ngân">Nhân viên</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label asp-for="CaLamViec">Ca Làm Việc</label>
+                            <select asp-for="CaLamViec" class="form-control">
+                                <option value="">-- Chọn ca làm việc --</option>
+                                <option value="Sáng">Ca sáng</option>
+                                <option value="Chiều">Ca chiều</option>
+                                <option value="Tối">Ca tối</option>
+                                <option value="Cả ngày">Cả Ngày</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="TrangThai">Trạng Thái</label>
+                    <select asp-for="TrangThai" class="form-control">
+                        <option value="Đang làm" selected>Đang làm việc</option>
+                        <option value="Nghỉ việc">Nghỉ việc</option>
+                    </select>
+                </div>
+
+                <h3 class="section-title">Thông tin đăng nhập</h3>
+
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label asp-for="TenDangNhap">Tên Đăng Nhập</label>
+                            <input asp-for="TenDangNhap" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label asp-for="MatKhau">Mật Khẩu</label>
+                            <input asp-for="MatKhau" type="password" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-buttons">
+                    <a asp-action="ThemSanPham" class="btn btn-secondary">Hủy</a>
+                    <button type="submit" class="btn">Lưu Nhân Viên</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

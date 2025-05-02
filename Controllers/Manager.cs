@@ -58,7 +58,7 @@ namespace pbl3_QLCF.Controllers
             return View();
         }
 
-        
+
         [Route("ThemSanPham")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -153,18 +153,18 @@ namespace pbl3_QLCF.Controllers
                 return RedirectToAction("SanPham");
             }
         }
-        
+
         //-----------------------------Đơn Hàng----------------------------------------------------
         [HttpGet]
         public IActionResult DonHang(int page = 1, string category = "all", string search = "")
         {
             IQueryable<DonHang> query = _context.DonHangs;
-            if(category != "all")
+            if (category != "all")
             {
-                switch(category)
+                switch (category)
                 {
                     case "new":
-                        query = query.Where(dh => dh.TrangThaiDh == "Mới"); 
+                        query = query.Where(dh => dh.TrangThaiDh == "Mới");
                         break;
                     case "processing":
                         query = query.Where(dh => dh.TrangThaiDh == "Đang xử lý");
@@ -238,10 +238,10 @@ namespace pbl3_QLCF.Controllers
                 TongTien = order.TongTien,
                 ThanhToan = order.ThanhToan,
                 MaNv = order.MaNv,
-                tenNv = tenNhanVien ?? "N/A", 
+                tenNv = tenNhanVien ?? "N/A",
                 MaBan = order.MaBan,
                 MaKh = order.MaKh,
-                tenKh = KH?.TenKh ?? "Unknown", 
+                tenKh = KH?.TenKh ?? "Unknown",
                 SDT = KH?.Sdt ?? "N/A",
                 CTDHs = order.ChiTietDonHangs?.ToList() ?? new List<ChiTietDonHang>(),
                 Giam = discountAmount
@@ -256,7 +256,7 @@ namespace pbl3_QLCF.Controllers
             try
             {
                 var order = _context.DonHangs.Find(id);
-                if(order == null)
+                if (order == null)
                 {
                     TempData["ErrorMessage"] = "Không tìm thấy sản phẩm để xóa";
                     return RedirectToAction("DonHang");
@@ -268,7 +268,7 @@ namespace pbl3_QLCF.Controllers
                 TempData["SuccessMessage"] = "Đã xóa đơn hàng thành công";
                 return RedirectToAction("DonHang");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 TempData["ErrorMessage"] = "Lỗi khi xóa sản phẩm" + e.Message;
                 return RedirectToAction("DonHang");
@@ -283,7 +283,7 @@ namespace pbl3_QLCF.Controllers
             {
                 query = query.Where(q => q.LoaiKH == category);
             }
-            if(!string.IsNullOrEmpty(search))
+            if (!string.IsNullOrEmpty(search))
             {
                 query = query.Where(q => q.TenKh.Contains(search));
             }
@@ -334,6 +334,7 @@ namespace pbl3_QLCF.Controllers
 
             return View(model);
         }
+        //--------------------------------Dashboard-----------------------
         [HttpGet]
         public IActionResult magDashboard()
         {
@@ -347,7 +348,7 @@ namespace pbl3_QLCF.Controllers
                                     .Sum(o => (int)o.TongTien);
             var yesterdayRevenue = _context.DonHangs.Where(o => o.ThoiGianDat.Value.Date == yesterday)
                                     .Sum(o => (int)o.TongTien);
-            if(yesterdayRevenue > 0)
+            if (yesterdayRevenue > 0)
             {
                 model.todayPercent = (double)(model.todayRevenue - yesterdayRevenue) / yesterdayRevenue * 100;
                 model.todayPercent = Math.Round(model.todayPercent, 2);
@@ -357,21 +358,21 @@ namespace pbl3_QLCF.Controllers
                                     .Count();
             var yesterdayOrder = _context.DonHangs.Where(o => o.ThoiGianDat.Value.Date == yesterday)
                                     .Count();
-            if(yesterdayOrder > 0)
+            if (yesterdayOrder > 0)
             {
-                model.orderPercent = (double )(model.todayOrder - yesterdayOrder) / yesterdayOrder * 100;
+                model.orderPercent = (double)(model.todayOrder - yesterdayOrder) / yesterdayOrder * 100;
                 model.orderPercent = Math.Round(model.orderPercent, 2);
             }
             //KH moi
             var allCustomer = _context.KhachHangs.ToList();
             var newCustomerThisWeek = new List<KhachHang>();
-            foreach(var customer in allCustomer)
+            foreach (var customer in allCustomer)
             {
                 var firstOrder = _context.DonHangs
                                 .Where(o => o.MaKh == customer.MaKh)
                                 .OrderByDescending(o => o.ThoiGianDat)
-                                .FirstOrDefault();  
-                if(firstOrder != null && firstOrder.ThoiGianDat >= thisWeek && firstOrder.ThoiGianDat <= today)
+                                .FirstOrDefault();
+                if (firstOrder != null && firstOrder.ThoiGianDat >= thisWeek && firstOrder.ThoiGianDat <= today)
                 {
                     newCustomerThisWeek.Add(customer);
                 }
@@ -379,7 +380,7 @@ namespace pbl3_QLCF.Controllers
             model.newCustomerCount = newCustomerThisWeek.Count();
             var lastWeek = thisWeek.AddDays(-7);
             var newCustomerLastWeek = 0;
-            foreach(var customer in allCustomer)
+            foreach (var customer in allCustomer)
             {
                 var firstOrder = _context.DonHangs
                                 .Where(d => d.MaKh == customer.MaKh)
@@ -447,5 +448,52 @@ namespace pbl3_QLCF.Controllers
             }
             return View(model);
         }
-    }
+        //-------------------NhanVien-------------------
+        [HttpGet]
+        public IActionResult NhanVien(int page = 1, string search = "")
+        {
+            IQueryable<NguoiDung> query = _context.NguoiDungs/*.Where(n => n.ChucVu == "Nhân viên")*/;
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(q => q.HoTen.Contains(search) || q.Sdt.Contains(search));
+            }
+            int totalItems = query.Count();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)PageSize);
+            var NVs = query.Skip((page - 1) * PageSize)
+                        .Take(PageSize)
+                        .ToList();
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+            ViewBag.SearchString = search;
+            return View(NVs);
+        }
+        [HttpGet]
+        public IActionResult ThemNhanVien()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult ThemNhanVien(NguoiDung user)
+        {
+            if (ModelState.IsValid)
+            {
+                var existingNV = _context.NguoiDungs.FirstOrDefault(n => n.MaNv == user.MaNv);
+                if (existingNV != null)
+                {
+                    TempData["ErrorMessage"] = "Lỗi: Mã nhân viên đã tồn tại";
+                    return View(user);
+                }
+                _context.NguoiDungs.Add(user);
+                _context.SaveChanges();
+                TempData["SuccessMessage"] = "Thêm người dùng thành công";
+                return RedirectToAction("NhanVien");
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Vui lòng kiểm tra lại thông tin nhân viên";
+            }
+            return View(user);
+        }
+    }    
 }

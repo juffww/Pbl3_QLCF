@@ -3,6 +3,7 @@ using pbl3_QLCF.ViewModels;
 using pbl3_QLCF.Data;
 using pbl3_QLCF.Models.Authentication;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.RateLimiting;
 namespace pbl3_QLCF.Controllers
 {
     //[Authentication]
@@ -13,12 +14,6 @@ namespace pbl3_QLCF.Controllers
         public Staff(Pbl3Context context)
         {
             _context = context;
-        }
-        
-        [HttpGet]
-        public IActionResult staffDashboard()
-        {
-            return View();
         }
 
         [HttpGet]
@@ -496,5 +491,55 @@ namespace pbl3_QLCF.Controllers
                 search = TempData["SearchString"]?.ToString()
             });
         }
+
+        [HttpGet]
+        public IActionResult staffDashboard()
+        {
+            var model = new DashboardStaffViewModel();
+            var today = DateTime.Today;
+
+            model.todayOrder = _context.DonHangs.Where(o => o.ThoiGianDat.Value.Date == today)
+                                .Count();
+            model.orderCompleted = _context.DonHangs.Where(o => o.ThoiGianDat.Value.Date == today
+                                        && o.TrangThaiDh == "Hoàn thành")
+                                .Count();   
+            model.proOrderCount = _context.DonHangs.Where(o => o.ThoiGianDat.Value.Date == today
+                                        && o.TrangThaiDh == "Đang xử lý")
+                                .Count();
+            //Lay cac don hang dang xu ly
+            var orders = _context.DonHangs
+                            .Where(o => o.ThoiGianDat.Value.Date == today && o.TrangThaiDh != "Hoàn thành")
+                            .Include(o => o.MaKhNavigation)
+                            .Include(o => o.ChiTietDonHangs)
+                                .ThenInclude(ct => ct.MaMonNavigation)
+                            .OrderByDescending(o => o.ThoiGianDat)
+                            .Take(3)
+                            .ToList();
+            foreach(var order in orders)
+            {
+                var processOrder = new OrderInProcessing
+                {
+                    orderId = order.MaDh,
+                    customerName = order.MaKhNavigation?.TenKh ?? "Anonymous",
+                    orderTime = order.ThoiGianDat ?? DateTime.Now,
+                    status = order.TrangThaiDh,
+                    items = new List<orderItem>()
+                };
+                if (order.ChiTietDonHangs != null)
+                {
+                    foreach (var item in order.ChiTietDonHangs)
+                    {
+                        processOrder.items.Add(new orderItem
+                        {
+                            productName = item.MaMonNavigation.TenMon,
+                            quantity = item.SoLuong ?? 0
+                        });
+                    }
+                }
+                model.processOrders.Add(processOrder);
+            }
+            return View(model);
+        }
     }
 }
+    

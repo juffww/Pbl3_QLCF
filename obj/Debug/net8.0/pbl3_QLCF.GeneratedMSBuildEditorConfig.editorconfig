@@ -78,12 +78,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFuYWdlclxtYWdEYXNoYm9hcmQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/X1Gen5/OneDrive - The University of Technology/Documents/PBL3/pbl3_QLCF/Views/Manager/NhanVien.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFuYWdlclxOaGFuVmllbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/X1Gen5/OneDrive - The University of Technology/Documents/PBL3/pbl3_QLCF/Views/Manager/SanPham.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFuYWdlclxTYW5QaGFtLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/X1Gen5/OneDrive - The University of Technology/Documents/PBL3/pbl3_QLCF/Views/Manager/sharedAll.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFuYWdlclxzaGFyZWRBbGwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/X1Gen5/OneDrive - The University of Technology/Documents/PBL3/pbl3_QLCF/Views/Manager/ThemNhanVien.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFuYWdlclxUaGVtTmhhblZpZW4uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/X1Gen5/OneDrive - The University of Technology/Documents/PBL3/pbl3_QLCF/Views/Manager/ThemSanPham.cshtml]
