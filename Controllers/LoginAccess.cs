@@ -35,23 +35,12 @@ namespace pbl3_QLCF.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(NguoiDung user, string userRole)
+        public IActionResult Login(NguoiDung user)
         {
             if (HttpContext.Session.GetString("TenDangNhap") == null)
             {
-                var query = db.NguoiDungs.Where(x => x.TenDangNhap.Equals(user.TenDangNhap) &&
-                                                    x.MatKhau.Equals(user.MatKhau));
-
-                if (userRole == "manager")
-                {
-                    query = query.Where(x => x.ChucVu.Equals("Quản lý"));
-                }
-                else
-                {
-                    query = query.Where(x => x.ChucVu.Equals("Nhân viên"));
-                }
-
-                var u = query.FirstOrDefault();
+                var u = db.NguoiDungs.FirstOrDefault(x => x.TenDangNhap.Equals(user.TenDangNhap) &&
+                                                       x.MatKhau.Equals(user.MatKhau));
 
                 if (u != null)
                 {
@@ -59,6 +48,7 @@ namespace pbl3_QLCF.Controllers
                     HttpContext.Session.SetString("UserRole", u.ChucVu.ToString());
                     HttpContext.Session.SetString("Ten", u.HoTen.ToString());
                     HttpContext.Session.SetString("maNV", u.MaNv.ToString());
+
                     if (u.ChucVu.Equals("Quản lý"))
                     {
                         customerService.UpdateCustomerTypes();
@@ -76,6 +66,12 @@ namespace pbl3_QLCF.Controllers
                 }
             }
             return View();
+        }
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+
+            return RedirectToAction("Login");
         }
         private bool CheckEmail(string email)
         {

@@ -437,8 +437,8 @@
                     </div>
                 </div>
                 <div class="user-dropdown">
-                    <a href="/Staff/Profile" class="dropdown-item">Thông tin cá nhân</a>
-                    <a href="/LoginAccess/Login" class="dropdown-item">Đăng xuất</a>
+                    <a href="@Url.Action("xemUser", "Manager", new { id = Context.Session.GetString("maNV") } )" class="dropdown-item">Thông tin cá nhân</a>
+                    <a href="/LoginAccess/Logout" class="dropdown-item">Đăng xuất</a>
                 </div>
             </div>
         </div>

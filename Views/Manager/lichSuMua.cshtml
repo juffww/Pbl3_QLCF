@@ -355,7 +355,8 @@
         }
     </style>
 </head>
-@model pbl3_QLCF.ViewModels.CTKHViewModel;
+@using pbl3_QLCF.ViewModels;
+@model CTKHViewModel;
 <body>
     <!-- Header -->
     @{
@@ -459,24 +460,12 @@
                             </td>
                         </tr>
                     }
-                    @* <tr>
-                        <td>DH001</td>
-                        <td>10/04/2025 14:30</td>
-                        <td>85,000đ</td>
-                        <td>
-                            <div class="actions">
-                                <form method="get" action="@Url.Action("CTLSMH")">
-                                    <button class="view-button">Chi tiết</button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr> *@
                 </tbody>
             </table>
         </div>
 
         <!-- Pagination -->
-        <div class="pagination">
+        @* <div class="pagination">
             <div class="pagination-button">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
@@ -490,7 +479,7 @@
                     <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
                 </svg>
             </div>
-        </div>
+        </div> *@
     </div>
 </body>
 </html>

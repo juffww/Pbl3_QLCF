@@ -92,6 +92,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Top Navbar instead of Side Menu -->
     <nav class="top-navbar">
@@ -103,8 +104,6 @@
             <a href="/Staff/staffDashboard" class="top-menu-item @(currentController == "Staff" && currentAction == "staffDashboard" ? "active" : "")">Dashboard</a>
             <a href="/Staff/DonHang" class="top-menu-item @(currentController == "Staff" && currentAction == "DonHang" ? "active" : "")">Đơn hàng</a>
             <a href="/Staff/SanPham" class="top-menu-item @(currentController == "Staff" && currentAction == "SanPham" ? "active" : "")">Sản phẩm</a>
-            <a href="/Staff/KhuyenMai" class="top-menu-item @(currentController == "Staff" && currentAction == "KhuyenMai" ? "active" : "")">Khuyến mãi</a>
-            <a href="/Staff/BaoCao" class="top-menu-item @(currentController == "Staff" && currentAction == "BaoCao" ? "active" : "")">Báo cáo</a>
         </div>
         <div class="user-menu">
             <div class="user-avatar">NV</div>
@@ -112,9 +111,10 @@
                 <div class="user-name">@Context.Session.GetString("Ten")</div>
                 <div class="user-role">@Context.Session.GetString("UserRole")</div>
             </div>
+            
             <div class="user-dropdown">
-                <a href="/Staff/Profile" class="dropdown-item">Thông tin cá nhân</a>
-                <a href="/LoginAccess/Login" class="dropdown-item">Đăng xuất</a>
+                <a href="@Url.Action("ThongTinCaNhan", "Staff", new { id = Context.Session.GetString("maNV") } )" class="dropdown-item">Thông tin cá nhân</a>
+                <a href="@Url.Action("Logout", "LoginAccess")" class="dropdown-item">Đăng xuất</a>
             </div>
         </div>
     </nav>

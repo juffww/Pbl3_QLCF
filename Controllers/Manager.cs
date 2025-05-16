@@ -9,7 +9,7 @@ using pbl3_QLCF.ViewModels;
 
 namespace pbl3_QLCF.Controllers
 {
-    //[Authentication]
+    [Authentication]
     public class Manager : Controller
     {
         private readonly Pbl3Context _context;
@@ -334,45 +334,61 @@ namespace pbl3_QLCF.Controllers
 
             return View(model);
         }
-        //--------------------------------Dashboard-----------------------
+        //--------------------------------Dashboard----------------------------
         [HttpGet]
         public IActionResult magDashboard()
         {
             var model = new DashboardMagViewModel();
             var today = DateTime.Today;
-            var yesterday = DateTime.Now.AddDays(-1);
-            var thisWeek = DateTime.Now.AddDays(-7);
+            var customerToday = DateTime.Now;
+            var yesterday = DateTime.Today.AddDays(-1);
+            var thisWeek = DateTime.Today.AddDays(-7);
 
             //Doanh thu hom nay
             model.todayRevenue = _context.DonHangs.Where(o => o.ThoiGianDat.Value.Date == today)
                                     .Sum(o => (int)o.TongTien);
             var yesterdayRevenue = _context.DonHangs.Where(o => o.ThoiGianDat.Value.Date == yesterday)
                                     .Sum(o => (int)o.TongTien);
+            model.todayPercent = 0; 
             if (yesterdayRevenue > 0)
             {
                 model.todayPercent = (double)(model.todayRevenue - yesterdayRevenue) / yesterdayRevenue * 100;
                 model.todayPercent = Math.Round(model.todayPercent, 2);
             }
+            else if (model.todayRevenue > 0)
+            {
+                model.todayPercent = 100; 
+            }
             //Don hang hom nay
-            model.todayOrder = _context.DonHangs.Where(o => o.ThoiGianDat.Value.Date == today)
-                                    .Count();
-            var yesterdayOrder = _context.DonHangs.Where(o => o.ThoiGianDat.Value.Date == yesterday)
-                                    .Count();
+            model.todayOrder = _context.DonHangs
+                .Where(o => o.ThoiGianDat.HasValue && o.ThoiGianDat.Value.Date == today)
+                .Count();
+
+            var yesterdayOrder = _context.DonHangs
+                .Where(o => o.ThoiGianDat.HasValue && o.ThoiGianDat.Value.Date == yesterday)
+                .Count();
+
+            model.orderPercent = 0;
             if (yesterdayOrder > 0)
             {
                 model.orderPercent = (double)(model.todayOrder - yesterdayOrder) / yesterdayOrder * 100;
-                model.orderPercent = Math.Round(model.orderPercent, 2);
+                 model.orderPercent = Math.Round(model.orderPercent, 2);
             }
-            //KH moi
+            else if (model.todayOrder > 0)
+            {
+                model.orderPercent = 100; 
+            }
+            //KH
             var allCustomer = _context.KhachHangs.ToList();
             var newCustomerThisWeek = new List<KhachHang>();
             foreach (var customer in allCustomer)
             {
                 var firstOrder = _context.DonHangs
                                 .Where(o => o.MaKh == customer.MaKh)
-                                .OrderByDescending(o => o.ThoiGianDat)
+                                .OrderBy(o => o.ThoiGianDat) 
                                 .FirstOrDefault();
-                if (firstOrder != null && firstOrder.ThoiGianDat >= thisWeek && firstOrder.ThoiGianDat <= today)
+                if (firstOrder != null && firstOrder.ThoiGianDat.HasValue &&
+                    firstOrder.ThoiGianDat.Value >= thisWeek && firstOrder.ThoiGianDat.Value <= customerToday)
                 {
                     newCustomerThisWeek.Add(customer);
                 }
@@ -386,16 +402,21 @@ namespace pbl3_QLCF.Controllers
                                 .Where(d => d.MaKh == customer.MaKh)
                                 .OrderBy(d => d.ThoiGianDat)
                                 .FirstOrDefault();
-
-                if (firstOrder != null && firstOrder.ThoiGianDat >= lastWeek && firstOrder.ThoiGianDat < thisWeek)
+                if (firstOrder != null && firstOrder.ThoiGianDat.HasValue &&
+                    firstOrder.ThoiGianDat.Value >= lastWeek && firstOrder.ThoiGianDat.Value < thisWeek)
                 {
                     newCustomerLastWeek++;
                 }
             }
+            model.customerPercent = 0;
             if (newCustomerLastWeek > 0)
             {
                 model.customerPercent = (double)(model.newCustomerCount - newCustomerLastWeek) / newCustomerLastWeek * 100;
                 model.customerPercent = Math.Round(model.customerPercent, 2);
+            }
+            else if (model.newCustomerCount > 0)
+            {
+                model.customerPercent = 100;
             }
             //San pham ban chay
             var month = DateTime.Now.AddDays(-30);
@@ -446,7 +467,9 @@ namespace pbl3_QLCF.Controllers
                     revenue = revenue
                 });
             }
-            return View(model);
+            //return View(model);
+
+            return View("~/Views/Manager/Dashboard/magDashboard.cshtml", model);
         }
         //-------------------NhanVien-------------------
         [HttpGet]
@@ -494,6 +517,44 @@ namespace pbl3_QLCF.Controllers
                 TempData["ErrorMessage"] = "Vui lòng kiểm tra lại thông tin nhân viên";
             }
             return View(user);
+        }
+        [HttpGet]
+        public IActionResult xemUser(string id)
+        {
+            if (id == null)
+            {
+                id = HttpContext.Session.GetString("maNV");
+            }
+
+            var user = _context.NguoiDungs.FirstOrDefault(u => u.MaNv == id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return View(user);
+        }
+        [HttpPost]
+        public IActionResult DeleteNhanVien(string id)
+        {
+            try
+            {
+                var product = _context.ThucDons.Find(id);
+                var user = _context.NguoiDungs.Find(id);
+                if (user == null)
+                {
+                    TempData["ErrorMessage"] = "Không tìm thấy người dùng cần xóa";
+                    return RedirectToAction("NhanVien");
+                }
+                _context.NguoiDungs.Remove(user);
+                _context.SaveChanges();
+                TempData["SuccessMessage"] = "Xóa người dùng thành công";
+                return RedirectToAction("NhanVien");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Lỗi khi xóa người dùng: " + ex.Message;
+                return RedirectToAction("NhanVien");
+            }
         }
     }    
 }

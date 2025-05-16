@@ -16,16 +16,13 @@
         }
     </style>
 </head>
-@model pbl3_QLCF.ViewModels.DashboardMagViewModel
+@using pbl3_QLCF.ViewModels;
+@model DashboardMagViewModel
 <body>
     @{
         Html.RenderPartial("~/Views/Manager/sharedAll.cshtml");
     }
     <div class="main-content">
-        <div class="dashboard-header">
-            <h1 class="page-title">Dashboard</h1>
-            <input type="text" class="search-bar" placeholder="Tìm kiếm...">
-        </div>
         <div class="dashboard-grid">
             <div class="card">
                 <div class="card-title">Doanh thu hôm nay</div>
@@ -33,15 +30,15 @@
                 <div class="card-trend">
                     @if (Model.todayPercent > 0)
                     {
-                        <span style="color: green;">↑ @(Math.Abs(Model.todayPercent))% so với tuần trước</span>
+                        <span style="color: green;">↑ @(Math.Abs(Model.todayPercent))% so với hôm qua</span>
                     }
                     else if (Model.todayPercent < 0)
                     {
-                        <span style="color: red;">↓ @(Math.Abs(Model.todayPercent))% so với tuần trước</span>
+                        <span style="color: red;">↓ @(Math.Abs(Model.todayPercent))% so với hôm qua</span>
                     }
                     else
                     {
-                        <span>↑ 0% so với tuần trước</span>
+                        <span>↑ 0% so với hôm qua</span>
                     }
                  </div>
             </div>
@@ -51,15 +48,15 @@
                 <div class="card-trend">
                     @if (Model.orderPercent > 0)
                     {
-                        <span style="color: green;">↑ @(Math.Abs(Model.orderPercent))% so với tuần trước</span>
+                        <span style="color: green;">↑ @(Math.Abs(Model.orderPercent))% so với hôm qua</span>
                     }
                     else if (Model.orderPercent < 0)
                     {
-                        <span style="color: red;">↓ @(Math.Abs(Model.orderPercent))% so với tuần trước</span>
+                        <span style="color: red;">↓ @(Math.Abs(Model.orderPercent))% so với hôm qua</span>
                     }
                     else
                     {
-                        <span>0% so với tuần trước</span>
+                        <span>↑ 0% so với hôm qua</span>
                     }
                  </div>
             </div>

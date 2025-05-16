@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using pbl3_QLCF.ViewModels;
 using pbl3_QLCF.Data;
 using pbl3_QLCF.Models.Authentication;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.RateLimiting;
+using pbl3_QLCF.ViewModels;
+
 namespace pbl3_QLCF.Controllers
 {
-    //[Authentication]
+    [Authentication]
     public class Staff : Controller
     {
         private readonly Pbl3Context _context;
@@ -539,6 +540,57 @@ namespace pbl3_QLCF.Controllers
                 model.processOrders.Add(processOrder);
             }
             return View(model);
+        }
+        [HttpGet]
+        public IActionResult ThongTinCaNhan(string id, bool editMode = false)
+        {
+            var user = _context.NguoiDungs.Find(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            ViewBag.EditMode = editMode;
+            return View(user);
+        }
+
+        [HttpPost]
+        public IActionResult ThongTinCaNhan(NguoiDung user)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var existingUser = _context.NguoiDungs.Find(user.MaNv);
+                    if (existingUser == null)
+                    {
+                        return NotFound();
+                    }
+
+                    existingUser.HoTen = user.HoTen;
+                    existingUser.NgaySinh = user.NgaySinh;
+                    existingUser.Sdt = user.Sdt;
+                    existingUser.DiaChi = user.DiaChi;
+                    existingUser.Email = user.Email;
+                    existingUser.TenDangNhap = user.TenDangNhap;
+
+                    _context.Update(existingUser);
+                    _context.SaveChanges();
+
+                    TempData["SuccessMessage"] = "Đã cập nhật thông tin thành công";
+                    return RedirectToAction("ThongTinCaNhan", new { id = user.MaNv });
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Lỗi khi cập nhật: " + ex.Message);
+                    ViewBag.EditMode = true;
+                }
+            }
+            else
+            {
+                ViewBag.EditMode = true;
+            }
+
+            return View(user);
         }
     }
 }

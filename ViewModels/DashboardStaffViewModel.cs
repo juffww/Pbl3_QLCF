@@ -2,12 +2,13 @@
 {
     public class DashboardStaffViewModel
     {
-        public int? todayOrder {  get; set; }
-        public int? orderCompleted {  get; set; }
+        public int? todayOrder { get; set; }
+        public int? orderCompleted { get; set; }
         public int? proOrderCount { get; set; }
         public List<OrderInProcessing> processOrders { get; set; }
-        public DashboardStaffViewModel() { 
-            processOrders = new List<OrderInProcessing>();   
+        public DashboardStaffViewModel()
+        {
+            processOrders = new List<OrderInProcessing>();
         }
     }
     public class orderItem
@@ -21,6 +22,6 @@
         public string customerName { get; set; }
         public List<orderItem> items { get; set; }
         public DateTime orderTime { get; set; }
-        public String status { get; set; }
+        public string status { get; set; }
     }
 }

@@ -26,18 +26,6 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\X1Gen5\OneDrive - The University of Technology\Documents\PBL3\pbl3_QLCF
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/X1Gen5/OneDrive - The University of Technology/Documents/PBL3/pbl3_QLCF/Views/Home/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/X1Gen5/OneDrive - The University of Technology/Documents/PBL3/pbl3_QLCF/Views/Home/Login.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxMb2dpbi5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/X1Gen5/OneDrive - The University of Technology/Documents/PBL3/pbl3_QLCF/Views/Home/Privacy.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/X1Gen5/OneDrive - The University of Technology/Documents/PBL3/pbl3_QLCF/Views/LoginAccess/ForgotPassword.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5BY2Nlc3NcRm9yZ290UGFzc3dvcmQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -102,6 +90,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFuYWdlclxYZW1Eb25IYW5nLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/X1Gen5/OneDrive - The University of Technology/Documents/PBL3/pbl3_QLCF/Views/Manager/xemUser.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFuYWdlclx4ZW1Vc2VyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/X1Gen5/OneDrive - The University of Technology/Documents/PBL3/pbl3_QLCF/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -124,6 +116,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/X1Gen5/OneDrive - The University of Technology/Documents/PBL3/pbl3_QLCF/Views/Staff/staffDashboard.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhZmZcc3RhZmZEYXNoYm9hcmQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/X1Gen5/OneDrive - The University of Technology/Documents/PBL3/pbl3_QLCF/Views/Staff/ThongTinCaNhan.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhZmZcVGhvbmdUaW5DYU5oYW4uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/X1Gen5/OneDrive - The University of Technology/Documents/PBL3/pbl3_QLCF/Views/Staff/XuLyDon.cshtml]
