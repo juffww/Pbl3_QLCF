@@ -9,7 +9,7 @@ using pbl3_QLCF.ViewModels;
 
 namespace pbl3_QLCF.Controllers
 {
-    [Authentication]
+    //[Authentication]
     public class Manager : Controller
     {
         private readonly Pbl3Context _context;
@@ -467,9 +467,7 @@ namespace pbl3_QLCF.Controllers
                     revenue = revenue
                 });
             }
-            //return View(model);
-
-            return View("~/Views/Manager/Dashboard/magDashboard.cshtml", model);
+            return View(model);
         }
         //-------------------NhanVien-------------------
         [HttpGet]

@@ -41,8 +41,6 @@ public partial class ThucDon
 
     // Navigation properties
     public virtual ICollection<ChiTietDonHang> ChiTietDonHangs { get; set; } = new List<ChiTietDonHang>();
-    public virtual ICollection<CongThucMonAn> CongThucMonAns { get; set; } = new List<CongThucMonAn>();
-    public virtual ICollection<KhuyenMai> MaKms { get; set; } = new List<KhuyenMai>();
 
     // Có thể thêm các phương thức tiện ích
     public string TrangThaiDisplay => TinhTrang == true ? "Đang bán" : "Ngừng bán";

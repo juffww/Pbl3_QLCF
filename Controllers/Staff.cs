@@ -7,7 +7,7 @@ using pbl3_QLCF.ViewModels;
 
 namespace pbl3_QLCF.Controllers
 {
-    [Authentication]
+    //[Authentication]
     public class Staff : Controller
     {
         private readonly Pbl3Context _context;
