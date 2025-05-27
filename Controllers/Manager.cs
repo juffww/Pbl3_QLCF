@@ -204,7 +204,6 @@ namespace pbl3_QLCF.Controllers
         [HttpGet]
         public IActionResult XemDonHang(string id)
         {
-            // Use Include to explicitly load the navigation properties
             var order = _context.DonHangs
                 .Include(o => o.ChiTietDonHangs)
                 .ThenInclude(c => c.MaMonNavigation)
@@ -215,7 +214,6 @@ namespace pbl3_QLCF.Controllers
                 return NotFound();
             }
             var KH = _context.KhachHangs.FirstOrDefault(kh => kh.MaKh == order.MaKh);
-            // Xử lý thông tin nhân viên an toàn
             string? tenNhanVien = null;
             if (!string.IsNullOrEmpty(order.MaNv))
             {
@@ -224,10 +222,8 @@ namespace pbl3_QLCF.Controllers
                     .FirstOrDefault(nv => nv.MaNv == order.MaNv);
                 tenNhanVien = NV?.HoTen;
             }
-            // Calculate the original total based on order items
             int originalTotal = order.ChiTietDonHangs.Sum(c => c.GiaBan * c.SoLuong) ?? 0;
 
-            // Calculate discount - the difference between original total and final total
             int discountAmount = Math.Max(0, originalTotal - (order.TongTien ?? 0));
 
             var model = new CTDHViewModel
@@ -552,6 +548,151 @@ namespace pbl3_QLCF.Controllers
             {
                 TempData["ErrorMessage"] = "Lỗi khi xóa người dùng: " + ex.Message;
                 return RedirectToAction("NhanVien");
+            }
+        }
+        [HttpPost]
+        public IActionResult UpdateNhanVien(string MaNv, string ChucVu, string CaLamViec)
+        {
+            try
+            {
+                var user = _context.NguoiDungs.FirstOrDefault(u => u.MaNv == MaNv);
+                if (user == null)
+                {
+                    TempData["ErrorMessage"] = "Không tìm thấy nhân viên cần cập nhật";
+                    return RedirectToAction("NhanVien");
+                }
+
+                if (string.IsNullOrEmpty(ChucVu) || string.IsNullOrEmpty(CaLamViec))
+                {
+                    TempData["ErrorMessage"] = "Vui lòng chọn đầy đủ thông tin chức vụ và ca làm việc";
+                    return RedirectToAction("xemUser", new { id = MaNv });
+                }
+
+                if (ChucVu != "Quản lý" && ChucVu != "Nhân viên")
+                {
+                    TempData["ErrorMessage"] = "Chức vụ không hợp lệ";
+                    return RedirectToAction("xemUser", new { id = MaNv });
+                }
+
+                if (CaLamViec != "Ca sáng" && CaLamViec != "Ca chiều" && CaLamViec != "Ca tối")
+                {
+                    TempData["ErrorMessage"] = "Ca làm việc không hợp lệ";
+                    return RedirectToAction("xemUser", new { id = MaNv });
+                }
+
+                user.ChucVu = ChucVu;
+                user.CaLamViec = CaLamViec;
+
+                _context.SaveChanges();
+                TempData["SuccessMessage"] = "Cập nhật thông tin nhân viên thành công";
+
+                return RedirectToAction("xemUser", new { id = MaNv });
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Lỗi khi cập nhật thông tin: " + ex.Message;
+                return RedirectToAction("xemUser", new { id = MaNv });
+            }
+        }
+        [HttpGet]
+        public IActionResult ThongTinCaNhan(string id, bool editMode = false)
+        {
+            var user = _context.NguoiDungs.Find(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            ViewBag.EditMode = editMode;
+            return View(user);
+        }
+        [HttpPost]
+        public IActionResult ThongTinCaNhan(string maNv, string sdt, string diaChi, string email, string tenDangNhap)
+        {
+            try
+            {
+                var existingUser = _context.NguoiDungs.Find(maNv);
+                if (existingUser == null)
+                {
+                    TempData["ErrorMessage"] = "Không tìm thấy thông tin người dùng";
+                    return RedirectToAction("ThongTinCaNhan", new { id = maNv });
+                }
+
+                var errors = new List<string>();
+
+                if (string.IsNullOrWhiteSpace(sdt) || !IsValidPhoneNumber(sdt))
+                {
+                    errors.Add("Số điện thoại không hợp lệ");
+                }
+
+                if (string.IsNullOrWhiteSpace(email) || !IsValidEmail(email))
+                {
+                    errors.Add("Email không hợp lệ");
+                }
+
+                if (string.IsNullOrWhiteSpace(diaChi) || diaChi.Trim().Length < 10)
+                {
+                    errors.Add("Địa chỉ phải có ít nhất 10 ký tự");
+                }
+
+                if (string.IsNullOrWhiteSpace(tenDangNhap) || tenDangNhap.Trim().Length < 3)
+                {
+                    errors.Add("Tên đăng nhập phải có ít nhất 3 ký tự");
+                }
+
+                var existingUserWithSameUsername = _context.NguoiDungs
+                    .FirstOrDefault(u => u.TenDangNhap == tenDangNhap.Trim() && u.MaNv != maNv);
+                if (existingUserWithSameUsername != null)
+                {
+                    errors.Add("Tên đăng nhập đã được sử dụng bởi người khác");
+                }
+
+                if (errors.Any())
+                {
+                    TempData["ErrorMessage"] = string.Join(". ", errors);
+                    ViewBag.EditMode = true;
+                    return View(existingUser);
+                }
+
+                existingUser.Sdt = sdt.Trim();
+                existingUser.DiaChi = diaChi.Trim();
+                existingUser.Email = email.Trim().ToLower();
+                existingUser.TenDangNhap = tenDangNhap.Trim();
+
+                _context.Update(existingUser);
+                _context.SaveChanges();
+
+                TempData["SuccessMessage"] = "Đã cập nhật thông tin thành công";
+                return RedirectToAction("ThongTinCaNhan", new { id = maNv });
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Lỗi khi cập nhật thông tin: " + ex.Message;
+                return RedirectToAction("ThongTinCaNhan", new { id = maNv, editMode = true });
+            }
+        }
+        private bool IsValidPhoneNumber(string phoneNumber)
+        {
+            if (string.IsNullOrWhiteSpace(phoneNumber))
+                return false;
+
+            phoneNumber = phoneNumber.Replace(" ", "").Replace("-", "").Replace("(", "").Replace(")", "");
+
+            var phoneRegex = new System.Text.RegularExpressions.Regex(@"^(\+84|84|0)(3[2-9]|5[689]|7[06-9]|8[1-689]|9[0-46-9])[0-9]{7}$");
+            return phoneRegex.IsMatch(phoneNumber);
+        }
+
+        private bool IsValidEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email && email.Contains("@") && email.Contains(".");
+            }
+            catch
+            {
+                return false;
             }
         }
     }    

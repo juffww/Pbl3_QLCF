@@ -22,8 +22,7 @@
 
         * {
             margin: 0;
-            p
-            ing: 0;
+            padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
@@ -104,8 +103,6 @@
           font-weight: 500;
         }
 
-        
-
         #add-product-btn {
           white-space: nowrap;
           padding: 0.8rem 1.5rem !important;
@@ -118,14 +115,24 @@
             text-decoration: none;
         }
 
-        .edit-product, .delete-product
-        {
-            padding: 8px 30px
+        .edit-product, .delete-product {
+            padding: 8px 20px;
             text-decoration: none !important;
+            margin-right: 10px;
         }
+
         .btn-success {
             background-color: var(--success-color);
             color: white;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
         }
 
         .category-filter {
@@ -156,67 +163,95 @@
             text-decoration: none;
             outline: none;
         }
-       
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
+
+        /* Thay đổi từ grid thành danh sách dạng hàng ngang */
+        .products-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
-        .product-card {
+        .product-row {
             background-color: white;
             border-radius: 8px;
-            overflow: hidden;
+            padding: 20px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .product-row:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
         .product-image {
-            height: 180px;
+            width: 120px;
+            height: 120px;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
             background-color: #f0f0f0;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #888;
-            overflow: hidden;
         }
+
         .product-image img {
-            max-width: 100%;            
-            max-height: 100%;        
-            object-fit: cover;          
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
-        .product-details {
-            padding: 15px;
+
+        .product-info {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
         .product-name {
-            font-size: 18px;
-            font-weight: 500;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--dark-color);
             margin-bottom: 5px;
         }
 
         .product-price {
-            font-size: 16px;
+            font-size: 18px;
             color: var(--primary-color);
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
-        .product-info {
-            display: flex;
-            justify-content: space-between;
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 10px;
+        .product-category {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: var(--dark-color);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            width: 25%; 
+            max-width: 130px; 
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .product-actions {
+        .product-status {
             display: flex;
-            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
         }
 
         .status-badge {
-            padding: 4px 8px;
-            border-radius: 4px;
+            padding: 6px 12px;
+            border-radius: 15px;
             font-size: 12px;
             font-weight: 500;
         }
@@ -229,6 +264,25 @@
         .status-inactive {
             background-color: #FFEBEE;
             color: var(--danger-color);
+        }
+
+        .product-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex-shrink: 0;
+            min-width: 120px;
+        }
+
+        .product-actions form {
+            margin: 0;
+        }
+
+        .product-actions .btn {
+            width: 100%;
+            padding: 10px 16px;
+            text-align: center;
+            box-sizing: border-box;
         }
 
         .pagination {
@@ -315,11 +369,11 @@
         }
 
         .modal-body {
-            padding: 20px; /* Reduced padding */
+            padding: 20px;
         }
 
         .form-group {
-            margin-bottom: 15px; /* Reduced margin */
+            margin-bottom: 15px;
         }
 
         .form-label {
@@ -348,6 +402,7 @@
             justify-content: flex-end;
             border-top: 1px solid #eee;
         }
+
         .alert {
             padding: 15px;
             margin-bottom: 20px;
@@ -359,6 +414,39 @@
             color: #3c763d;
             background-color: #dff0d8;
             border-color: #d6e9c6;
+        }
+
+        .alert-danger {
+            color: #a94442;
+            background-color: #f2dede;
+            border-color: #ebccd1;
+        }
+
+        @@media (max-width: 768px) {
+            .product-row {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .product-image {
+                width: 100px;
+                height: 100px;
+            }
+
+            .product-actions {
+                flex-direction: row;
+                justify-content: center;
+                min-width: auto;
+            }
+
+            .action-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .search-bar {
+                max-width: 100%;
+            }
         }
     </style>
 </head>
@@ -395,7 +483,7 @@
                 <button type="submit" class="btn btn-primary" id="search-btn">Tìm</button>
             </form>
             <div class="buttons">
-                <a href="@Url.Action("ThemSanPham", "Manager")" class="btn btn-success"id="add-product-btn">+ Thêm Sản Phẩm</a>
+                <a href="@Url.Action("ThemSanPham", "Manager")" class="btn btn-success" id="add-product-btn">+ Thêm Sản Phẩm</a>
             </div>
         </div>
 
@@ -415,51 +503,48 @@
                href="@Url.Action("SanPham", new { category = "Đồ ăn nhẹ", search = ViewBag.SearchString, page = 1 })">Đồ ăn nhẹ</a>
         </div>
     
-        <!-- Product List -->
-        <div class="products-grid">
+        <!-- Product List - đã thay đổi từ grid thành list -->
+        <div class="products-list">
             @foreach (var product in Model)
             {
-                <div class="product-card">
+                <div class="product-row">
                     <div class="product-image">
                         <img src="@(product.HinhAnh ?? "default.jpg")" alt="@product.TenMon">
                     </div>
-                    <div class="product-details">
+                    <div class="product-info">
                         <div class="product-name">@product.TenMon</div>
-                            <div class="product-price">@product.GiaSp.ToString("N0").Replace(",", ".") VNĐ</div>
-                        <div class="product-info">
-                            <span>@product.TenLoai</span>
+                        <div class="product-price">@product.GiaSp.ToString("N0").Replace(",", ".") VNĐ</div>
+                        <div class="product-category">@product.TenLoai</div>
+                        <div class="product-status">
                             <span class="status-badge @(product.TinhTrang == true ? "status-active" : "status-inactive")">
                                 @(product.TinhTrang == true ? "Đang bán" : "Ngừng bán")
                             </span>
                         </div>
-                        <div class="product-actions"> 
-                            <a href="@Url.Action("EditProduct", "Manager", new { id = product.MaMon })" class="btn btn-primary edit-product">Chỉnh sửa</a>
-                            <form method="post" action="@Url.Action("DeleteProduct", "Manager")" style="display: inline-block;"
-                                    onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này không?');">
-                                                    @Html.AntiForgeryToken()
-                                <input type="hidden" name="id" value="@product.MaMon" />
-                                <button type="submit" class="btn btn-danger">Xóa</button>
-                            </form>
-                        </div>
+                    </div>
+                    <div class="product-actions"> 
+                        <a href="@Url.Action("EditProduct", "Manager", new { id = product.MaMon })" class="btn btn-primary edit-product">Chỉnh sửa</a>
+                        <form method="post" action="@Url.Action("DeleteProduct", "Manager")" style="display: inline-block;"
+                                onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này không?');">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@product.MaMon" />
+                            <button type="submit" class="btn btn-danger">Xóa</button>
+                        </form>
                     </div>
                 </div>
             }
         </div>
 
-        <!-- Phân trang -->
         <div class="pagination">
             @{
                 int currentPage = ViewBag.CurrentPage;
                 int totalPages = ViewBag.TotalPages;
 
-                //Hiển thị nút trang đầu cùng [<<]
                 if(currentPage > 1)
                 {
                     <a href="@Url.Action("SanPham", new { page = 1, category = ViewBag.CurrentCategory, search = ViewBag.SearchString})">
                         &lt;&lt
                     </a>
                 }
-                // Hiển thị nút trang trước [<]
                 if (currentPage > 1)
                 {
                     <a href="@Url.Action("SanPham", new { page = currentPage - 1, category = ViewBag.CurrentCategory, search = ViewBag.SearchString })">
@@ -467,22 +552,18 @@
                     </a>
                 }
 
-                // Hiển thị các trang gần đó (5 trang)
-                int startPage = Math.Max(1, currentPage - 2); // Show 2 pages before current
-                int endPage = Math.Min(totalPages, currentPage + 2); // Show 2 pages after current
+                int startPage = Math.Max(1, currentPage - 2);
+                int endPage = Math.Min(totalPages, currentPage + 2); 
 
-                // Điều chỉnh để luôn hiển thị 5 trang nếu có thể
                 if (endPage - startPage + 1 < 5 && totalPages >= 5)
                 {
                     if (currentPage <= 3)
                     {
-                        // Nếu đang ở gần đầu, hiển thị 5 trang đầu
                         endPage = Math.Min(5, totalPages);
                         startPage = 1;
                     }
                     else
                     {
-                        // Nếu đang ở gần cuối, hiển thị 5 trang cuối
                         startPage = Math.Max(1, totalPages - 4);
                         endPage = totalPages;
                     }
@@ -495,14 +576,12 @@
                     </a>
                 }
 
-                // Hiển thị nút trang sau [>]
                 if (currentPage < totalPages)
                 {
                     <a href="@Url.Action("SanPham", new { page = currentPage + 1, category = ViewBag.CurrentCategory, search = ViewBag.SearchString })">
                         &gt;
                     </a>
                 }
-                //Hiển thị nút trang đầu cùng [>>]
                 if (currentPage < totalPages)
                 {
                     <a href="@Url.Action("SanPham", new { page = totalPages, category = ViewBag.CurrentCategory, search = ViewBag.SearchString})">

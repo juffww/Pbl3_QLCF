@@ -24,11 +24,10 @@
         }
 
         body {
-            background-color: #FFF8EA; /* Cream background to match login page */
+            background-color: #FFF8EA; 
             min-height: 100vh;
         }
 
-        /* Top navigation bar */
         .top-navbar {
             background-color: white;
             display: flex;
@@ -48,7 +47,7 @@
         .logo {
             width: 50px;
             height: 50px;
-            background-color: #6F4E37; /* Coffee brown */
+            background-color: #6F4E37;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -61,10 +60,9 @@
         .brand-name {
             font-size: 18px;
             font-weight: bold;
-            color: #6F4E37; /* Coffee brown */
+            color: #6F4E37; 
         }
 
-        /* Horizontal menu */
         .menu {
             display: flex;
             list-style: none;
@@ -97,19 +95,18 @@
         }
 
         .menu-item:hover {
-            background-color: #F3E5D7; /* Light coffee/cream color */
-            color: #6F4E37; /* Coffee brown */
+            background-color: #F3E5D7;
+            color: #6F4E37; 
         }
 
         .menu-item.active {
-            background-color: #6F4E37; /* Coffee brown */
+            background-color: #6F4E37; 
             color: white;
         }
 
         .menu-item.active a {
             color: white;
         }
-        /* User info and search */
         .right-section {
             display: flex;
             align-items: center;
@@ -122,7 +119,7 @@
             padding: 8px 15px;
             border: none;
             border-radius: 20px;
-            background-color: #F3E5D7; /* Light coffee/cream color */
+            background-color: #F3E5D7;
         }
 
         .icons {
@@ -309,15 +306,14 @@
         .orders-table th, .orders-table td {
             padding: 10px;
             text-align: left;
-            border-bottom: 1px solid #F3E5D7; /* Light coffee/cream color */
+            border-bottom: 1px solid #F3E5D7;
         }
 
         .orders-table th {
-            color: #855E42; /* Medium brown */
+            color: #855E42; 
             font-weight: normal;
         }
 
-        /* Dashboard header */
         .dashboard-header {
             display: flex;
             align-items: center;
@@ -327,28 +323,26 @@
 
         .dashboard-header page-title {
             margin: 0;
-            color: #3A2718; /* Dark brown */
+            color: #3A2718; 
         }
 
         .search-bar {
             padding: 8px 12px;
             font-size: 16px;
             border-radius: 8px;
-            border: 1px solid #D2B48C; /* Coffee with milk color */
+            border: 1px solid #D2B48C; 
         }
 
-        /* Media query for responsive design */
-                @@media (max-width: 1200px) {
-            .menu-item {
-                padding: 10px 10px;
-                font-size: 13px;
-            }
-
-            .search-bar {
-                width: 150px;
-            }
+        @@media (max-width: 1200px) {
+        .menu-item {
+            padding: 10px 10px;
+            font-size: 13px;
         }
-        /* Tạo dropdown khi hover vào user menu */
+
+        .search-bar {
+            width: 150px;
+        }
+        }
         .user-menu {
             position: relative;
             cursor: pointer;
@@ -358,12 +352,12 @@
             position: absolute;
             top: 100%;
             right: 0;
-            width: 200px; /* Add a defined width */
-            background-color: #ffffff; /* Add background color */
-            border: 1px solid #e0d6c2; /* Add border */
-            border-radius: 6px; /* Add rounded corners */
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Add shadow */
-            padding: 8px 0; /* Add padding */
+            width: 200px;
+            background-color: #ffffff; 
+            border: 1px solid #e0d6c2; 
+            border-radius: 6px; 
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+            padding: 8px 0; 
             z-index: 100;
             display: none;
         }
@@ -392,7 +386,6 @@
     </style>
 </head>
 <body>
-    <!-- Top Navigation Bar (horizontal menu) -->
     <div class="top-navbar">
         <div class="logo-container">
             <div class="logo">AC</div>
@@ -437,7 +430,7 @@
                     </div>
                 </div>
                 <div class="user-dropdown">
-                    <a href="@Url.Action("xemUser", "Manager", new { id = Context.Session.GetString("maNV") } )" class="dropdown-item">Thông tin cá nhân</a>
+                    <a href="@Url.Action("ThongTinCaNhan", "Manager", new { id = Context.Session.GetString("maNV") } )" class="dropdown-item">Thông tin cá nhân</a>
                     <a href="/LoginAccess/Logout" class="dropdown-item">Đăng xuất</a>
                 </div>
             </div>

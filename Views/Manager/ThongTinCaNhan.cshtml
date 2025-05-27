@@ -203,143 +203,6 @@
         }
     </style>
 </head>
-@* @model pbl3_QLCF.Data.NguoiDung
-<body>
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success">
-            @TempData["SuccessMessage"]
-        </div>
-    }
-
-    @if (TempData["ErrorMessage"] != null)
-    {
-        <div class="alert alert-danger">
-            @TempData["ErrorMessage"]
-        </div>
-    }
-    <div class="container">
-        <div class="profile-container">
-            <div class="profile-header">
-                <div class="profile-avatar">
-                    <span>NV</span>
-                </div>
-                <div class="profile-title">
-                    <h1>Thông tin cá nhân</h1>
-                    <p>Quản lý thông tin cá nhân của bạn</p>
-                    <span class="status-badge">Đang hoạt động</span>
-                </div>
-            </div>
-
-            <form asp-action="ThongTinCaNhan" method="post">
-                <input type="hidden" asp-for="MaNv" />
-                <div class="form-group">
-                    <label asp-for="MaNv">Mã nhân viên</label>
-                    <input asp-for="MaNv" type="text" class="form-control" disabled value="@Model?.MaNv">
-                </div>
-
-                <div class="section-title">Thông tin cơ bản</div>
-
-                <div class="form-row">
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label asp-for="HoTen">Họ và tên</label>
-                            <input asp-for="HoTen" type="text" class="form-control" value="@Model?.HoTen" disabled="@(ViewBag.EditMode != true)">
-                        </div>
-                    </div>
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label asp-for="NgaySinh">Ngày sinh</label>
-                            <input asp-for="NgaySinh" type="date" class="form-control" value="@(Model?.NgaySinh?.ToString("yyyy-MM-dd"))" disabled="@(ViewBag.EditMode != true)">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label>Giới tính</label>
-                            <div class="radio-group">
-                                <div class="radio-option">
-                                    <input type="radio" id="gioiTinhNam" asp-for="GioiTinh" value="true" disabled />
-                                    <label for="gioiTinhNam">Nam</label>
-                                </div>
-                                <div class="radio-option">
-                                    <input type="radio" id="gioiTinhNu" asp-for="GioiTinh" value="false" disabled />
-                                    <label for="gioiTinhNu">Nữ</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label asp-for="Sdt">Số điện thoại</label>
-                            <input asp-for="Sdt" type="tel" class="form-control" value="@Model?.Sdt" disabled="@(ViewBag.EditMode != true)">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="DiaChi">Địa chỉ</label>
-                    <input asp-for="DiaChi" type="text" class="form-control" value="@Model?.DiaChi" disabled="@(ViewBag.EditMode != true)">
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="Email">Email</label>
-                    <input asp-for="Email" type="email" class="form-control" value="@Model?.Email" disabled="@(ViewBag.EditMode != true)">
-                </div>
-
-                <div class="section-title">Thông tin công việc</div>
-
-                <div class="form-row">
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label asp-for="ChucVu">Chức vụ</label>
-                            <input type="text" asp-for="ChucVu" class="form-control" disabled value="@Model?.ChucVu">
-                        </div>
-                    </div>
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label asp-for="CaLamViec">Ca làm việc</label>
-                            <input type="text" asp-for="CaLamViec" class="form-control" disabled value="@Model?.CaLamViec">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="section-title">Thông tin đăng nhập</div>
-
-                <div class="form-row">
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label asp-for="TenDangNhap">Tên đăng nhập</label>
-                            <input type="text" asp-for="TenDangNhap" class="form-control" value="@Model?.TenDangNhap" disabled="@(ViewBag.EditMode != true)">
-                        </div>
-                    </div>
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label asp-for="MatKhau">Mật khẩu</label>
-                            <input type="password" asp-for="MatKhau" class="form-control" value="@Model?.MatKhau" disabled>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="actions">
-                    @if (ViewBag.EditMode == true)
-                    {
-                        <a asp-action="ThongTinCaNhan" asp-route-id="@Model?.MaNv" class="btn btn-outline">Hủy</a>
-                        <button type="submit" class="btn">Lưu thay đổi</button>
-                    }
-                    else
-                    {
-                        <a asp-action="staffDashboard" asp-controller="Staff" class="btn btn-outline">Quay lại</a>
-                        <a asp-action="ThongTinCaNhan" asp-route-id="@Model?.MaNv" asp-route-editMode="true" class="btn">Chỉnh sửa</a>
-                    }
-                </div>
-            </form>
-        </div>
-    </div>
-</body>
-</html> *@
 @model pbl3_QLCF.Data.NguoiDung
 <body>
     @if (TempData["SuccessMessage"] != null)
@@ -368,20 +231,14 @@
                     <span class="status-badge">Đang hoạt động</span>
                 </div>
             </div>
-
             <form asp-action="ThongTinCaNhan" method="post">
-                <input type="hidden" asp-for="MaNv" />
-                <input type="hidden" asp-for="HoTen" />
-                <input type="hidden" asp-for="NgaySinh" />
-                <input type="hidden" asp-for="GioiTinh" />
-                <input type="hidden" asp-for="ChucVu" />
-                <input type="hidden" asp-for="CaLamViec" />
-                <input type="hidden" asp-for="MatKhau" />
-                <input type="hidden" asp-for="TrangThai" />
+                <!-- Chỉ cần truyền MaNv và các trường cần thiết -->
+                <input type="hidden" name="maNv" value="@Model?.MaNv" />
 
+                <!-- Các trường thông tin không thay đổi chỉ hiển thị -->
                 <div class="form-group">
-                    <label asp-for="MaNv">Mã nhân viên</label>
-                    <input asp-for="MaNv" type="text" class="form-control" disabled value="@Model?.MaNv">
+                    <label>Mã nhân viên</label>
+                    <input type="text" class="form-control" disabled value="@Model?.MaNv">
                 </div>
 
                 <div class="section-title">Thông tin cơ bản</div>
@@ -389,15 +246,15 @@
                 <div class="form-row">
                     <div class="form-col">
                         <div class="form-group">
-                            <label asp-for="HoTen">Họ và tên</label>
-                            <input asp-for="HoTen" type="text" class="form-control" value="@Model?.HoTen" disabled>
+                            <label>Họ và tên</label>
+                            <input type="text" class="form-control" value="@Model?.HoTen" disabled>
                             <small class="form-text text-muted">Thông tin này không thể thay đổi</small>
                         </div>
                     </div>
                     <div class="form-col">
                         <div class="form-group">
-                            <label asp-for="NgaySinh">Ngày sinh</label>
-                            <input asp-for="NgaySinh" type="date" class="form-control" value="@(Model?.NgaySinh?.ToString("yyyy-MM-dd"))" disabled>
+                            <label>Ngày sinh</label>
+                            <input type="date" class="form-control" value="@(Model?.NgaySinh?.ToString("yyyy-MM-dd"))" disabled>
                             <small class="form-text text-muted">Thông tin này không thể thay đổi</small>
                         </div>
                     </div>
@@ -409,11 +266,11 @@
                             <label>Giới tính</label>
                             <div class="radio-group">
                                 <div class="radio-option">
-                                    <input type="radio" id="gioiTinhNam" asp-for="GioiTinh" value="true" disabled />
+                                    <input type="radio" id="gioiTinhNam" value="true" disabled @(Model?.GioiTinh == true ? "checked" : "") />
                                     <label for="gioiTinhNam">Nam</label>
                                 </div>
                                 <div class="radio-option">
-                                    <input type="radio" id="gioiTinhNu" asp-for="GioiTinh" value="false" disabled />
+                                    <input type="radio" id="gioiTinhNu" value="false" disabled @(Model?.GioiTinh == false ? "checked" : "") />
                                     <label for="gioiTinhNu">Nữ</label>
                                 </div>
                             </div>
@@ -422,31 +279,31 @@
                     </div>
                     <div class="form-col">
                         <div class="form-group">
-                            <label asp-for="Sdt">Số điện thoại <span class="text-danger">*</span></label>
-                            <input asp-for="Sdt" type="tel" class="form-control" value="@Model?.Sdt" disabled="@(ViewBag.EditMode != true)">
-                            <span asp-validation-for="Sdt" class="text-danger"></span>
+                            <label>Số điện thoại <span class="text-danger">*</span></label>
+                            <input name="sdt" type="tel" class="form-control" value="@Model?.Sdt"
+                            @(ViewBag.EditMode != true ? "disabled" : "") required>
                             @if (ViewBag.EditMode == true)
                             {
-                                <small class="form-text text-muted">Nhập số điện thoại hợp lệ (10-11 chữ số)</small>
+                                <small class="form-text text-muted">Nhập số điện thoại hợp lệ (10 chữ số)</small>
                             }
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label asp-for="DiaChi">Địa chỉ <span class="text-danger">*</span></label>
-                    <input asp-for="DiaChi" type="text" class="form-control" value="@Model?.DiaChi" disabled="@(ViewBag.EditMode != true)">
-                    <span asp-validation-for="DiaChi" class="text-danger"></span>
+                    <label>Địa chỉ <span class="text-danger">*</span></label>
+                    <input name="diaChi" type="text" class="form-control" value="@Model?.DiaChi"
+                    @(ViewBag.EditMode != true ? "disabled" : "") required>
                     @if (ViewBag.EditMode == true)
                     {
-                        <small class="form-text text-muted">Nhập địa chỉ chi tiết</small>
+                        <small class="form-text text-muted">Nhập địa chỉ chi tiết (ít nhất 10 ký tự)</small>
                     }
                 </div>
 
                 <div class="form-group">
-                    <label asp-for="Email">Email <span class="text-danger">*</span></label>
-                    <input asp-for="Email" type="email" class="form-control" value="@Model?.Email" disabled="@(ViewBag.EditMode != true)">
-                    <span asp-validation-for="Email" class="text-danger"></span>
+                    <label>Email <span class="text-danger">*</span></label>
+                    <input name="email" type="email" class="form-control" value="@Model?.Email"
+                    @(ViewBag.EditMode != true ? "disabled" : "") required>
                     @if (ViewBag.EditMode == true)
                     {
                         <small class="form-text text-muted">Nhập địa chỉ email hợp lệ</small>
@@ -458,15 +315,15 @@
                 <div class="form-row">
                     <div class="form-col">
                         <div class="form-group">
-                            <label asp-for="ChucVu">Chức vụ</label>
-                            <input type="text" asp-for="ChucVu" class="form-control" disabled value="@Model?.ChucVu">
+                            <label>Chức vụ</label>
+                            <input type="text" class="form-control" disabled value="@Model?.ChucVu">
                             <small class="form-text text-muted">Thông tin này không thể thay đổi</small>
                         </div>
                     </div>
                     <div class="form-col">
                         <div class="form-group">
-                            <label asp-for="CaLamViec">Ca làm việc</label>
-                            <input type="text" asp-for="CaLamViec" class="form-control" disabled value="@Model?.CaLamViec">
+                            <label>Ca làm việc</label>
+                            <input type="text" class="form-control" disabled value="@Model?.CaLamViec">
                             <small class="form-text text-muted">Thông tin này không thể thay đổi</small>
                         </div>
                     </div>
@@ -477,9 +334,9 @@
                 <div class="form-row">
                     <div class="form-col">
                         <div class="form-group">
-                            <label asp-for="TenDangNhap">Tên đăng nhập <span class="text-danger">*</span></label>
-                            <input type="text" asp-for="TenDangNhap" class="form-control" value="@Model?.TenDangNhap" disabled="@(ViewBag.EditMode != true)">
-                            <span asp-validation-for="TenDangNhap" class="text-danger"></span>
+                            <label>Tên đăng nhập <span class="text-danger">*</span></label>
+                            <input name="tenDangNhap" type="text" class="form-control" value="@Model?.TenDangNhap"
+                            @(ViewBag.EditMode != true ? "disabled" : "") required>
                             @if (ViewBag.EditMode == true)
                             {
                                 <small class="form-text text-muted">Tên đăng nhập phải có ít nhất 3 ký tự</small>
@@ -488,8 +345,8 @@
                     </div>
                     <div class="form-col">
                         <div class="form-group">
-                            <label asp-for="MatKhau">Mật khẩu</label>
-                            <input type="password" asp-for="MatKhau" class="form-control" value="********" disabled>
+                            <label>Mật khẩu</label>
+                            <input type="password" class="form-control" value="********" disabled>
                             <small class="form-text text-muted">Liên hệ quản lý để đổi mật khẩu</small>
                         </div>
                     </div>
@@ -503,7 +360,7 @@
                     }
                     else
                     {
-                        <a asp-action="staffDashboard" asp-controller="Staff" class="btn btn-outline">Quay lại</a>
+                        <a asp-action="magDashboard" asp-controller="Manager" class="btn btn-outline">Quay lại</a>
                         <a asp-action="ThongTinCaNhan" asp-route-id="@Model?.MaNv" asp-route-editMode="true" class="btn">Chỉnh sửa</a>
                     }
                 </div>

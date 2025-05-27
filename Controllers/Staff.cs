@@ -556,6 +556,44 @@ namespace pbl3_QLCF.Controllers
         [HttpPost]
         public IActionResult ThongTinCaNhan(NguoiDung user)
         {
+            var fieldsToValidate = new[] { "Sdt", "DiaChi", "Email", "TenDangNhap" };
+            var keysToRemove = ModelState.Keys
+                .Where(k => !fieldsToValidate.Any(f => k.Contains(f)))
+                .ToList();
+
+            foreach (var key in keysToRemove)
+            {
+                ModelState.Remove(key);
+            }
+
+            if (!IsValidPhoneNumber(user.Sdt))
+            {
+                ModelState.AddModelError("Sdt", "Số điện thoại không hợp lệ. Vui lòng nhập số điện thoại Việt Nam hợp lệ.");
+            }
+
+            if (!IsValidEmail(user.Email))
+            {
+                ModelState.AddModelError("Email", "Định dạng email không hợp lệ.");
+            }
+
+            if (string.IsNullOrWhiteSpace(user.DiaChi) || user.DiaChi.Length < 10)
+            {
+                ModelState.AddModelError("DiaChi", "Địa chỉ phải có ít nhất 10 ký tự.");
+            }
+
+            if (string.IsNullOrWhiteSpace(user.TenDangNhap) || user.TenDangNhap.Length < 3)
+            {
+                ModelState.AddModelError("TenDangNhap", "Tên đăng nhập phải có ít nhất 3 ký tự.");
+            }
+
+            var existingUserWithSameUsername = _context.NguoiDungs
+                .FirstOrDefault(u => u.TenDangNhap == user.TenDangNhap && u.MaNv != user.MaNv);
+
+            if (existingUserWithSameUsername != null)
+            {
+                ModelState.AddModelError("TenDangNhap", "Tên đăng nhập đã được sử dụng bởi người khác.");
+            }
+
             if (ModelState.IsValid)
             {
                 try
@@ -566,12 +604,11 @@ namespace pbl3_QLCF.Controllers
                         return NotFound();
                     }
 
-                    existingUser.HoTen = user.HoTen;
-                    existingUser.NgaySinh = user.NgaySinh;
-                    existingUser.Sdt = user.Sdt;
-                    existingUser.DiaChi = user.DiaChi;
-                    existingUser.Email = user.Email;
-                    existingUser.TenDangNhap = user.TenDangNhap;
+                    // CHỈ cập nhật các trường được phép
+                    existingUser.Sdt = user.Sdt?.Trim();
+                    existingUser.DiaChi = user.DiaChi?.Trim();
+                    existingUser.Email = user.Email?.Trim().ToLower();
+                    existingUser.TenDangNhap = user.TenDangNhap?.Trim();
 
                     _context.Update(existingUser);
                     _context.SaveChanges();
@@ -581,16 +618,44 @@ namespace pbl3_QLCF.Controllers
                 }
                 catch (Exception ex)
                 {
-                    ModelState.AddModelError("", "Lỗi khi cập nhật: " + ex.Message);
+                    TempData["ErrorMessage"] = "Lỗi khi cập nhật thông tin: " + ex.Message;
                     ViewBag.EditMode = true;
                 }
             }
             else
             {
                 ViewBag.EditMode = true;
+                TempData["ErrorMessage"] = "Vui lòng kiểm tra lại thông tin đã nhập";
             }
 
             return View(user);
+        }
+
+        private bool IsValidPhoneNumber(string phoneNumber)
+        {
+            if (string.IsNullOrWhiteSpace(phoneNumber))
+                return false;
+
+            phoneNumber = phoneNumber.Replace(" ", "").Replace("-", "");
+
+            var phoneRegex = new System.Text.RegularExpressions.Regex(@"^(\+84|84|0[3|5|7|8|9])[0-9]{8,9}$");
+            return phoneRegex.IsMatch(phoneNumber);
+        }
+
+        private bool IsValidEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
+
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
