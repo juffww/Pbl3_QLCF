@@ -10,10 +10,19 @@
     <title>CaféManager - Dashboard</title>
     <link rel="stylesheet" type="text/css" href="~/css/Manager/magDashboard.css" />
     <style>
-        .product-name
-        {
+        .product-name {
             color: white !important;
         }
+        .graph-card {
+            grid-column: span 2;
+            min-height: 400px; 
+        }
+
+        .chart-wrapper {
+            height: 350px; 
+            position: relative;
+        }
+
     </style>
 </head>
 @using pbl3_QLCF.ViewModels;
@@ -40,7 +49,7 @@
                     {
                         <span>↑ 0% so với hôm qua</span>
                     }
-                 </div>
+                </div>
             </div>
             <div class="card">
                 <div class="card-title">Đơn hàng hôm nay</div>
@@ -58,7 +67,7 @@
                     {
                         <span>↑ 0% so với hôm qua</span>
                     }
-                 </div>
+                </div>
             </div>
             <div class="card">
                 <div class="card-title">Khách hàng mới</div>
@@ -76,37 +85,50 @@
                     {
                         <span>0% so với tuần trước</span>
                     }
-                 </div>
+                </div>
             </div>
+
             <div class="card graph-card">
-                <div class="card-title">Xu hướng doanh thu</div>
-                <svg class="chart" viewBox="0 0 500 250">
-                    <polyline class="chart-line" points="
-                        50,200
-                        100,150
-                        150,180
-                        200,130
-                        250,80
-                        300,100
-                        350,70
-                        400,50
-                        450,30
-                    "></polyline>
-                    <text x="50" y="220" fill="#888" font-size="10">T2</text>
-                    <text x="100" y="220" fill="#888" font-size="10">T3</text>
-                    <text x="150" y="220" fill="#888" font-size="10">T4</text>
-                    <text x="200" y="220" fill="#888" font-size="10">T5</text>
-                    <text x="250" y="220" fill="#888" font-size="10">T6</text>
-                    <text x="300" y="220" fill="#888" font-size="10">T7</text>
-                    <text x="350" y="220" fill="#888" font-size="10">CN</text>
-                    <text x="400" y="220" fill="#888" font-size="10">T2</text>
-                    <text x="450" y="220" fill="#888" font-size="10">T3</text>
-                </svg>
+                <div class="chart-title">Xu hướng doanh thu</div>
+                <div class="chart-wrapper">
+                    <svg class="chart-svg" viewBox="0 0 700 300">
+                        <defs>
+                            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                            </linearGradient>
+                            <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#667eea;stop-opacity:0.6" />
+                                <stop offset="100%" style="stop-color:#667eea;stop-opacity:0" />
+                            </linearGradient>
+                        </defs>
+
+                        <!-- Grid lines -->
+                        <g class="grid">
+                            <line class="grid-line" x1="80" y1="50" x2="80" y2="220"></line>
+                            <line class="grid-line" x1="80" y1="220" x2="620" y2="220"></line>
+                            <line class="grid-line" x1="80" y1="50" x2="620" y2="50"></line>
+                            <line class="grid-line" x1="80" y1="92.5" x2="620" y2="92.5"></line>
+                            <line class="grid-line" x1="80" y1="135" x2="620" y2="135"></line>
+                            <line class="grid-line" x1="80" y1="177.5" x2="620" y2="177.5"></line>
+                        </g>
+
+                        <polygon class="chart-area" id="chartArea"></polygon>
+
+                        <polyline class="chart-line" id="chartLine"></polyline>
+
+                        <g id="dataPoints"></g>
+
+                        <g id="xAxisLabels"></g>
+                    </svg>
+                    <div class="tooltip" id="tooltip"></div>
+                </div>
             </div>
+
             <div class="card product-card">
                 <div class="card-title">Sản phẩm bán chạy</div>
                 <div class="product-list">
-                    @foreach(var item in Model.topSellingProduct)
+                    @foreach (var item in Model.topSellingProduct)
                     {
                         <div class="product-item">
                             <div class="product-name">@item.productName</div>
@@ -141,5 +163,293 @@
             </div>
         </div>
     </div>
+    // Script cải tiến cho biểu đồ với trục tọa độ phù hợp
+    <script>
+        const revenueData = @Html.Raw(Json.Serialize(Model.revenueTrend.Select(r => new
+            {
+                day = r.time,
+                revenue = r.revenue,
+                date = r.date
+            })));
+
+        function formatCurrency(amount) {
+            if (amount >= 1000000) {
+                return (amount / 1000000).toFixed(1) + 'M';
+            } else if (amount >= 1000) {
+                return (amount / 1000).toFixed(0) + 'K';
+            }
+            return amount.toString();
+        }
+
+        function formatFullCurrency(amount) {
+            return amount.toLocaleString('vi-VN') + ' VND';
+        }
+
+        function calculateYAxisSteps(maxValue) {
+            if (maxValue === 0) return [0, 100000, 200000, 300000, 400000, 500000];
+
+            const magnitude = Math.pow(10, Math.floor(Math.log10(maxValue)));
+            const normalized = maxValue / magnitude;
+
+            let step;
+            if (normalized <= 1) step = 0.2 * magnitude;
+            else if (normalized <= 2) step = 0.5 * magnitude;
+            else if (normalized <= 5) step = 1 * magnitude;
+            else step = 2 * magnitude;
+
+            const steps = [];
+            const numSteps = 5;
+            const adjustedMax = Math.ceil(maxValue / step) * step;
+
+            for (let i = 0; i <= numSteps; i++) {
+                steps.push((adjustedMax / numSteps) * i);
+            }
+
+            return steps.reverse();
+        }
+
+        function createChart() {
+            const maxRevenue = Math.max(...revenueData.map(d => d.revenue));
+            const yAxisSteps = calculateYAxisSteps(maxRevenue);
+            const maxYValue = yAxisSteps[0];
+
+            const chartHeight = 170;
+            const chartWidth = 540;
+            const stepX = chartWidth / (revenueData.length - 1);
+
+            updateYAxisAndGrid(yAxisSteps);
+
+            let points = [];
+            let areaPoints = [];
+
+            revenueData.forEach((data, index) => {
+                const x = 80 + (index * stepX);
+                const y = 220 - (data.revenue / maxYValue) * chartHeight;
+                points.push(`${x},${y}`);
+                areaPoints.push(`${x},${y}`);
+            });
+
+            areaPoints.push(`${80 + (revenueData.length - 1) * stepX},220`);
+            areaPoints.push('80,220');
+
+            document.getElementById('chartLine').setAttribute('points', points.join(' '));
+            document.getElementById('chartArea').setAttribute('points', areaPoints.join(' '));
+
+            createDataPointsAndXLabels(stepX, maxYValue, chartHeight);
+        }
+
+        function updateYAxisAndGrid(yAxisSteps) {
+            const svg = document.querySelector('.chart-svg');
+
+            const oldGrid = svg.querySelector('.grid');
+            const oldYLabels = svg.querySelectorAll('.y-axis-label');
+
+            if (oldGrid) oldGrid.remove();
+            oldYLabels.forEach(label => label.remove());
+
+            const grid = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            grid.setAttribute('class', 'grid');
+
+            const mainBorder = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            mainBorder.setAttribute('x', '80');
+            mainBorder.setAttribute('y', '50');
+            mainBorder.setAttribute('width', '540');
+            mainBorder.setAttribute('height', '170');
+            mainBorder.setAttribute('fill', 'none');
+            mainBorder.setAttribute('stroke', '#e0e0e0');
+            mainBorder.setAttribute('stroke-width', '2');
+            grid.appendChild(mainBorder);
+
+            yAxisSteps.forEach((value, index) => {
+                const y = 50 + (index * (170 / (yAxisSteps.length - 1)));
+
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('class', 'grid-line');
+                line.setAttribute('x1', '80');
+                line.setAttribute('y1', y);
+                line.setAttribute('x2', '620');
+                line.setAttribute('y2', y);
+                line.setAttribute('stroke', '#f0f0f0');
+                line.setAttribute('stroke-width', '1');
+                line.setAttribute('stroke-dasharray', '2,2');
+                grid.appendChild(line);
+
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', '70');
+                text.setAttribute('y', y + 5);
+                text.setAttribute('class', 'axis-text y-axis-label');
+                text.setAttribute('text-anchor', 'end');
+                text.setAttribute('font-size', '12');
+                text.setAttribute('fill', '#666');
+                text.textContent = formatCurrency(value);
+                svg.appendChild(text);
+            });
+
+            revenueData.forEach((data, index) => {
+                const x = 80 + (index * (540 / (revenueData.length - 1)));
+
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('class', 'grid-line-vertical');
+                line.setAttribute('x1', x);
+                line.setAttribute('y1', '50');
+                line.setAttribute('x2', x);
+                line.setAttribute('y2', '220');
+                line.setAttribute('stroke', '#f8f8f8');
+                line.setAttribute('stroke-width', '1');
+                line.setAttribute('stroke-dasharray', '1,1');
+                grid.appendChild(line);
+            });
+
+            const defs = svg.querySelector('defs');
+            svg.insertBefore(grid, defs.nextSibling);
+        }
+
+        function createDataPointsAndXLabels(stepX, maxYValue, chartHeight) {
+            const dataPointsGroup = document.getElementById('dataPoints');
+            const xAxisLabels = document.getElementById('xAxisLabels');
+
+            dataPointsGroup.innerHTML = '';
+            xAxisLabels.innerHTML = '';
+
+            revenueData.forEach((data, index) => {
+                const x = 80 + (index * stepX);
+                const y = 220 - (data.revenue / maxYValue) * chartHeight;
+
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('class', 'chart-point');
+                circle.setAttribute('cx', x);
+                circle.setAttribute('cy', y);
+                circle.setAttribute('r', '5');
+                circle.setAttribute('data-index', index);
+                circle.setAttribute('fill', '#667eea');
+                circle.setAttribute('stroke', '#fff');
+                circle.setAttribute('stroke-width', '2');
+
+                circle.addEventListener('mouseenter', (e) => showTooltip(e, data));
+                circle.addEventListener('mouseleave', hideTooltip);
+
+                dataPointsGroup.appendChild(circle);
+
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', x);
+                text.setAttribute('y', 240);
+                text.setAttribute('class', 'axis-text');
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('font-size', '12');
+                text.setAttribute('fill', '#666');
+                text.setAttribute('font-weight', 'bold');
+                text.textContent = data.day;
+                xAxisLabels.appendChild(text);
+
+                const dateText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                dateText.setAttribute('x', x);
+                dateText.setAttribute('y', 255);
+                dateText.setAttribute('class', 'axis-text');
+                dateText.setAttribute('text-anchor', 'middle');
+                dateText.setAttribute('font-size', '10');
+                dateText.setAttribute('fill', '#999');
+                dateText.textContent = data.date;
+                xAxisLabels.appendChild(dateText);
+            });
+        }
+
+        function showTooltip(e, data) {
+            const tooltip = document.getElementById('tooltip');
+            const rect = e.target.getBoundingClientRect();
+            const containerRect = document.querySelector('.chart-wrapper').getBoundingClientRect();
+
+            tooltip.innerHTML = `
+                    <strong>${data.day} (${data.date})</strong><br>
+                    Doanh thu: ${formatFullCurrency(data.revenue)}
+                `;
+
+            tooltip.style.left = (rect.left - containerRect.left) + 'px';
+            tooltip.style.top = (rect.top - containerRect.top - 10) + 'px';
+            tooltip.classList.add('show');
+        }
+
+        function hideTooltip() {
+            document.getElementById('tooltip').classList.remove('show');
+        }
+
+        function animateChart() {
+            const chartLine = document.getElementById('chartLine');
+            const chartArea = document.getElementById('chartArea');
+            const dataPoints = document.querySelectorAll('.chart-point');
+
+            if (chartLine) {
+                const lineLength = chartLine.getTotalLength();
+                chartLine.style.strokeDasharray = lineLength;
+                chartLine.style.strokeDashoffset = lineLength;
+                chartLine.style.animation = 'drawLine 2s ease-in-out forwards';
+            }
+
+            if (chartArea) {
+                chartArea.style.opacity = '0';
+                chartArea.style.animation = 'fadeInArea 1.5s ease-in-out 0.5s forwards';
+            }
+
+            dataPoints.forEach((point, index) => {
+                point.style.opacity = '0';
+                point.style.transform = 'scale(0)';
+                point.style.animation = `fadeInPoint 0.5s ease-in-out ${1 + index * 0.1}s forwards`;
+            });
+        }
+
+        const style = document.createElement('style');
+        style.textContent = `
+        @@keyframes drawLine {
+                    to { stroke-dashoffset: 0; }
+                }
+        @@keyframes fadeInArea {
+                    to { opacity: 0.3; }
+                }
+        @@keyframes fadeInPoint {
+                    to { opacity: 1; transform: scale(1); }
+                }
+                .chart-point {
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+                .chart-point:hover {
+                    r: 7;
+                    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+                }
+                .tooltip {
+                    position: absolute;
+                    background: rgba(0,0,0,0.8);
+                    color: white;
+                    padding: 8px 12px;
+                    border-radius: 6px;
+                    font-size: 12px;
+                    pointer-events: none;
+                    opacity: 0;
+                    transform: translateY(-10px);
+                    transition: all 0.3s ease;
+                    z-index: 1000;
+                    white-space: nowrap;
+                }
+                .tooltip.show {
+                    opacity: 1;
+                    transform: translateY(-20px);
+                }
+            `;
+        document.head.appendChild(style);
+
+        document.addEventListener('DOMContentLoaded', function () {
+            createChart();
+            animateChart();
+        });
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function () {
+                createChart();
+                animateChart();
+            });
+        } else {
+            createChart();
+            animateChart();
+        }
+    </script>
 </body>
 </html>

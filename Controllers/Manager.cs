@@ -331,6 +331,7 @@ namespace pbl3_QLCF.Controllers
             return View(model);
         }
         //--------------------------------Dashboard----------------------------
+        // ===== SỬA CONTROLLER =====
         [HttpGet]
         public IActionResult magDashboard()
         {
@@ -340,12 +341,12 @@ namespace pbl3_QLCF.Controllers
             var yesterday = DateTime.Today.AddDays(-1);
             var thisWeek = DateTime.Today.AddDays(-7);
 
-            //Doanh thu hom nay
-            model.todayRevenue = _context.DonHangs.Where(o => o.ThoiGianDat.Value.Date == today)
-                                    .Sum(o => (int)o.TongTien);
-            var yesterdayRevenue = _context.DonHangs.Where(o => o.ThoiGianDat.Value.Date == yesterday)
-                                    .Sum(o => (int)o.TongTien);
-            model.todayPercent = 0; 
+            // Doanh thu hôm nay
+            model.todayRevenue = _context.DonHangs.Where(o => o.ThoiGianDat.HasValue && o.ThoiGianDat.Value.Date == today)
+                                    .Sum(o => (int)(o.TongTien ?? 0));
+            var yesterdayRevenue = _context.DonHangs.Where(o => o.ThoiGianDat.HasValue && o.ThoiGianDat.Value.Date == yesterday)
+                                    .Sum(o => (int)(o.TongTien ?? 0));
+            model.todayPercent = 0;
             if (yesterdayRevenue > 0)
             {
                 model.todayPercent = (double)(model.todayRevenue - yesterdayRevenue) / yesterdayRevenue * 100;
@@ -353,9 +354,10 @@ namespace pbl3_QLCF.Controllers
             }
             else if (model.todayRevenue > 0)
             {
-                model.todayPercent = 100; 
+                model.todayPercent = 100;
             }
-            //Don hang hom nay
+
+            // Đơn hàng hôm nay
             model.todayOrder = _context.DonHangs
                 .Where(o => o.ThoiGianDat.HasValue && o.ThoiGianDat.Value.Date == today)
                 .Count();
@@ -368,20 +370,21 @@ namespace pbl3_QLCF.Controllers
             if (yesterdayOrder > 0)
             {
                 model.orderPercent = (double)(model.todayOrder - yesterdayOrder) / yesterdayOrder * 100;
-                 model.orderPercent = Math.Round(model.orderPercent, 2);
+                model.orderPercent = Math.Round(model.orderPercent, 2);
             }
             else if (model.todayOrder > 0)
             {
-                model.orderPercent = 100; 
+                model.orderPercent = 100;
             }
-            //KH
+
+            // Khách hàng mới
             var allCustomer = _context.KhachHangs.ToList();
             var newCustomerThisWeek = new List<KhachHang>();
             foreach (var customer in allCustomer)
             {
                 var firstOrder = _context.DonHangs
                                 .Where(o => o.MaKh == customer.MaKh)
-                                .OrderBy(o => o.ThoiGianDat) 
+                                .OrderBy(o => o.ThoiGianDat)
                                 .FirstOrDefault();
                 if (firstOrder != null && firstOrder.ThoiGianDat.HasValue &&
                     firstOrder.ThoiGianDat.Value >= thisWeek && firstOrder.ThoiGianDat.Value <= customerToday)
@@ -390,6 +393,7 @@ namespace pbl3_QLCF.Controllers
                 }
             }
             model.newCustomerCount = newCustomerThisWeek.Count();
+
             var lastWeek = thisWeek.AddDays(-7);
             var newCustomerLastWeek = 0;
             foreach (var customer in allCustomer)
@@ -414,19 +418,22 @@ namespace pbl3_QLCF.Controllers
             {
                 model.customerPercent = 100;
             }
-            //San pham ban chay
+
+            // Sản phẩm bán chạy
             var month = DateTime.Now.AddDays(-30);
-            model.topSellingProduct = _context.ChiTietDonHangs.Where(ct => ct.MaDhNavigation.ThoiGianDat.Value.Date >= month)
-                                        .GroupBy(ct => new { ct.MaMonNavigation.TenMon })
-                                        .Select(g => new topSelling()
-                                        {
-                                            productName = g.Key.TenMon,
-                                            quantity = g.Sum(ct => ct.SoLuong.HasValue ? ct.SoLuong.Value : 0)
-                                        })
-                                        .OrderByDescending(x => x.quantity)
-                                        .Take(5)
-                                        .ToList();
-            //Lay don hang gan nhat
+            model.topSellingProduct = _context.ChiTietDonHangs
+                .Where(ct => ct.MaDhNavigation.ThoiGianDat.HasValue && ct.MaDhNavigation.ThoiGianDat.Value.Date >= month)
+                .GroupBy(ct => new { ct.MaMonNavigation.TenMon })
+                .Select(g => new topSelling()
+                {
+                    productName = g.Key.TenMon,
+                    quantity = g.Sum(ct => ct.SoLuong.HasValue ? ct.SoLuong.Value : 0)
+                })
+                .OrderByDescending(x => x.quantity)
+                .Take(5)
+                .ToList();
+
+            // Lấy đơn hàng gần nhất
             model.recentOrders = _context.DonHangs
                                  .OrderByDescending(o => o.ThoiGianDat)
                                  .Take(10)
@@ -438,32 +445,45 @@ namespace pbl3_QLCF.Controllers
                                      status = o.TrangThaiDh
                                  })
                                  .ToList();
-            //Xu huong doanh thu
+
+            // ===== SỬA XU HƯỚNG DOANH THU =====
             model.revenueTrend = new List<revenueTrendItem>();
-            DateTime startDate = DateTime.Today.AddDays(-9);
+            DateTime startDate = DateTime.Today.AddDays(-8); // Lấy 9 ngày (từ -8 đến 0)
+
             for (int i = 0; i < 9; i++)
             {
                 DateTime date = startDate.AddDays(i);
-                string dayName = date.DayOfWeek.ToString();
-                switch (dayName)
-                {
-                    case "Monday": dayName = "T2"; break;
-                    case "Tuesday": dayName = "T3"; break;
-                    case "Wednesday": dayName = "T4"; break;
-                    case "Thursday": dayName = "T5"; break;
-                    case "Friday": dayName = "T6"; break;
-                    case "Saturday": dayName = "T7"; break;
-                    case "Sunday": dayName = "CN"; break;
-                }
-                int revenue = _context.DonHangs.Where(o => o.ThoiGianDat == date)
-                                .Sum(o => o.TongTien ?? 0);
+                string dayName = GetVietnameseDayName(date.DayOfWeek);
+
+                int revenue = _context.DonHangs
+                    .Where(o => o.ThoiGianDat.HasValue && o.ThoiGianDat.Value.Date == date.Date)
+                    .Sum(o => o.TongTien ?? 0);
+
                 model.revenueTrend.Add(new revenueTrendItem()
                 {
                     time = dayName,
-                    revenue = revenue
+                    revenue = revenue,
+                    date = date.ToString("dd/MM") // Thêm trường date để hiển thị
                 });
             }
+
             return View(model);
+        }
+
+        // Hàm helper để chuyển đổi tên ngày
+        private string GetVietnameseDayName(DayOfWeek dayOfWeek)
+        {
+            switch (dayOfWeek)
+            {
+                case DayOfWeek.Monday: return "T2";
+                case DayOfWeek.Tuesday: return "T3";
+                case DayOfWeek.Wednesday: return "T4";
+                case DayOfWeek.Thursday: return "T5";
+                case DayOfWeek.Friday: return "T6";
+                case DayOfWeek.Saturday: return "T7";
+                case DayOfWeek.Sunday: return "CN";
+                default: return "";
+            }
         }
         //-------------------NhanVien-------------------
         [HttpGet]

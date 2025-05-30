@@ -16,6 +16,7 @@
     {
         public string time { get; set; }
         public int revenue { get; set; }
+        public string date { get; set; } 
     }
     public class topSelling
     {
