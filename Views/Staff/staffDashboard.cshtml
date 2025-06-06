@@ -22,6 +22,21 @@
         .action-btn {
             text-decoration: none !important;
         }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 1rem;
+        }
   </style>
 </head>
 @using pbl3_QLCF.ViewModels;
@@ -43,7 +58,6 @@
           <span class="indicator-up">↑</span>
         </div>
       </div>
-      @* cyan *@
       <div class="stat-card">
         <div class="stat-header stat-blue">Đơn hàng đã hoàn thành</div>
         <div class="stat-content">
@@ -54,7 +68,6 @@
           <span class="indicator-up">↑</span>
         </div>
       </div>
-      @* orange *@
       <div class="stat-card">
         <div class="stat-header stat-blue">Đơn hàng đang xử lý</div>
         <div class="stat-content">
@@ -67,14 +80,13 @@
       </div>
     </div>
 
-    <!-- Grid Layout for Order Processing and Actions -->
     <div class="grid">
       <div class="card">
         <div class="card-title">Đơn hàng đang xử lý</div>
             <div class="tabs">
-              <div class="tab active">Tất cả</div>
-              <div class="tab">Mới</div>
-              <div class="tab">Đang xử lý</div>
+                <div class="tab active" onclick="filterOrders('all')">Tất cả</div>
+                <div class="tab" onclick="filterOrders('new')">Mới</div>
+                <div class="tab" onclick="filterOrders('processing')">Đang xử lý</div>
             </div>
             <div class="order-list"> 
                 @foreach(var item in Model.processOrders)
@@ -107,27 +119,85 @@
         <div class="card">
           <div class="card-title">Thao tác nhanh</div>
           <div class="quick-actions">
-            <a asp-action="SanPham" asp-controller="Staff" class="action-btn btn-primary">Tạo đơn hàng mới</a>
-            <a asp-action="SanPham" asp-controller="Staff" class="action-btn btn-info">Quản lý khách hàng</a>
-            <a asp-action="SanPham" asp-controller="Staff" class="action-btn btn-success">Báo cáo ca làm</a>
+            <a asp-action="SanPham" asp-controller="Staff" class="action-btn btn-primary">🛒 Tạo đơn hàng mới</a>
+            <a asp-action="DonHang" asp-controller="Staff" class="action-btn btn-info">📦 Xem tất cả đơn hàng</a>
+           @*  <a asp-action="SanPham" asp-controller="Staff" class="action-btn btn-success">Báo cáo ca làm</a> *@
           </div>
         </div>
 
-        <div class="card notifications">
-          <div class="card-title">Thông báo</div>
-          <div class="notification-item">
-            <div class="notification-icon icon-warning">!</div>
-            <div class="notification-text">Sữa tươi sắp hết</div>
-            <div class="notification-time">10 phút trước</div>
-          </div>
-          <div class="notification-item">
-            <div class="notification-icon icon-info">i</div>
-            <div class="notification-text">Khuyến mãi mới được áp dụng</div>
-            <div class="notification-time">1 giờ trước</div>
-          </div>
+        <div class="card">
+            <div class="card-title">Thông tin ca làm việc</div>
+            <div style="padding: 1rem 0;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+                    <span style="color: #666;">Thời gian bắt đầu:</span>
+                    <strong>08:00 - 06/05/2025</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+                    <span style="color: #666;">Thời gian hiện tại:</span>
+                    <strong id="currentTime">--:--</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+                    <span style="color: #666;">Tổng đơn hàng hôm nay:</span>
+                    <strong>@Model.todayOrder đơn</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: #666;">Doanh thu ca:</span>
+                    <strong style="color: #8b5a2b;">@Model.revenueToday.ToString("#,##0") VNĐ</strong>
+                </div>
+            </div>
         </div>
       </div>
     </div>
   </div>
+    <script>
+        // Update current time
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('vi-VN', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('currentTime').textContent = timeString;
+        }
+
+        // Update time every second
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // Tab filtering (demo functionality)
+        function filterOrders(type) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+
+            // For demo purposes, show empty state
+            // In real implementation, this would filter actual orders
+            console.log('Filtering orders by:', type);
+        }
+
+        // Demo: Add some sample orders after page load
+        // setTimeout(() => {
+        //     const orderList = document.getElementById('orderList');
+        //     orderList.innerHTML = `
+        //         <div class="order-item">
+        //           <div class="order-name">#001 - Nguyễn Văn A</div>
+        //           <div class="order-details">Cà phê đen đá (x1), Bánh mì (x1)</div>
+        //           <div class="order-time">14:30 - 06/05/2025</div>
+        //           <div class="order-status status-new">Mới</div>
+        //         </div>
+        //         <div class="order-item">
+        //           <div class="order-name">#002 - Trần Thị B</div>
+        //           <div class="order-details">Trà sữa trân châu (x2)</div>
+        //           <div class="order-time">14:45 - 06/05/2025</div>
+        //           <div class="order-status status-processing">Đang xử lý</div>
+        //         </div>
+        //       `;
+        // }, 2000);
+    </script>
 </body>
 </html>

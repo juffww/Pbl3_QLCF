@@ -79,11 +79,11 @@ body {
     justify-content: center;
 }
 
-    .right-panel h2 {
-        font-size: 28px;
-        text-align: center;
-        margin: 20px 20px;
-    }
+.right-panel h2 {
+    font-size: 28px;
+    text-align: center;
+    margin: 20px 20px;
+}
 
 .tabs {
     display: flex;
@@ -106,14 +106,14 @@ body {
     border-radius: 0;
 }
 
-    .tab.active {
-        background-color: var(--primary-color);
-        color: var(--white);
-    }
+.tab.active {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
 
-    .tab:not(.active) {
-        color: var(--text-color);
-    }
+.tab:not(.active) {
+    color: var(--text-color);
+}
 
 .tab-icon {
     font-size: 1.2rem;
@@ -140,16 +140,16 @@ body {
 .form-input {
     width: 100%;
     padding: 12px 15px;
-    border: 1px solid #D2B48C; /* Coffee with milk color for input borders */
+    border: 1px solid #D2B48C; 
     border-radius: 5px;
     font-size: 1rem;
     transition: border 0.3s ease;
 }
 
-    .form-input:focus {
-        outline: none;
-        border-color: var(--primary-color);
-    }
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
 
 .form-options {
     display: flex;
@@ -172,10 +172,10 @@ body {
     transition: color 0.3s ease;
 }
 
-    .forgot-password:active, .forgot-password:hover {
-        text-decoration: underline;
-        color: var(--primary-color);
-    }
+.forgot-password:active, .forgot-password:hover {
+    text-decoration: underline;
+    color: var(--primary-color);
+}
 
 .login-btn {
     width: 100%;
@@ -190,8 +190,8 @@ body {
     transition: all 0.3s ease;
 }
 
-    .login-btn:hover {
-        background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(111, 78, 55, 0.4);
-    }
+.login-btn:hover {
+    background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(111, 78, 55, 0.4);
+}

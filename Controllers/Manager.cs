@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using pbl3_QLCF.Data;
 using pbl3_QLCF.Models.Authentication;
+using pbl3_QLCF.Service;
 using pbl3_QLCF.ViewModels;
 
 namespace pbl3_QLCF.Controllers
@@ -207,6 +208,7 @@ namespace pbl3_QLCF.Controllers
             var order = _context.DonHangs
                 .Include(o => o.ChiTietDonHangs)
                 .ThenInclude(c => c.MaMonNavigation)
+                .Include(o => o.MaBanNavigation) 
                 .FirstOrDefault(o => o.MaDh == id);
 
             if (order == null)
@@ -235,7 +237,8 @@ namespace pbl3_QLCF.Controllers
                 ThanhToan = order.ThanhToan,
                 MaNv = order.MaNv,
                 tenNv = tenNhanVien ?? "N/A",
-                MaBan = order.MaBan,
+                MaBan = order.MaBan ?? "N/A",
+                viTri = order.MaBanNavigation?.KhuVucBan ?? "N/A",
                 MaKh = order.MaKh,
                 tenKh = KH?.TenKh ?? "Unknown",
                 SDT = KH?.Sdt ?? "N/A",
@@ -274,6 +277,8 @@ namespace pbl3_QLCF.Controllers
         [HttpGet]
         public IActionResult KhachHang(int page = 1, string category = "all", string search = "")
         {
+            CustomerService customerService = new CustomerService(_context);
+            customerService.UpdateCustomerTypes();
             IQueryable<KhachHang> query = _context.KhachHangs;
             if (category != "all")
             {
@@ -331,7 +336,6 @@ namespace pbl3_QLCF.Controllers
             return View(model);
         }
         //--------------------------------Dashboard----------------------------
-        // ===== SỬA CONTROLLER =====
         [HttpGet]
         public IActionResult magDashboard()
         {
@@ -446,7 +450,6 @@ namespace pbl3_QLCF.Controllers
                                  })
                                  .ToList();
 
-            // ===== SỬA XU HƯỚNG DOANH THU =====
             model.revenueTrend = new List<revenueTrendItem>();
             DateTime startDate = DateTime.Today.AddDays(-8); // Lấy 9 ngày (từ -8 đến 0)
 
@@ -470,7 +473,6 @@ namespace pbl3_QLCF.Controllers
             return View(model);
         }
 
-        // Hàm helper để chuyển đổi tên ngày
         private string GetVietnameseDayName(DayOfWeek dayOfWeek)
         {
             switch (dayOfWeek)
@@ -483,6 +485,39 @@ namespace pbl3_QLCF.Controllers
                 case DayOfWeek.Saturday: return "T7";
                 case DayOfWeek.Sunday: return "CN";
                 default: return "";
+            }
+        }
+        [HttpGet]
+        public IActionResult GetMonthlyRevenue(int year)
+        {
+            try
+            {
+                var monthlyData = new List<object>();
+
+                for (int month = 1; month <= 12; month++)
+                {
+                    var startDate = new DateTime(year, month, 1);
+                    var endDate = startDate.AddMonths(1).AddDays(-1);
+
+                    var monthRevenue = _context.DonHangs
+                        .Where(o => o.ThoiGianDat.HasValue &&
+                                   o.ThoiGianDat.Value.Date >= startDate.Date &&
+                                   o.ThoiGianDat.Value.Date <= endDate.Date)
+                        .Sum(o => o.TongTien ?? 0);
+
+                    monthlyData.Add(new
+                    {
+                        month = month,
+                        revenue = monthRevenue,
+                        name = $"Tháng {month}"
+                    });
+                }
+
+                return Json(new { success = true, data = monthlyData });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
             }
         }
         //-------------------NhanVien-------------------
@@ -625,79 +660,92 @@ namespace pbl3_QLCF.Controllers
             ViewBag.EditMode = editMode;
             return View(user);
         }
+
         [HttpPost]
-        public IActionResult ThongTinCaNhan(string maNv, string sdt, string diaChi, string email, string tenDangNhap)
+        public IActionResult ThongTinCaNhan(NguoiDung user)
         {
-            try
+            var fieldsToValidate = new[] { "Sdt", "DiaChi", "Email", "TenDangNhap" };
+            var keysToRemove = ModelState.Keys
+                .Where(k => !fieldsToValidate.Any(f => k.Contains(f)))
+                .ToList();
+
+            foreach (var key in keysToRemove)
             {
-                var existingUser = _context.NguoiDungs.Find(maNv);
-                if (existingUser == null)
+                ModelState.Remove(key);
+            }
+
+            if (!IsValidPhoneNumber(user.Sdt))
+            {
+                ModelState.AddModelError("Sdt", "Số điện thoại không hợp lệ. Vui lòng nhập số điện thoại Việt Nam hợp lệ.");
+            }
+
+            if (!IsValidEmail(user.Email))
+            {
+                ModelState.AddModelError("Email", "Định dạng email không hợp lệ.");
+            }
+
+            if (string.IsNullOrWhiteSpace(user.DiaChi) || user.DiaChi.Length < 10)
+            {
+                ModelState.AddModelError("DiaChi", "Địa chỉ phải có ít nhất 10 ký tự.");
+            }
+
+            if (string.IsNullOrWhiteSpace(user.TenDangNhap) || user.TenDangNhap.Length < 3)
+            {
+                ModelState.AddModelError("TenDangNhap", "Tên đăng nhập phải có ít nhất 3 ký tự.");
+            }
+
+            var existingUserWithSameUsername = _context.NguoiDungs
+                .FirstOrDefault(u => u.TenDangNhap == user.TenDangNhap && u.MaNv != user.MaNv);
+
+            if (existingUserWithSameUsername != null)
+            {
+                ModelState.AddModelError("TenDangNhap", "Tên đăng nhập đã được sử dụng bởi người khác.");
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
                 {
-                    TempData["ErrorMessage"] = "Không tìm thấy thông tin người dùng";
-                    return RedirectToAction("ThongTinCaNhan", new { id = maNv });
+                    var existingUser = _context.NguoiDungs.Find(user.MaNv);
+                    if (existingUser == null)
+                    {
+                        return NotFound();
+                    }
+
+                    existingUser.Sdt = user.Sdt?.Trim();
+                    existingUser.DiaChi = user.DiaChi?.Trim();
+                    existingUser.Email = user.Email?.Trim().ToLower();
+                    existingUser.TenDangNhap = user.TenDangNhap?.Trim();
+
+                    _context.Update(existingUser);
+                    _context.SaveChanges();
+
+                    TempData["SuccessMessage"] = "Đã cập nhật thông tin thành công";
+                    return RedirectToAction("ThongTinCaNhan", new { id = user.MaNv });
                 }
-
-                var errors = new List<string>();
-
-                if (string.IsNullOrWhiteSpace(sdt) || !IsValidPhoneNumber(sdt))
+                catch (Exception ex)
                 {
-                    errors.Add("Số điện thoại không hợp lệ");
-                }
-
-                if (string.IsNullOrWhiteSpace(email) || !IsValidEmail(email))
-                {
-                    errors.Add("Email không hợp lệ");
-                }
-
-                if (string.IsNullOrWhiteSpace(diaChi) || diaChi.Trim().Length < 10)
-                {
-                    errors.Add("Địa chỉ phải có ít nhất 10 ký tự");
-                }
-
-                if (string.IsNullOrWhiteSpace(tenDangNhap) || tenDangNhap.Trim().Length < 3)
-                {
-                    errors.Add("Tên đăng nhập phải có ít nhất 3 ký tự");
-                }
-
-                var existingUserWithSameUsername = _context.NguoiDungs
-                    .FirstOrDefault(u => u.TenDangNhap == tenDangNhap.Trim() && u.MaNv != maNv);
-                if (existingUserWithSameUsername != null)
-                {
-                    errors.Add("Tên đăng nhập đã được sử dụng bởi người khác");
-                }
-
-                if (errors.Any())
-                {
-                    TempData["ErrorMessage"] = string.Join(". ", errors);
+                    TempData["ErrorMessage"] = "Lỗi khi cập nhật thông tin: " + ex.Message;
                     ViewBag.EditMode = true;
-                    return View(existingUser);
                 }
-
-                existingUser.Sdt = sdt.Trim();
-                existingUser.DiaChi = diaChi.Trim();
-                existingUser.Email = email.Trim().ToLower();
-                existingUser.TenDangNhap = tenDangNhap.Trim();
-
-                _context.Update(existingUser);
-                _context.SaveChanges();
-
-                TempData["SuccessMessage"] = "Đã cập nhật thông tin thành công";
-                return RedirectToAction("ThongTinCaNhan", new { id = maNv });
             }
-            catch (Exception ex)
+            else
             {
-                TempData["ErrorMessage"] = "Lỗi khi cập nhật thông tin: " + ex.Message;
-                return RedirectToAction("ThongTinCaNhan", new { id = maNv, editMode = true });
+                ViewBag.EditMode = true;
+                TempData["ErrorMessage"] = "Vui lòng kiểm tra lại thông tin đã nhập";
             }
+
+            return View(user);
         }
+
         private bool IsValidPhoneNumber(string phoneNumber)
         {
             if (string.IsNullOrWhiteSpace(phoneNumber))
                 return false;
 
-            phoneNumber = phoneNumber.Replace(" ", "").Replace("-", "").Replace("(", "").Replace(")", "");
+            phoneNumber = phoneNumber.Replace(" ", "").Replace("-", "");
 
-            var phoneRegex = new System.Text.RegularExpressions.Regex(@"^(\+84|84|0)(3[2-9]|5[689]|7[06-9]|8[1-689]|9[0-46-9])[0-9]{7}$");
+            var phoneRegex = new System.Text.RegularExpressions.Regex(@"^(\+84|84|0[3|5|7|8|9])[0-9]{8,9}$");
             return phoneRegex.IsMatch(phoneNumber);
         }
 
@@ -705,15 +753,128 @@ namespace pbl3_QLCF.Controllers
         {
             if (string.IsNullOrWhiteSpace(email))
                 return false;
+
             try
             {
                 var addr = new System.Net.Mail.MailAddress(email);
-                return addr.Address == email && email.Contains("@") && email.Contains(".");
+                return addr.Address == email;
             }
             catch
             {
                 return false;
             }
+        }
+        [HttpPost]
+        //[Route("DoiMatKhau")]
+        public IActionResult DoiMatKhau(string MatKhauCu, string MatKhauMoi, string XacNhanMatKhau)
+        {
+            try
+            {
+                var userId = HttpContext.Session.GetString("maNV");
+
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Json(new { success = false, message = "Phiên đăng nhập đã hết hạn" });
+                }
+
+                var user = _context.NguoiDungs.Find(userId);
+                if (user == null)
+                {
+                    return Json(new { success = false, message = "Không tìm thấy thông tin người dùng" });
+                }
+
+                // Dictionary để chứa các lỗi
+                var errors = new Dictionary<string, string>();
+
+                // Kiểm tra mật khẩu cũ
+                if (string.IsNullOrWhiteSpace(MatKhauCu))
+                {
+                    errors.Add("MatKhauCu", "Vui lòng nhập mật khẩu hiện tại");
+                }
+                else if (!VerifyPassword(MatKhauCu, user.MatKhau))
+                {
+                    errors.Add("MatKhauCu", "Mật khẩu hiện tại không chính xác");
+                }
+
+                // Kiểm tra mật khẩu mới
+                if (string.IsNullOrWhiteSpace(MatKhauMoi))
+                {
+                    errors.Add("MatKhauMoi", "Vui lòng nhập mật khẩu mới");
+                }
+                else if (MatKhauMoi.Length < 6)
+                {
+                    errors.Add("MatKhauMoi", "Mật khẩu mới phải có ít nhất 6 ký tự");
+                }
+                else if (!IsStrongPassword(MatKhauMoi))
+                {
+                    errors.Add("MatKhauMoi", "Mật khẩu phải có ít nhất 1 chữ hoa, 1 chữ thường và 1 số");
+                }
+
+                // Kiểm tra xác nhận mật khẩu
+                if (string.IsNullOrWhiteSpace(XacNhanMatKhau))
+                {
+                    errors.Add("XacNhanMatKhau", "Vui lòng xác nhận mật khẩu mới");
+                }
+                else if (MatKhauMoi != XacNhanMatKhau)
+                {
+                    errors.Add("XacNhanMatKhau", "Mật khẩu xác nhận không khớp");
+                }
+
+                // Nếu có lỗi, trả về danh sách lỗi
+                if (errors.Any())
+                {
+                    return Json(new { success = false, errors = errors });
+                }
+
+                // Cập nhật mật khẩu mới
+                user.MatKhau = HashPassword(MatKhauMoi);
+                _context.Update(user);
+                _context.SaveChanges();
+
+                return Json(new { success = true, message = "Đổi mật khẩu thành công" });
+            }
+            catch (Exception ex)
+            {
+                // Log lỗi để debug
+                Console.WriteLine($"Error in DoiMatKhau: {ex.Message}");
+                return Json(new { success = false, message = "Lỗi hệ thống: " + ex.Message });
+            }
+        }
+
+        private bool VerifyPassword(string password, string hashedPassword)
+        {
+            // Thêm logging để debug
+            Console.WriteLine($"Verifying password. Input: '{password}', Stored: '{hashedPassword}'");
+
+            // Nếu bạn đang dùng plain text (chỉ cho development)
+            bool isMatch = password == hashedPassword;
+            Console.WriteLine($"Password match result: {isMatch}");
+
+            return isMatch;
+
+            // Nếu bạn dùng BCrypt (recommended for production):
+            // return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+        }
+
+        private string HashPassword(string password)
+        {
+            // Cho development, có thể dùng plain text
+            return password;
+
+            // Cho production, nên dùng BCrypt:
+            // return BCrypt.Net.BCrypt.HashPassword(password);
+        }
+
+        private bool IsStrongPassword(string password)
+        {
+            if (string.IsNullOrWhiteSpace(password) || password.Length < 6)
+                return false;
+
+            bool hasUpper = password.Any(char.IsUpper);
+            bool hasLower = password.Any(char.IsLower);
+            bool hasNumber = password.Any(char.IsDigit);
+
+            return hasUpper && hasLower && hasNumber;
         }
     }    
 }

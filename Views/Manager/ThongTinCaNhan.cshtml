@@ -183,6 +183,159 @@
             color: white;
         }
 
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(3px);
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            margin: 2% auto;
+            padding: 0;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        .modal-content-centered {
+            background-color: var(--white);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 0;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @@keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 5px 30px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+            .modal-header h2 {
+                margin: 0;
+                color: var(--primary-color);
+                font-size: 20px;
+            }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+            .close:hover,
+            .close:focus {
+                color: var(--primary-color);
+            }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .modal-footer {
+            padding: 20px 30px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        .error-message {
+            display: block;
+            color: var(--danger-color);
+            font-size: 14px;
+            margin-top: 5px;
+            min-height: 20px;
+        }
+
+        .password-requirements {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--light-gray);
+            border-radius: 4px;
+        }
+
+            .password-requirements h4 {
+                margin: 0 0 10px 0;
+                font-size: 14px;
+                color: var(--text-color);
+            }
+
+            .password-requirements ul {
+                margin: 0;
+                padding-left: 20px;
+                font-size: 13px;
+            }
+
+            .password-requirements li {
+                margin-bottom: 5px;
+                color: #666;
+                transition: color 0.3s;
+            }
+
+                .password-requirements li.valid {
+                    color: var(--success-color);
+                    font-weight: 500;
+                }
+
+                .password-requirements li.invalid {
+                    color: var(--danger-color);
+                }
+
+        .text-danger {
+            color: var(--danger-color);
+        }
+
+        .form-text {
+            font-size: 13px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Responsive */
+        @@media (max-width: 768px) {
+            .modal-content {
+                margin: 5% auto;
+                width: 95%;
+            }
+
+            .modal-content-centered {
+                width: 95%;
+                max-width: none;
+            }
+        }
+
         .alert {
             padding: 15px;
             margin-bottom: 20px;
@@ -231,14 +384,20 @@
                     <span class="status-badge">Đang hoạt động</span>
                 </div>
             </div>
-            <form asp-action="ThongTinCaNhan" method="post">
-                <!-- Chỉ cần truyền MaNv và các trường cần thiết -->
-                <input type="hidden" name="maNv" value="@Model?.MaNv" />
 
-                <!-- Các trường thông tin không thay đổi chỉ hiển thị -->
+            <form asp-action="ThongTinCaNhan" method="post">
+                <input type="hidden" asp-for="MaNv" />
+                <input type="hidden" asp-for="HoTen" />
+                <input type="hidden" asp-for="NgaySinh" />
+                <input type="hidden" asp-for="GioiTinh" />
+                <input type="hidden" asp-for="ChucVu" />
+                <input type="hidden" asp-for="CaLamViec" />
+                <input type="hidden" asp-for="MatKhau" />
+                <input type="hidden" asp-for="TrangThai" />
+
                 <div class="form-group">
-                    <label>Mã nhân viên</label>
-                    <input type="text" class="form-control" disabled value="@Model?.MaNv">
+                    <label asp-for="MaNv">Mã nhân viên</label>
+                    <input asp-for="MaNv" type="text" class="form-control" disabled value="@Model?.MaNv">
                 </div>
 
                 <div class="section-title">Thông tin cơ bản</div>
@@ -246,15 +405,15 @@
                 <div class="form-row">
                     <div class="form-col">
                         <div class="form-group">
-                            <label>Họ và tên</label>
-                            <input type="text" class="form-control" value="@Model?.HoTen" disabled>
+                            <label asp-for="HoTen">Họ và tên</label>
+                            <input asp-for="HoTen" type="text" class="form-control" value="@Model?.HoTen" disabled>
                             <small class="form-text text-muted">Thông tin này không thể thay đổi</small>
                         </div>
                     </div>
                     <div class="form-col">
                         <div class="form-group">
-                            <label>Ngày sinh</label>
-                            <input type="date" class="form-control" value="@(Model?.NgaySinh?.ToString("yyyy-MM-dd"))" disabled>
+                            <label asp-for="NgaySinh">Ngày sinh</label>
+                            <input asp-for="NgaySinh" type="date" class="form-control" value="@(Model?.NgaySinh?.ToString("yyyy-MM-dd"))" disabled>
                             <small class="form-text text-muted">Thông tin này không thể thay đổi</small>
                         </div>
                     </div>
@@ -266,11 +425,11 @@
                             <label>Giới tính</label>
                             <div class="radio-group">
                                 <div class="radio-option">
-                                    <input type="radio" id="gioiTinhNam" value="true" disabled @(Model?.GioiTinh == true ? "checked" : "") />
+                                    <input type="radio" id="gioiTinhNam" asp-for="GioiTinh" value="true" disabled />
                                     <label for="gioiTinhNam">Nam</label>
                                 </div>
                                 <div class="radio-option">
-                                    <input type="radio" id="gioiTinhNu" value="false" disabled @(Model?.GioiTinh == false ? "checked" : "") />
+                                    <input type="radio" id="gioiTinhNu" asp-for="GioiTinh" value="false" disabled />
                                     <label for="gioiTinhNu">Nữ</label>
                                 </div>
                             </div>
@@ -279,31 +438,31 @@
                     </div>
                     <div class="form-col">
                         <div class="form-group">
-                            <label>Số điện thoại <span class="text-danger">*</span></label>
-                            <input name="sdt" type="tel" class="form-control" value="@Model?.Sdt"
-                            @(ViewBag.EditMode != true ? "disabled" : "") required>
+                            <label asp-for="Sdt">Số điện thoại <span class="text-danger">*</span></label>
+                            <input asp-for="Sdt" type="tel" class="form-control" value="@Model?.Sdt" disabled="@(ViewBag.EditMode != true)">
+                            <span asp-validation-for="Sdt" class="text-danger"></span>
                             @if (ViewBag.EditMode == true)
                             {
-                                <small class="form-text text-muted">Nhập số điện thoại hợp lệ (10 chữ số)</small>
+                                <small class="form-text text-muted">Nhập số điện thoại hợp lệ (10-11 chữ số)</small>
                             }
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Địa chỉ <span class="text-danger">*</span></label>
-                    <input name="diaChi" type="text" class="form-control" value="@Model?.DiaChi"
-                    @(ViewBag.EditMode != true ? "disabled" : "") required>
+                    <label asp-for="DiaChi">Địa chỉ <span class="text-danger">*</span></label>
+                    <input asp-for="DiaChi" type="text" class="form-control" value="@Model?.DiaChi" disabled="@(ViewBag.EditMode != true)">
+                    <span asp-validation-for="DiaChi" class="text-danger"></span>
                     @if (ViewBag.EditMode == true)
                     {
-                        <small class="form-text text-muted">Nhập địa chỉ chi tiết (ít nhất 10 ký tự)</small>
+                        <small class="form-text text-muted">Nhập địa chỉ chi tiết</small>
                     }
                 </div>
 
                 <div class="form-group">
-                    <label>Email <span class="text-danger">*</span></label>
-                    <input name="email" type="email" class="form-control" value="@Model?.Email"
-                    @(ViewBag.EditMode != true ? "disabled" : "") required>
+                    <label asp-for="Email">Email <span class="text-danger">*</span></label>
+                    <input asp-for="Email" type="email" class="form-control" value="@Model?.Email" disabled="@(ViewBag.EditMode != true)">
+                    <span asp-validation-for="Email" class="text-danger"></span>
                     @if (ViewBag.EditMode == true)
                     {
                         <small class="form-text text-muted">Nhập địa chỉ email hợp lệ</small>
@@ -315,15 +474,15 @@
                 <div class="form-row">
                     <div class="form-col">
                         <div class="form-group">
-                            <label>Chức vụ</label>
-                            <input type="text" class="form-control" disabled value="@Model?.ChucVu">
+                            <label asp-for="ChucVu">Chức vụ</label>
+                            <input type="text" asp-for="ChucVu" class="form-control" disabled value="@Model?.ChucVu">
                             <small class="form-text text-muted">Thông tin này không thể thay đổi</small>
                         </div>
                     </div>
                     <div class="form-col">
                         <div class="form-group">
-                            <label>Ca làm việc</label>
-                            <input type="text" class="form-control" disabled value="@Model?.CaLamViec">
+                            <label asp-for="CaLamViec">Ca làm việc</label>
+                            <input type="text" asp-for="CaLamViec" class="form-control" disabled value="@Model?.CaLamViec">
                             <small class="form-text text-muted">Thông tin này không thể thay đổi</small>
                         </div>
                     </div>
@@ -334,9 +493,9 @@
                 <div class="form-row">
                     <div class="form-col">
                         <div class="form-group">
-                            <label>Tên đăng nhập <span class="text-danger">*</span></label>
-                            <input name="tenDangNhap" type="text" class="form-control" value="@Model?.TenDangNhap"
-                            @(ViewBag.EditMode != true ? "disabled" : "") required>
+                            <label asp-for="TenDangNhap">Tên đăng nhập <span class="text-danger">*</span></label>
+                            <input type="text" asp-for="TenDangNhap" class="form-control" value="@Model?.TenDangNhap" disabled="@(ViewBag.EditMode != true)">
+                            <span asp-validation-for="TenDangNhap" class="text-danger"></span>
                             @if (ViewBag.EditMode == true)
                             {
                                 <small class="form-text text-muted">Tên đăng nhập phải có ít nhất 3 ký tự</small>
@@ -345,9 +504,11 @@
                     </div>
                     <div class="form-col">
                         <div class="form-group">
-                            <label>Mật khẩu</label>
-                            <input type="password" class="form-control" value="********" disabled>
-                            <small class="form-text text-muted">Liên hệ quản lý để đổi mật khẩu</small>
+                            <label asp-for="MatKhau">Mật khẩu</label>
+                            <input type="password" asp-for="MatKhau" class="form-control" value="********" disabled>
+                            <button type="button" class="btn btn-outline" onclick="openChangePasswordModal()" style="margin-top: 10px; font-size: 14px; padding: 8px 15px;">
+                                Đổi mật khẩu
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -367,5 +528,244 @@
             </form>
         </div>
     </div>
+    <div id="changePasswordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Đổi mật khẩu</h2>
+                <span class="close">&times;</span>
+            </div>
+            <form id="changePasswordForm" action="/Manager/DoiMatKhau" method="post">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="currentPassword">Mật khẩu hiện tại <span class="text-danger">*</span></label>
+                        <input type="password" id="currentPassword" name="MatKhauCu" class="form-control" required>
+                        <span class="error-message" id="currentPasswordError"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="newPassword">Mật khẩu mới <span class="text-danger">*</span></label>
+                        <input type="password" id="newPassword" name="MatKhauMoi" class="form-control" required>
+                        @* <small class="form-text text-muted">Mật khẩu phải có ít nhất 6 ký tự</small> *@
+                        <span class="error-message" id="newPasswordError"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmPassword">Xác nhận mật khẩu mới <span class="text-danger">*</span></label>
+                        <input type="password" id="confirmPassword" name="XacNhanMatKhau" class="form-control" required>
+                        <span class="error-message" id="confirmPasswordError"></span>
+                    </div>
+
+                    <div class="password-requirements">
+                        <h4>Yêu cầu mật khẩu:</h4>
+                        <ul>
+                            <li id="req-length">Ít nhất 6 ký tự</li>
+                            <li id="req-uppercase">Có ít nhất 1 chữ hoa</li>
+                            <li id="req-lowercase">Có ít nhất 1 chữ thường</li>
+                            <li id="req-number">Có ít nhất 1 số</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" id="cancelBtn">Hủy</button>
+                    <button type="submit" class="btn" id="savePasswordBtn">Đổi mật khẩu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const modal = document.getElementById('changePasswordModal');
+            const closeBtn = document.querySelector('.close');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const form = document.getElementById('changePasswordForm');
+
+            const currentPasswordInput = document.getElementById('currentPassword');
+            const newPasswordInput = document.getElementById('newPassword');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+
+            function openModal() {
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeModal() {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+                form.reset();
+                clearErrors();
+                resetPasswordRequirements();
+            }
+
+            closeBtn.addEventListener('click', closeModal);
+            cancelBtn.addEventListener('click', closeModal);
+
+            window.addEventListener('click', function (event) {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+
+            newPasswordInput.addEventListener('input', function () {
+                validatePasswordStrength(this.value);
+            });
+
+            confirmPasswordInput.addEventListener('input', function () {
+                validatePasswordMatch();
+            });
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                if (validateForm()) {
+                    submitPasswordChange();
+                }
+            });
+
+            function validatePasswordStrength(password) {
+                const requirements = {
+                    length: password.length >= 6,
+                    uppercase: /[A-Z]/.test(password),
+                    lowercase: /[a-z]/.test(password),
+                    number: /\d/.test(password)
+                };
+
+                document.getElementById('req-length').className = requirements.length ? 'valid' : 'invalid';
+                document.getElementById('req-uppercase').className = requirements.uppercase ? 'valid' : 'invalid';
+                document.getElementById('req-lowercase').className = requirements.lowercase ? 'valid' : 'invalid';
+                document.getElementById('req-number').className = requirements.number ? 'valid' : 'invalid';
+
+                return Object.values(requirements).every(req => req);
+            }
+
+            function validatePasswordMatch() {
+                const newPassword = newPasswordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+                const errorElement = document.getElementById('confirmPasswordError');
+
+                if (confirmPassword && newPassword !== confirmPassword) {
+                    errorElement.textContent = 'Mật khẩu xác nhận không khớp';
+                    return false;
+                } else {
+                    errorElement.textContent = '';
+                    return true;
+                }
+            }
+
+            function validateForm() {
+                let isValid = true;
+                clearErrors();
+
+                if (!currentPasswordInput.value.trim()) {
+                    showError('currentPasswordError', 'Vui lòng nhập mật khẩu hiện tại');
+                    isValid = false;
+                }
+
+                const newPassword = newPasswordInput.value;
+                if (!newPassword) {
+                    showError('newPasswordError', 'Vui lòng nhập mật khẩu mới');
+                    isValid = false;
+                } else if (!validatePasswordStrength(newPassword)) {
+                    showError('newPasswordError', 'Mật khẩu không đáp ứng các yêu cầu');
+                    isValid = false;
+                }
+
+                if (!confirmPasswordInput.value) {
+                    showError('confirmPasswordError', 'Vui lòng xác nhận mật khẩu mới');
+                    isValid = false;
+                } else if (!validatePasswordMatch()) {
+                    isValid = false;
+                }
+
+                return isValid;
+            }
+
+            function resetPasswordRequirements() {
+                const requirements = document.querySelectorAll('.password-requirements li');
+                requirements.forEach(req => {
+                    req.className = '';
+                });
+            }
+
+            async function submitPasswordChange() {
+                const saveBtn = document.getElementById('savePasswordBtn');
+                const originalText = saveBtn.textContent;
+
+                saveBtn.disabled = true;
+                saveBtn.textContent = 'Đang xử lý...';
+
+                try {
+                    const formData = new FormData(form);
+                    const response = await fetch('/DoiMatKhau', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    // console.log('Server response:', result);
+
+                    if (result.success) {
+                        alert('Đổi mật khẩu thành công!');
+                        closeModal();
+                        location.reload();
+                    } else {
+                        if (result.errors) {
+                            // console.log('Errors received:', result.errors);
+
+                            clearErrors();
+
+                            for (const [field, message] of Object.entries(result.errors)) {
+                                console.log(`Processing error for field: ${field}, message: ${message}`); // Debug log
+
+                                if (field === 'MatKhauCu') {
+                                    showError('currentPasswordError', message);
+                                } else if (field === 'MatKhauMoi') {
+                                    showError('newPasswordError', message);
+                                } else if (field === 'XacNhanMatKhau') {
+                                    showError('confirmPasswordError', message);
+                                }
+                            }
+                        } else {
+                            const errorMessage = result.message || 'Có lỗi xảy ra, vui lòng thử lại';
+                            alert(errorMessage);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                    alert('Có lỗi xảy ra khi kết nối đến server: ' + error.message);
+                } finally {
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = originalText;
+                }
+            }
+
+            function showError(elementId, message) {
+                const errorElement = document.getElementById(elementId);
+                if (errorElement) {
+                    errorElement.textContent = message;
+                    errorElement.style.display = 'block';
+                    // console.log(`Error displayed for ${elementId}: ${message}`);
+                } else {
+                    // console.error(`Error element not found: ${elementId}`);
+                }
+            }
+
+            function clearErrors() {
+                const errorElements = document.querySelectorAll('.error-message');
+                errorElements.forEach(element => {
+                    element.textContent = '';
+                    element.style.display = 'none';
+                });
+            }
+
+            window.openChangePasswordModal = openModal;
+        });
+    </script>
 </body>
 </html>

@@ -630,7 +630,6 @@
             background-color: #e0e0e0;
         }
 
-        /* Empty cart state */
         .empty-cart {
             text-align: center;
             padding: 40px 0;
@@ -643,7 +642,6 @@
             color: #ddd;
         }
 
-        /* Scrollbar styling */
         .menu-section::-webkit-scrollbar, .cart-items::-webkit-scrollbar {
             width: 6px;
         }
@@ -653,7 +651,6 @@
             border-radius: 10px;
         }
 
-        /* Product badge */
         .product-badge {
             position: absolute;
             top: 10px;
@@ -847,15 +844,29 @@
                 }
         </div>
 
-        <!-- Customer search section -->
+        <!-- Customer search section với validation số điện thoại -->
         @using (Html.BeginForm("timKhachHang", "Staff", FormMethod.Post))
         {
             <div class="option-group">
                 <label class="option-label">Số điện thoại</label>
                 <div class="phone-search-container">
-                    <input type="text" name="soDienThoai" value="@searchPhone" placeholder="Nhập số điện thoại" class="option-input" required style="width: 70%;">
-                    <button type="submit" class="search-btn">Tìm</button>
+                    <input type="tel" 
+                           name="soDienThoai" 
+                           id="phoneInput"
+                           value="@searchPhone" 
+                           placeholder="Nhập 10 số điện thoại" 
+                           class="option-input phone-input" 
+                           required 
+                           maxlength="10"
+                           pattern="[0-9]{10}"
+                           style="width: 70%;"
+                           oninput="validatePhoneInput(this)"
+                           onkeypress="return isNumberKey(event)"
+                           onpaste="handlePhonePaste(event)">
+                    <button type="submit" class="search-btn" id="searchBtn">Tìm</button>
                 </div>
+                <div class="phone-error" id="phoneError" style="display: none; color: #dc3545; font-size: 12px; margin-top: 5px;"></div>
+                <div class="phone-success" id="phoneSuccess" style="display: none; color: #28a745; font-size: 12px; margin-top: 5px;">Số điện thoại hợp lệ!</div>
             </div>
         }
        
@@ -873,7 +884,6 @@
                     }
                 </div>
 
-                <!-- Hidden input to preserve phone number -->
                 <input type="hidden" name="soDienThoai" value="@searchPhone">
 
                 <div class="option-group">
@@ -881,7 +891,6 @@
                     <input type="text" name="ban" placeholder="Nhập số bàn" class="option-input">
                 </div>
 
-                <!-- Loyalty points section -->
                 @if (!string.IsNullOrEmpty(searchPhone) && !isNewCustomer && customerPoints > 0)
                 {
                     <div class="option-group" id="loyalty-points-section">
@@ -908,7 +917,6 @@
                                     <span id="points-value-display">@((customerPoints * 1000).ToString("#,##0")) VND</span>
                                 </div>
                             </div>
-                            <!-- Hidden input to pass the total points -->
                             <input type="hidden" name="pointsToUse" id="pointsToUse" value="@customerPoints">
                         </div>
                     </div>
@@ -938,7 +946,95 @@
         }
     </div>
 </div>
+
+<style>
+    .phone-input.error {
+        border-color: #dc3545 !important;
+        background-color: #fff5f5;
+    }
+    
+    .phone-input.success {
+        border-color: #28a745 !important;
+        background-color: #f8fff8;
+    }
+    
+    .search-btn:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+</style>
+
 <script>
+    // Validation số điện thoại
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        // Chỉ cho phép số (0-9)
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+
+    function handlePhonePaste(event) {
+        event.preventDefault();
+        const paste = (event.clipboardData || window.clipboardData).getData('text');
+        const numbersOnly = paste.replace(/[^0-9]/g, '').substring(0, 10);
+        event.target.value = numbersOnly;
+        validatePhoneInput(event.target);
+    }
+
+    function validatePhoneInput(input) {
+        const phoneError = document.getElementById('phoneError');
+        const phoneSuccess = document.getElementById('phoneSuccess');
+        const searchBtn = document.getElementById('searchBtn');
+        const value = input.value;
+
+        // Reset trạng thái
+        input.classList.remove('error', 'success');
+        phoneError.style.display = 'none';
+        phoneSuccess.style.display = 'none';
+        searchBtn.disabled = false;
+
+        // Loại bỏ ký tự không phải số
+        const numbersOnly = value.replace(/[^0-9]/g, '');
+        if (numbersOnly !== value) {
+            input.value = numbersOnly;
+        }
+
+        // Giới hạn tối đa 10 số
+        if (input.value.length > 10) {
+            input.value = input.value.substring(0, 10);
+        }
+
+        const currentValue = input.value;
+
+        if (currentValue.length === 0) {
+            return;
+        }
+
+        if (currentValue.length < 10) {
+            input.classList.add('error');
+            phoneError.textContent = `Cần nhập đủ 10 số (đã nhập ${currentValue.length} số)`;
+            phoneError.style.display = 'block';
+            searchBtn.disabled = true;
+        } else if (currentValue.length === 10) {
+            // Kiểm tra số điện thoại Việt Nam hợp lệ
+            const vietnamPhoneRegex = /^(03|05|07|08|09)[0-9]{8}$/;
+            if (vietnamPhoneRegex.test(currentValue)) {
+                input.classList.add('success');
+                phoneSuccess.style.display = 'block';
+                searchBtn.disabled = false;
+            } else {
+                input.classList.add('error');
+                phoneError.textContent = 'Số điện thoại không đúng định dạng Việt Nam (phải bắt đầu bằng 03, 05, 07, 08, 09)';
+                phoneError.style.display = 'block';
+                searchBtn.disabled = true;
+            }
+        }
+    }
+
+    // Các function khác giữ nguyên
     function addToOrder(form) {
         var formData = new FormData(form);
 
@@ -955,6 +1051,7 @@
 
         return false; 
     }
+
     function updatePointsDisplay() {
         var toggle = document.getElementById('use-points-toggle');
         var detailsSection = document.getElementById('points-details');
@@ -989,8 +1086,15 @@
         return value.toLocaleString('vi-VN') + " VND";
     }
 
+    // Khởi tạo validation khi trang load
     document.addEventListener('DOMContentLoaded', function () {
         updatePointsDisplay();
+        
+        // Validate số điện thoại nếu đã có giá trị
+        const phoneInput = document.getElementById('phoneInput');
+        if (phoneInput && phoneInput.value) {
+            validatePhoneInput(phoneInput);
+        }
     });
 </script>
 </body>

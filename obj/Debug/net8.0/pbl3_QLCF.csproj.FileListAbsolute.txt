@@ -261,3 +261,4 @@ C:\Users\X1Gen5\OneDrive - The University of Technology\Documents\PBL3\pbl3_QLCF
 C:\Users\X1Gen5\OneDrive - The University of Technology\Documents\PBL3\pbl3_QLCF\obj\Debug\net8.0\pbl3_QLCF.pdb
 C:\Users\X1Gen5\OneDrive - The University of Technology\Documents\PBL3\pbl3_QLCF\obj\Debug\net8.0\pbl3_QLCF.genruntimeconfig.cache
 C:\Users\X1Gen5\OneDrive - The University of Technology\Documents\PBL3\pbl3_QLCF\obj\Debug\net8.0\ref\pbl3_QLCF.dll
+C:\Users\X1Gen5\OneDrive - The University of Technology\Documents\PBL3\pbl3_QLCF\bin\Debug\net8.0\BCrypt.Net-Next.dll

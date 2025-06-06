@@ -364,7 +364,7 @@
                     </div>
                     <div class="info-item">
                         <div class="info-label">Bàn</div>
-                        <div class="info-value">@Model.MaBan</div>
+                        <div class="info-value">@Model.MaBan - @Model.viTri</div>
                     </div>
                 </div>
             </div>
@@ -401,7 +401,7 @@
             <div class="summary-card">
                 <div class="summary-row">
                     <span>Tổng số lượng:</span>
-                    <span>@(Model.CTDHs?.Count() ?? 0)</span>
+                    <span>@(Model.CTDHs?.Sum(c => c.SoLuong) ?? 0)</span>
                 </div>
                 <div class="summary-row">
                     <span>Tạm tính:</span>
@@ -434,7 +434,7 @@
             </div>
 
             <div class="actions">
-                <button class="btn btn-outline" onclick="window.history.back()">Quay lại</button>
+                @* <button class="btn btn-outline" onclick="window.history.back()">Quay lại</button> *@
                 <button class="btn btn-primary" onclick="printOrder()">In hóa đơn</button>
                 <form method = "post" asp-action="capNhatTrangThai" asp-controller="Staff">
                     <input type="hidden" name = "id" value ="@Model.MaDh">
@@ -446,21 +446,19 @@
 
     <script>
             function printOrder() {
-            // Create a new window for printing
         const printWindow = window.open('', '_blank', 'width=800,height=600');
 
-        // Get current values
         const orderNumber = document.querySelector('.card-header .card-title').textContent.split('#')[1];
         const orderDate = document.querySelector('.order-info .info-item:nth-child(2) .info-value').textContent;
         const customerName = document.querySelector('.order-info div:nth-child(2) .info-item:nth-child(1) .info-value').textContent;
         const customerId = document.querySelector('.order-info div:nth-child(2) .info-item:nth-child(2) .info-value').textContent;
-        const tableNumber = document.querySelector('.order-info div:nth-child(3) .info-item:nth-child(1) .info-value').textContent;
 
-        // Clone product table and summary for the print
+        const tableNumber = document.querySelector('.order-info div:nth-child(3) .info-item:nth-child(2) .info-value').textContent;
+        const staffName = document.querySelector('.order-info div:nth-child(3) .info-item:nth-child(1) .info-value').textContent;
+
         const productTable = document.querySelector('.table').cloneNode(true);
         const summary = document.querySelector('.summary-card').cloneNode(true);
 
-        // Create print document
         printWindow.document.write(`
             <html>
             <head>
@@ -549,14 +547,11 @@
             </html>
         `);
 
-            // Wait for content to load then print
             printWindow.document.close();
             printWindow.focus();
 
-            // Print after a slight delay to ensure CSS is loaded
             setTimeout(() => {
                 printWindow.print();
-                // Close the window after printing (optional)
                 printWindow.close();
             }, 500);
         }

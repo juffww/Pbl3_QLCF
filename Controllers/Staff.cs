@@ -225,18 +225,14 @@ namespace pbl3_QLCF.Controllers
                     int availablePoints = khachHang.DiemTichLuy ?? 0;
                     int pointsToDeduct = Math.Min(availablePoints, pointsToUse);
 
-                    // Calculate discount amount
                     int discountAmount = pointsToDeduct * 1000;
 
-                    // Apply discount
                     donHang.TongTien -= discountAmount;
                     if (donHang.TongTien < 0) donHang.TongTien = 0;
 
-                    // Update customer points
                     khachHang.DiemTichLuy -= pointsToDeduct;
                 }
 
-                // Calculate new points based on the final amount (after discount)
                 int newPoints = (int)(donHang.TongTien / 10000);
                 khachHang.DiemTichLuy += newPoints;
                 _context.SaveChanges();
@@ -258,7 +254,6 @@ namespace pbl3_QLCF.Controllers
             _context.DonHangs.Add(orderToSave);
             _context.SaveChanges();
 
-            // Save order details
             foreach (var item in donHang.ChiTietDonHangs)
             {
                 var chiTiet = new ChiTietDonHang
@@ -418,6 +413,7 @@ namespace pbl3_QLCF.Controllers
             var order = _context.DonHangs
                 .Include(o => o.ChiTietDonHangs)
                 .ThenInclude(c => c.MaMonNavigation)
+                .Include(o => o.MaBanNavigation) 
                 .FirstOrDefault(o => o.MaDh == id);
             if (order == null)
             {
@@ -439,10 +435,8 @@ namespace pbl3_QLCF.Controllers
                 tenNhanVien = NV?.HoTen;
             }
 
-            // Calculate the original total based on order items
             double originalTotal = order.ChiTietDonHangs.Sum(c => c.GiaBan * c.SoLuong) ?? 0;
 
-            // Calculate discount - the difference between original total and final total
             double discountAmount = Math.Max(0, originalTotal - (order.TongTien ?? 0));
 
             var model = new CTDHViewModel
@@ -455,11 +449,12 @@ namespace pbl3_QLCF.Controllers
                 MaNv = order.MaNv,
                 tenNv = tenNhanVien ?? "N/A",
                 MaBan = order.MaBan,
+                viTri = order.MaBanNavigation?.KhuVucBan ?? "N/A",
                 MaKh = order.MaKh,
                 tenKh = KH?.TenKh ?? "Unknown",
                 SDT = KH?.Sdt ?? "N/A",
                 CTDHs = order.ChiTietDonHangs?.ToList() ?? new List<ChiTietDonHang>(),
-                Giam = (int)discountAmount  // Store discount amount
+                Giam = (int)discountAmount  
             };
 
             return View(model);
@@ -507,6 +502,8 @@ namespace pbl3_QLCF.Controllers
             model.proOrderCount = _context.DonHangs.Where(o => o.ThoiGianDat.Value.Date == today
                                         && o.TrangThaiDh == "Đang xử lý")
                                 .Count();
+            model.revenueToday = _context.DonHangs.Where(o => o.ThoiGianDat.HasValue && o.ThoiGianDat.Value.Date == today)
+                                .Sum(o => (int)(o.TongTien ?? 0));
             //Lay cac don hang dang xu ly
             var orders = _context.DonHangs
                             .Where(o => o.ThoiGianDat.Value.Date == today && o.TrangThaiDh != "Hoàn thành")
@@ -604,7 +601,6 @@ namespace pbl3_QLCF.Controllers
                         return NotFound();
                     }
 
-                    // CHỈ cập nhật các trường được phép
                     existingUser.Sdt = user.Sdt?.Trim();
                     existingUser.DiaChi = user.DiaChi?.Trim();
                     existingUser.Email = user.Email?.Trim().ToLower();
@@ -656,6 +652,118 @@ namespace pbl3_QLCF.Controllers
             {
                 return false;
             }
+        }
+        [HttpPost]
+        [Route("DoiMatKhau")]
+        public IActionResult DoiMatKhau(string MatKhauCu, string MatKhauMoi, string XacNhanMatKhau)
+        {
+            try
+            {
+                var userId = HttpContext.Session.GetString("maNV");
+
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Json(new { success = false, message = "Phiên đăng nhập đã hết hạn" });
+                }
+
+                var user = _context.NguoiDungs.Find(userId);
+                if (user == null)
+                {
+                    return Json(new { success = false, message = "Không tìm thấy thông tin người dùng" });
+                }
+
+                // Dictionary để chứa các lỗi
+                var errors = new Dictionary<string, string>();
+
+                // Kiểm tra mật khẩu cũ
+                if (string.IsNullOrWhiteSpace(MatKhauCu))
+                {
+                    errors.Add("MatKhauCu", "Vui lòng nhập mật khẩu hiện tại");
+                }
+                else if (!VerifyPassword(MatKhauCu, user.MatKhau))
+                {
+                    errors.Add("MatKhauCu", "Mật khẩu hiện tại không chính xác");
+                }
+
+                // Kiểm tra mật khẩu mới
+                if (string.IsNullOrWhiteSpace(MatKhauMoi))
+                {
+                    errors.Add("MatKhauMoi", "Vui lòng nhập mật khẩu mới");
+                }
+                else if (MatKhauMoi.Length < 6)
+                {
+                    errors.Add("MatKhauMoi", "Mật khẩu mới phải có ít nhất 6 ký tự");
+                }
+                else if (!IsStrongPassword(MatKhauMoi))
+                {
+                    errors.Add("MatKhauMoi", "Mật khẩu phải có ít nhất 1 chữ hoa, 1 chữ thường và 1 số");
+                }
+
+                // Kiểm tra xác nhận mật khẩu
+                if (string.IsNullOrWhiteSpace(XacNhanMatKhau))
+                {
+                    errors.Add("XacNhanMatKhau", "Vui lòng xác nhận mật khẩu mới");
+                }
+                else if (MatKhauMoi != XacNhanMatKhau)
+                {
+                    errors.Add("XacNhanMatKhau", "Mật khẩu xác nhận không khớp");
+                }
+
+                // Nếu có lỗi, trả về danh sách lỗi
+                if (errors.Any())
+                {
+                    return Json(new { success = false, errors = errors });
+                }
+
+                // Cập nhật mật khẩu mới
+                user.MatKhau = HashPassword(MatKhauMoi);
+                _context.Update(user);
+                _context.SaveChanges();
+
+                return Json(new { success = true, message = "Đổi mật khẩu thành công" });
+            }
+            catch (Exception ex)
+            {
+                // Log lỗi để debug
+                Console.WriteLine($"Error in DoiMatKhau: {ex.Message}");
+                return Json(new { success = false, message = "Lỗi hệ thống: " + ex.Message });
+            }
+        }
+
+        private bool VerifyPassword(string password, string hashedPassword)
+        {
+            // Thêm logging để debug
+            Console.WriteLine($"Verifying password. Input: '{password}', Stored: '{hashedPassword}'");
+
+            // Nếu bạn đang dùng plain text (chỉ cho development)
+            bool isMatch = password == hashedPassword;
+            Console.WriteLine($"Password match result: {isMatch}");
+
+            return isMatch;
+
+            // Nếu bạn dùng BCrypt (recommended for production):
+            // return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+        }
+
+        private string HashPassword(string password)
+        {
+            // Cho development, có thể dùng plain text
+            return password;
+
+            // Cho production, nên dùng BCrypt:
+            // return BCrypt.Net.BCrypt.HashPassword(password);
+        }
+
+        private bool IsStrongPassword(string password)
+        {
+            if (string.IsNullOrWhiteSpace(password) || password.Length < 6)
+                return false;
+
+            bool hasUpper = password.Any(char.IsUpper);
+            bool hasLower = password.Any(char.IsLower);
+            bool hasNumber = password.Any(char.IsDigit);
+
+            return hasUpper && hasLower && hasNumber;
         }
     }
 }

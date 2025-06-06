@@ -39,10 +39,8 @@ public partial class ThucDon
     [Display(Name = "Trạng Thái")]
     public bool? TinhTrang { get; set; } = true; 
 
-    // Navigation properties
     public virtual ICollection<ChiTietDonHang> ChiTietDonHangs { get; set; } = new List<ChiTietDonHang>();
 
-    // Có thể thêm các phương thức tiện ích
     public string TrangThaiDisplay => TinhTrang == true ? "Đang bán" : "Ngừng bán";
 
     public string GiaFormatted => GiaSp.ToString("N0") + " VNĐ";

@@ -208,13 +208,21 @@
                     <div class="form-col">
                         <div class="form-group">
                             <label asp-for="Sdt">Số Điện Thoại</label>
-                            <input asp-for="Sdt" type="tel" class="form-control">
+                            <input asp-for="Sdt" type="tel" class="form-control" 
+                                   pattern="[0-9]{10}" 
+                                   maxlength="10" 
+                                   title="Số điện thoại phải có đúng 10 chữ số"
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                            <small class="form-text text-muted">Nhập đúng 10 chữ số</small>
                         </div>
                     </div>
                     <div class="form-col">
                         <div class="form-group">
                             <label asp-for="Email">Email</label>
-                            <input asp-for="Email" type="email" class="form-control">
+                            <input asp-for="Email" type="email" class="form-control"
+                                   pattern="[a-z0-9._%+-]+[a-z0-9.-]+\.[a-z]{2,}$"
+                                   title="Vui lòng nhập email đúng định dạng (vd: example@domain.com)">
+                            <small class="form-text text-muted">Ví dụ: example@domain.com</small>
                         </div>
                     </div>
                 </div>
@@ -233,7 +241,7 @@
                             <select asp-for="ChucVu" class="form-control">
                                 <option value="">-- Chọn chức vụ --</option>
                                 <option value="Quản lý">Quản lý</option>
-                                <option value="Thu ngân">Nhân viên</option>
+                                <option value="Nhân viên">Nhân viên</option>
                             </select>
                         </div>
                     </div>
@@ -242,10 +250,9 @@
                             <label asp-for="CaLamViec">Ca Làm Việc</label>
                             <select asp-for="CaLamViec" class="form-control">
                                 <option value="">-- Chọn ca làm việc --</option>
-                                <option value="Sáng">Ca sáng</option>
-                                <option value="Chiều">Ca chiều</option>
-                                <option value="Tối">Ca tối</option>
-                                <option value="Cả ngày">Cả Ngày</option>
+                                <option value="Ca sáng">Ca sáng</option>
+                                <option value="Ca chiều">Ca chiều</option>
+                                <option value="Ca tối">Ca tối</option>
                             </select>
                         </div>
                     </div>
@@ -283,5 +290,78 @@
             </form>
         </div>
     </div>
+
+    <style>
+        .form-text {
+            font-size: 0.875em;
+            color: #6c757d;
+            margin-top: 0.25rem;
+        }
+        .text-muted {
+            color: #6c757d !important;
+        }
+        input:invalid {
+            border-color: #dc3545;
+        }
+        input:valid {
+            border-color: #28a745;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const phoneInput = document.querySelector('input[asp-for="Sdt"]');
+            const emailInput = document.querySelector('input[asp-for="Email"]');
+            const form = document.querySelector('form');
+
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function(e) {
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                    
+                    if (this.value.length > 10) {
+                        this.value = this.value.slice(0, 10);
+                    }
+                });
+
+                phoneInput.addEventListener('blur', function(e) {
+                    if (this.value && this.value.length !== 10) {
+                        this.setCustomValidity('Số điện thoại phải có đúng 10 chữ số');
+                    } else {
+                        this.setCustomValidity('');
+                    }
+                });
+            }
+
+            if (emailInput) {
+                emailInput.addEventListener('blur', function(e) {
+                    const emailRegex = /^[^\s]+[^\s]+\.[^\s]+$/;
+                    if (this.value && !emailRegex.test(this.value)) {
+                        this.setCustomValidity('Vui lòng nhập email đúng định dạng');
+                    } else {
+                        this.setCustomValidity('');
+                    }
+                });
+            }
+            form.addEventListener('submit', function(e) {
+                let isValid = true;
+                
+                if (phoneInput && phoneInput.value && phoneInput.value.length !== 10) {
+                    phoneInput.setCustomValidity('Số điện thoại phải có đúng 10 chữ số');
+                    isValid = false;
+                }
+                
+                const emailRegex = /^[^\s]+[^\s]+\.[^\s]+$/;
+                if (emailInput && emailInput.value && !emailRegex.test(emailInput.value)) {
+                    emailInput.setCustomValidity('Vui lòng nhập email đúng định dạng');
+                    isValid = false;
+                }
+                
+                if (!isValid) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            });
+        });
+    </script>
 </body>
 </html>

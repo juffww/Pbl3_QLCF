@@ -164,7 +164,6 @@
             outline: none;
         }
 
-        /* Thay đổi từ grid thành danh sách dạng hàng ngang */
         .products-list {
             display: flex;
             flex-direction: column;
@@ -470,20 +469,20 @@
     @Html.AntiForgeryToken()
     <div class="container">
         <div class="page-header">
-            <h1 class="page-title">Quản lý Sản Phẩm</h1>
+            <h1 class="page-title">Quản lý Thực Đơn</h1>
         </div>
 
         <!-- Phần tìm kiếm và lọc -->
         <div class="action-bar">
             <form method="get" action="@Url.Action("SanPham")" class="search-bar">
-                <input type="text" name="search" class="search-input" placeholder="Tìm kiếm sản phẩm..." 
+                <input type="text" name="search" class="search-input" placeholder="Tìm kiếm món..." 
                        value="@ViewBag.SearchString">
                 <input type="hidden" name="category" value="@ViewBag.CurrentCategory">
                 <input type="hidden" name="page" value="1">
                 <button type="submit" class="btn btn-primary" id="search-btn">Tìm</button>
             </form>
             <div class="buttons">
-                <a href="@Url.Action("ThemSanPham", "Manager")" class="btn btn-success" id="add-product-btn">+ Thêm Sản Phẩm</a>
+                <a href="@Url.Action("ThemSanPham", "Manager")" class="btn btn-success" id="add-product-btn">+ Thêm món</a>
             </div>
         </div>
 
@@ -503,7 +502,6 @@
                href="@Url.Action("SanPham", new { category = "Đồ ăn nhẹ", search = ViewBag.SearchString, page = 1 })">Đồ ăn nhẹ</a>
         </div>
     
-        <!-- Product List - đã thay đổi từ grid thành list -->
         <div class="products-list">
             @foreach (var product in Model)
             {

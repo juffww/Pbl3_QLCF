@@ -98,15 +98,12 @@ namespace pbl3_QLCF.Controllers
                 ViewBag.Message = "No user database matched";
                 return View();
             }
-            // Tạo mã xác nhận
             Random rand = new Random();
             string code = rand.Next(100000, 999999).ToString();
 
-            // Lưu mã vào session
             HttpContext.Session.SetString("ChangePWCode", code);
             HttpContext.Session.SetString("ChangePWEmail", email);
 
-            // Gửi email
             string subject = "Password Recovery Code";
             string message = $"Your verification code is: <strong>{code}</strong>";
 
@@ -125,7 +122,6 @@ namespace pbl3_QLCF.Controllers
         [HttpPost]
         public async Task<IActionResult> ResendVerificationCode()
         {
-            // Get the email from session
             string email = HttpContext.Session.GetString("ChangePWEmail");
 
             if (string.IsNullOrEmpty(email))
@@ -133,14 +129,11 @@ namespace pbl3_QLCF.Controllers
                 return Json(new { success = false, message = "Email not found" });
             }
 
-            // Generate new code
             Random rand = new Random();
             string code = rand.Next(100000, 999999).ToString();
 
-            // Save the new code in session
             HttpContext.Session.SetString("ChangePWCode", code);
 
-            // Send the email
             string subject = "Password Recovery Code";
             string message = $"Your verification code is: <strong>{code}</strong>";
 
@@ -164,7 +157,6 @@ namespace pbl3_QLCF.Controllers
                 return View();
             }
 
-            // Lấy mã từ session
             string savedCode = HttpContext.Session.GetString("ChangePWCode");
 
             if (savedCode == null || savedCode != code)
@@ -174,7 +166,6 @@ namespace pbl3_QLCF.Controllers
                 return View();
             }
 
-            // Nếu code đúng, chuyển hướng đến trang đổi mật khẩu với state "Code sent"
             return RedirectToAction("ResetPassword", new { state = "Change Password" });
         }
         [HttpGet]
