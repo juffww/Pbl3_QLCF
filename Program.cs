@@ -16,16 +16,14 @@ builder.Services.AddDbContext<Pbl3Context>(options =>
 });
 builder.Services.AddSession();
 
-// Thêm vào Program.cs hoặc Startup.cs
 builder.Services.AddTransient<IMyEmailSender>(provider =>
     new MyEmailSender(
         "baoho1503@gmail.com",  
         "xbuy fprn swrn ilhu"          
     ));
-// In Program.cs or Startup.cs
 builder.Services.AddScoped<pbl3_QLCF.Service.CustomerService>();
 builder.Services.AddControllersWithViews();
-// Các cấu hình khác...
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllersWithViews();
 var app = builder.Build();

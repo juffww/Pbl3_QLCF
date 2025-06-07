@@ -47,6 +47,28 @@
             max-width: 450px;
         }
 
+        .app-name {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 80px;
+            margin-bottom: 15px;
+        }
+
+        .coffee-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
         .form-title {
             color: var(--primary-color);
             font-size: 28px;
@@ -181,7 +203,7 @@
         }
 
         .error-message {
-            color: #D32F2F; /* Màu đỏ cho lỗi */
+            color: #D32F2F;
             font-size: 14px;
             margin-top: 5px;
             margin-bottom: 15px;
@@ -191,8 +213,8 @@
 <body>
     <div class="form-box">
         <div class="logo-container">
-            <img src="~/images/coffee-cup.png" alt="CaféManager Logo" class="logo">
-            <h1 class="app-name">CaféManager</h1>
+            <div class="coffee-icon">☕</div>
+            <h1 class="app-name">AromaCafé</h1>
         </div>
 
         <h2 class="form-title">Khôi phục mật khẩu</h2>
@@ -238,7 +260,6 @@
     </div>
 
     <script>
-        // Start timer when page loads
         window.onload = function() {
             startTimer();
             document.getElementById('code1').focus();
@@ -253,7 +274,6 @@
         }
 
         function completeInputs() {
-            // Combine all digits into one code
             const code1 = document.getElementById('code1').value;
             const code2 = document.getElementById('code2').value;
             const code3 = document.getElementById('code3').value;
@@ -288,12 +308,10 @@
         function resendCode(e) {
             e.preventDefault();
 
-            // Disable the resend link while processing
             const resendLink = document.getElementById('resendLink');
             resendLink.style.pointerEvents = 'none';
             resendLink.textContent = 'Đang gửi...';
 
-            // Submit request to resend code action
             fetch('@Url.Action("ResendVerificationCode", "LoginAccess")', {
                 method: 'POST',
                 headers: {
@@ -304,14 +322,12 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Reset timer and inputs
                     startTimer();
                     document.querySelectorAll('.code-input').forEach(input => {
                         input.value = '';
                     });
                     document.getElementById('code1').focus();
                 } else {
-                    // Show error message
                     alert(data.message || 'Failed to resend code. Please try again.');
                 }
             })
@@ -320,7 +336,6 @@
                 alert('Failed to resend code. Please try again.');
             })
             .finally(() => {
-                // Re-enable the resend link
                 resendLink.style.pointerEvents = 'auto';
                 resendLink.textContent = 'Gửi lại mã';
             });

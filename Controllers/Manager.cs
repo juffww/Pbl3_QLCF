@@ -556,14 +556,59 @@ namespace pbl3_QLCF.Controllers
                     TempData["ErrorMessage"] = "Lỗi: Mã nhân viên đã tồn tại";
                     return View(user);
                 }
-                _context.NguoiDungs.Add(user);
-                _context.SaveChanges();
-                TempData["SuccessMessage"] = "Thêm người dùng thành công";
-                return RedirectToAction("NhanVien");
+
+                var existingUser = _context.NguoiDungs.FirstOrDefault(n => n.TenDangNhap == user.TenDangNhap);
+                if (existingUser != null)
+                {
+                    TempData["ErrorMessage"] = "Lỗi: Tên đăng nhập đã tồn tại";
+                    return View(user);
+                }
+
+                if (string.IsNullOrWhiteSpace(user.MatKhau))
+                {
+                    TempData["ErrorMessage"] = "Vui lòng nhập mật khẩu";
+                    return View(user);
+                }
+
+                //if (user.MatKhau.Length < 6)
+                //{
+                //    TempData["ErrorMessage"] = "Mật khẩu phải có ít nhất 6 ký tự";
+                //    return View(user);
+                //}
+
+                //if (!IsStrongPassword(user.MatKhau))
+                //{
+                //    TempData["ErrorMessage"] = "Mật khẩu phải có ít nhất 1 chữ hoa, 1 chữ thường và 1 số";
+                //    return View(user);
+                //}
+
+                user.MatKhau = HashPassword(user.MatKhau);
+
+                if (string.IsNullOrEmpty(user.TrangThai))
+                {
+                    user.TrangThai = "Đang làm việc";
+                }
+
+                try
+                {
+                    _context.NguoiDungs.Add(user);
+                    _context.SaveChanges();
+                    TempData["SuccessMessage"] = "Thêm nhân viên thành công";
+                    return RedirectToAction("NhanVien");
+                }
+                catch (Exception ex)
+                {
+                    //Console.WriteLine($"Error adding employee: {ex.Message}");
+                    TempData["ErrorMessage"] = "Lỗi hệ thống khi thêm nhân viên";
+                    return View(user);
+                }
             }
             else
             {
-                TempData["ErrorMessage"] = "Vui lòng kiểm tra lại thông tin nhân viên";
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage);
+                TempData["ErrorMessage"] = "Vui lòng kiểm tra lại thông tin: " + string.Join(", ", errors);
             }
             return View(user);
         }
@@ -765,7 +810,6 @@ namespace pbl3_QLCF.Controllers
             }
         }
         [HttpPost]
-        //[Route("DoiMatKhau")]
         public IActionResult DoiMatKhau(string MatKhauCu, string MatKhauMoi, string XacNhanMatKhau)
         {
             try
@@ -783,10 +827,8 @@ namespace pbl3_QLCF.Controllers
                     return Json(new { success = false, message = "Không tìm thấy thông tin người dùng" });
                 }
 
-                // Dictionary để chứa các lỗi
                 var errors = new Dictionary<string, string>();
 
-                // Kiểm tra mật khẩu cũ
                 if (string.IsNullOrWhiteSpace(MatKhauCu))
                 {
                     errors.Add("MatKhauCu", "Vui lòng nhập mật khẩu hiện tại");
@@ -796,7 +838,6 @@ namespace pbl3_QLCF.Controllers
                     errors.Add("MatKhauCu", "Mật khẩu hiện tại không chính xác");
                 }
 
-                // Kiểm tra mật khẩu mới
                 if (string.IsNullOrWhiteSpace(MatKhauMoi))
                 {
                     errors.Add("MatKhauMoi", "Vui lòng nhập mật khẩu mới");
@@ -810,7 +851,6 @@ namespace pbl3_QLCF.Controllers
                     errors.Add("MatKhauMoi", "Mật khẩu phải có ít nhất 1 chữ hoa, 1 chữ thường và 1 số");
                 }
 
-                // Kiểm tra xác nhận mật khẩu
                 if (string.IsNullOrWhiteSpace(XacNhanMatKhau))
                 {
                     errors.Add("XacNhanMatKhau", "Vui lòng xác nhận mật khẩu mới");
@@ -820,13 +860,11 @@ namespace pbl3_QLCF.Controllers
                     errors.Add("XacNhanMatKhau", "Mật khẩu xác nhận không khớp");
                 }
 
-                // Nếu có lỗi, trả về danh sách lỗi
                 if (errors.Any())
                 {
                     return Json(new { success = false, errors = errors });
                 }
 
-                // Cập nhật mật khẩu mới
                 user.MatKhau = HashPassword(MatKhauMoi);
                 _context.Update(user);
                 _context.SaveChanges();
@@ -835,7 +873,6 @@ namespace pbl3_QLCF.Controllers
             }
             catch (Exception ex)
             {
-                // Log lỗi để debug
                 Console.WriteLine($"Error in DoiMatKhau: {ex.Message}");
                 return Json(new { success = false, message = "Lỗi hệ thống: " + ex.Message });
             }
@@ -847,22 +884,22 @@ namespace pbl3_QLCF.Controllers
             Console.WriteLine($"Verifying password. Input: '{password}', Stored: '{hashedPassword}'");
 
             // Nếu bạn đang dùng plain text (chỉ cho development)
-            bool isMatch = password == hashedPassword;
-            Console.WriteLine($"Password match result: {isMatch}");
+            //bool isMatch = password == hashedPassword;
+            //Console.WriteLine($"Password match result: {isMatch}");
 
-            return isMatch;
+            //return isMatch;
 
             // Nếu bạn dùng BCrypt (recommended for production):
-            // return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+            return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
         }
 
         private string HashPassword(string password)
         {
             // Cho development, có thể dùng plain text
-            return password;
+            //return password;
 
             // Cho production, nên dùng BCrypt:
-            // return BCrypt.Net.BCrypt.HashPassword(password);
+            return BCrypt.Net.BCrypt.HashPassword(password);
         }
 
         private bool IsStrongPassword(string password)

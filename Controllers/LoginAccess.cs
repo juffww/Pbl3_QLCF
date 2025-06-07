@@ -20,7 +20,7 @@ namespace pbl3_QLCF.Controllers
             _emailSender = emailSender;
             this.customerService = customerService;
         }
-
+        
         [HttpGet]
         public IActionResult Login()
         {
@@ -39,10 +39,9 @@ namespace pbl3_QLCF.Controllers
         {
             if (HttpContext.Session.GetString("TenDangNhap") == null)
             {
-                var u = db.NguoiDungs.FirstOrDefault(x => x.TenDangNhap.Equals(user.TenDangNhap) &&
-                                                       x.MatKhau.Equals(user.MatKhau));
+                var u = db.NguoiDungs.FirstOrDefault(x => x.TenDangNhap.Equals(user.TenDangNhap));
 
-                if (u != null)
+                if (u != null && VerifyPassword(user.MatKhau, u.MatKhau))
                 {
                     HttpContext.Session.SetString("TenDangNhap", u.TenDangNhap.ToString());
                     HttpContext.Session.SetString("UserRole", u.ChucVu.ToString());
@@ -197,14 +196,22 @@ namespace pbl3_QLCF.Controllers
                 ViewBag.ErrorMessage = "Mật khẩu xác nhận không khớp với mật khẩu mới";
                 return View(model);
             }
+            if (!IsStrongPassword(model.newPassword))
+            {
+                ModelState.AddModelError("newPassword", "Mật khẩu phải có ít nhất 6 ký tự, bao gồm chữ hoa, chữ thường và số");
+                ViewBag.ErrorMessage = "Mật khẩu phải có ít nhất 6 ký tự, bao gồm chữ hoa, chữ thường và số";
+                return View(model);
+            }
 
             var user = db.NguoiDungs.FirstOrDefault(x => x.Email == email);
             if (user != null)
             {
-                user.MatKhau = model.newPassword;
+                user.MatKhau = HashPassword(model.newPassword);
                 db.SaveChanges();
+
                 HttpContext.Session.Remove("ChangePWCode");
                 HttpContext.Session.Remove("ChangePWEmail");
+
                 TempData["SuccessMessage"] = "Đã thay đổi mật khẩu thành công";
                 ViewBag.SuccessMessage = "Đã thay đổi mật khẩu thành công";
                 return RedirectToAction("Login", "LoginAccess");
@@ -214,6 +221,35 @@ namespace pbl3_QLCF.Controllers
                 ModelState.AddModelError("", "User not found");
                 return View(model);
             }
+        }
+        private bool VerifyPassword(string password, string hashedPassword)
+        {
+            try
+            {
+                return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error verifying password: {ex.Message}");
+                return false;
+            }
+        }
+
+        private string HashPassword(string password)
+        {
+            return BCrypt.Net.BCrypt.HashPassword(password);
+        }
+
+        private bool IsStrongPassword(string password)
+        {
+            if (string.IsNullOrWhiteSpace(password) || password.Length < 6)
+                return false;
+
+            bool hasUpper = password.Any(char.IsUpper);
+            bool hasLower = password.Any(char.IsLower);
+            bool hasNumber = password.Any(char.IsDigit);
+
+            return hasUpper && hasLower && hasNumber;
         }
     }
 }

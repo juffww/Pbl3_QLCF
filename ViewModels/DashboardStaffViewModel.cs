@@ -6,6 +6,7 @@
         public int? orderCompleted { get; set; }
         public int? proOrderCount { get; set; }
         public int revenueToday { get; set; }
+        public DateTime loginStartTime { get; set; } 
         public List<OrderInProcessing> processOrders { get; set; }
         public DashboardStaffViewModel()
         {

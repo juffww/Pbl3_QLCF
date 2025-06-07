@@ -6,11 +6,11 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CaféManager - Dashboard</title>
-  <link rel="stylesheet" type="text/css" href="~/css/Staff/Dashboard.css" />
-  <style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CaféManager - Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="~/css/Staff/Dashboard.css" />
+    <style>
         .top-menu-item {
             color: black !important;
         }
@@ -19,6 +19,7 @@
             background-color: #8b5a2b !important;
             color: white !important;
         }
+
         .action-btn {
             text-decoration: none !important;
         }
@@ -37,7 +38,7 @@
             color: #333;
             margin-bottom: 1rem;
         }
-  </style>
+    </style>
 </head>
 @using pbl3_QLCF.ViewModels;
 @model DashboardStaffViewModel
@@ -45,159 +46,147 @@
     @{
         Html.RenderPartial("~/Views/Staff/sharedAll.cshtml");
     }
-  <div class="main-content">
-    <!-- Stats Cards -->
-    <div class="stats-container">
-      <div class="stat-card">
-        <div class="stat-header stat-blue">Đơn hàng hôm nay</div>
-        <div class="stat-content">
-          <div class="stat-value">@Model.todayOrder</div>
-          <div class="stat-unit">đơn</div>
-        </div>
-        <div class="indicator">
-          <span class="indicator-up">↑</span>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-header stat-blue">Đơn hàng đã hoàn thành</div>
-        <div class="stat-content">
-          <div class="stat-value">@Model.orderCompleted</div>
-          <div class="stat-unit">đơn</div>
-        </div>
-        <div class="indicator">
-          <span class="indicator-up">↑</span>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-header stat-blue">Đơn hàng đang xử lý</div>
-        <div class="stat-content">
-          <div class="stat-value">@Model.proOrderCount</div>
-          <div class="stat-unit">đơn</div>
-        </div>
-        <div class="indicator">
-          <span class="indicator-warning">!</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="grid">
-      <div class="card">
-        <div class="card-title">Đơn hàng đang xử lý</div>
-            <div class="tabs">
-                <div class="tab active" onclick="filterOrders('all')">Tất cả</div>
-                <div class="tab" onclick="filterOrders('new')">Mới</div>
-                <div class="tab" onclick="filterOrders('processing')">Đang xử lý</div>
+    <div class="main-content">
+        <!-- Stats Cards -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-header stat-blue">Đơn hàng hôm nay</div>
+                <div class="stat-content">
+                    <div class="stat-value">@Model.todayOrder</div>
+                    <div class="stat-unit">đơn</div>
+                </div>
+                <div class="indicator">
+                    <span class="indicator-up">↑</span>
+                </div>
             </div>
-            <div class="order-list"> 
-                @foreach(var item in Model.processOrders)
-                {
-                    <div class="order-item">
-                        <div class="order-name">#@(item.orderId) - @(item.customerName)</div>
-                        <div class="order-details">
-                            @if (item.items != null && item.items.Any())
-                            {
-                                var productTexts = new List<string>();
-                                @foreach (var product in item.items)
+            <div class="stat-card">
+                <div class="stat-header stat-blue">Đơn hàng đã hoàn thành</div>
+                <div class="stat-content">
+                    <div class="stat-value">@Model.orderCompleted</div>
+                    <div class="stat-unit">đơn</div>
+                </div>
+                <div class="indicator">
+                    <span class="indicator-up">↑</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header stat-blue">Đơn hàng đang xử lý</div>
+                <div class="stat-content">
+                    <div class="stat-value">@Model.proOrderCount</div>
+                    <div class="stat-unit">đơn</div>
+                </div>
+                <div class="indicator">
+                    <span class="indicator-warning">!</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <div class="card-title">Đơn hàng đang xử lý</div>
+                <div class="tabs">
+                    <div class="tab active" onclick="filterOrders('all')">Tất cả</div>
+                    <div class="tab" onclick="filterOrders('new')">Mới</div>
+                    <div class="tab" onclick="filterOrders('processing')">Đang xử lý</div>
+                </div>
+                <div class="order-list">
+                    @foreach (var item in Model.processOrders)
+                    {
+                        <div class="order-item">
+                            <div class="order-name">#@(item.orderId) - @(item.customerName)</div>
+                            <div class="order-details">
+                                @if (item.items != null && item.items.Any())
                                 {
-                                    productTexts.Add($"{product.productName} (x{product.quantity})");
+                                    var productTexts = new List<string>();
+                                    @foreach (var product in item.items)
+                                    {
+                                        productTexts.Add($"{product.productName} (x{product.quantity})");
+                                    }
+                                    @string.Join(", ", productTexts)
                                 }
-                                @string.Join(", ", productTexts)
-                            }
-                            else
-                            {
-                                <span>Không có sản phẩm</span>
-                            }
+                                else
+                                {
+                                    <span>Không có sản phẩm</span>
+                                }
+                            </div>
+                            <div class="order-time">@item.orderTime.ToString("HH:mm - dd/MM/yyyy")</div>
+                            <div class="order-status status-@(item.status=="Mới" ? "new" : "processing")">@item.status</div>
                         </div>
-                        <div class="order-time">@item.orderTime.ToString("HH:mm - dd/MM/yyyy")</div>
-                        <div class="order-status status-@(item.status=="Mới" ? "new" : "processing")">@item.status</div>
+                    }
+                </div>
+            </div>
+
+            <div>
+                <div class="card">
+                    <div class="card-title">Thao tác nhanh</div>
+                    <div class="quick-actions">
+                        <a asp-action="SanPham" asp-controller="Staff" class="action-btn btn-primary">🛒 Tạo đơn hàng mới</a>
+                        <a asp-action="DonHang" asp-controller="Staff" class="action-btn btn-info">📦 Xem tất cả đơn hàng</a>
+                        @*  <a asp-action="SanPham" asp-controller="Staff" class="action-btn btn-success">Báo cáo ca làm</a> *@
                     </div>
-                }
-            </div>
-      </div>
+                </div>
 
-      <div>
-        <div class="card">
-          <div class="card-title">Thao tác nhanh</div>
-          <div class="quick-actions">
-            <a asp-action="SanPham" asp-controller="Staff" class="action-btn btn-primary">🛒 Tạo đơn hàng mới</a>
-            <a asp-action="DonHang" asp-controller="Staff" class="action-btn btn-info">📦 Xem tất cả đơn hàng</a>
-           @*  <a asp-action="SanPham" asp-controller="Staff" class="action-btn btn-success">Báo cáo ca làm</a> *@
-          </div>
-        </div>
-
-        <div class="card">
-            <div class="card-title">Thông tin ca làm việc</div>
-            <div style="padding: 1rem 0;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
-                    <span style="color: #666;">Thời gian bắt đầu:</span>
-                    <strong>08:00 - 06/05/2025</strong>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
-                    <span style="color: #666;">Thời gian hiện tại:</span>
-                    <strong id="currentTime">--:--</strong>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
-                    <span style="color: #666;">Tổng đơn hàng hôm nay:</span>
-                    <strong>@Model.todayOrder đơn</strong>
-                </div>
-                <div style="display: flex; justify-content: space-between;">
-                    <span style="color: #666;">Doanh thu ca:</span>
-                    <strong style="color: #8b5a2b;">@Model.revenueToday.ToString("#,##0") VNĐ</strong>
+                <div class="card">
+                    <div class="card-title">Thông tin ca làm việc</div>
+                    <div style="padding: 1rem 0;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+                            <span style="color: #666;">Thời gian bắt đầu:</span>
+                            <strong>@Model.loginStartTime.ToString("HH:mm - dd/MM/yyyy")</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+                            <span style="color: #666;">Thời gian hiện tại:</span>
+                            <strong id="currentTime">--:--</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+                            <span style="color: #666;">Thời gian làm việc:</span>
+                            <strong id="workingTime">--:--:--</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+                            <span style="color: #666;">Tổng đơn hàng hôm nay:</span>
+                            <strong>@Model.todayOrder đơn</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: #666;">Doanh thu ca:</span>
+                            <strong style="color: #8b5a2b;">@Model.revenueToday.ToString("#,##0") VNĐ</strong>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-      </div>
     </div>
-  </div>
     <script>
-        // Update current time
+        const loginStartTime = new Date('@Model.loginStartTime.ToString("yyyy-MM-ddTHH:mm:ss")');
+
         function updateTime() {
             const now = new Date();
+
             const timeString = now.toLocaleTimeString('vi-VN', {
                 hour: '2-digit',
                 minute: '2-digit',
                 second: '2-digit'
             });
             document.getElementById('currentTime').textContent = timeString;
+
+            const diffMs = now - loginStartTime;
+            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+            const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+            const diffSeconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+
+            const workingTimeString = `${diffHours.toString().padStart(2, '0')}:${diffMinutes.toString().padStart(2, '0')}:${diffSeconds.toString().padStart(2, '0')}`;
+            document.getElementById('workingTime').textContent = workingTimeString;
         }
 
-        // Update time every second
         setInterval(updateTime, 1000);
         updateTime();
 
-        // Tab filtering (demo functionality)
         function filterOrders(type) {
-            // Remove active class from all tabs
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.classList.remove('active');
             });
 
-            // Add active class to clicked tab
             event.target.classList.add('active');
-
-            // For demo purposes, show empty state
-            // In real implementation, this would filter actual orders
-            console.log('Filtering orders by:', type);
+            // console.log('Filtering orders by:', type);
         }
-
-        // Demo: Add some sample orders after page load
-        // setTimeout(() => {
-        //     const orderList = document.getElementById('orderList');
-        //     orderList.innerHTML = `
-        //         <div class="order-item">
-        //           <div class="order-name">#001 - Nguyễn Văn A</div>
-        //           <div class="order-details">Cà phê đen đá (x1), Bánh mì (x1)</div>
-        //           <div class="order-time">14:30 - 06/05/2025</div>
-        //           <div class="order-status status-new">Mới</div>
-        //         </div>
-        //         <div class="order-item">
-        //           <div class="order-name">#002 - Trần Thị B</div>
-        //           <div class="order-details">Trà sữa trân châu (x2)</div>
-        //           <div class="order-time">14:45 - 06/05/2025</div>
-        //           <div class="order-status status-processing">Đang xử lý</div>
-        //         </div>
-        //       `;
-        // }, 2000);
     </script>
 </body>
 </html>

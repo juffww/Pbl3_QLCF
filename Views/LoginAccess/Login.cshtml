@@ -52,17 +52,6 @@
                 </div>
             }
             <h2 class="login-title">Đăng nhập</h2>
-            @* <div class="tabs">
-                <div class="tab active">
-                    <span class="tab-icon">👤</span>
-                    <span>Nhân viên</span>
-                </div>
-                <div class="tab" style="margin-left: 15px;">
-                    <span class="tab-icon">👑</span>
-                    <span>Quản lý</span>
-                </div>
-            </div> *@
-
             @using (Html.BeginForm("Login", "LoginAccess", FormMethod.Post))
             {
                 <div class="form-group">
@@ -102,29 +91,5 @@
             }
         </div>
     </div>
-    @* <div>@RenderBody</div> *@
-    @* <script>
-        // Script to handle role switching
-        document.addEventListener('DOMContentLoaded', function() {
-        const roleBtns = document.querySelectorAll('.tab');
-        const userRoleInput = document.getElementById('userRole');
-
-        roleBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                // Remove 'active' class from all tabs
-                roleBtns.forEach(b => b.classList.remove('active'));
-                // Add 'active' class to the clicked tab
-                this.classList.add('active');
-
-                // Update the hidden field value based on which tab is clicked
-                if (this.innerText.includes('Quản lý')) {
-                    userRoleInput.value = 'manager';
-                } else {
-                    userRoleInput.value = 'employee';
-                }
-            });
-        });
-    });
-    </script> *@
 </body>
 </html>
