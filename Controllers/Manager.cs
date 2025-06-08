@@ -880,25 +880,11 @@ namespace pbl3_QLCF.Controllers
 
         private bool VerifyPassword(string password, string hashedPassword)
         {
-            // Thêm logging để debug
-            Console.WriteLine($"Verifying password. Input: '{password}', Stored: '{hashedPassword}'");
-
-            // Nếu bạn đang dùng plain text (chỉ cho development)
-            //bool isMatch = password == hashedPassword;
-            //Console.WriteLine($"Password match result: {isMatch}");
-
-            //return isMatch;
-
-            // Nếu bạn dùng BCrypt (recommended for production):
             return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
         }
 
         private string HashPassword(string password)
         {
-            // Cho development, có thể dùng plain text
-            //return password;
-
-            // Cho production, nên dùng BCrypt:
             return BCrypt.Net.BCrypt.HashPassword(password);
         }
 
