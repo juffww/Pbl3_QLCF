@@ -10,7 +10,7 @@ using pbl3_QLCF.ViewModels;
 
 namespace pbl3_QLCF.Controllers
 {
-    //[Authentication]
+    [Authentication]
     public class Manager : Controller
     {
         private readonly Pbl3Context _context;
@@ -437,7 +437,6 @@ namespace pbl3_QLCF.Controllers
                 .Take(5)
                 .ToList();
 
-            // Lấy đơn hàng gần nhất
             model.recentOrders = _context.DonHangs
                                  .OrderByDescending(o => o.ThoiGianDat)
                                  .Take(10)
@@ -466,7 +465,7 @@ namespace pbl3_QLCF.Controllers
                 {
                     time = dayName,
                     revenue = revenue,
-                    date = date.ToString("dd/MM") // Thêm trường date để hiển thị
+                    date = date.ToString("dd/MM") 
                 });
             }
 
@@ -548,6 +547,64 @@ namespace pbl3_QLCF.Controllers
         [HttpPost]
         public IActionResult ThemNhanVien(NguoiDung user)
         {
+            if (string.IsNullOrWhiteSpace(user.ChucVu))
+            {
+                TempData["ErrorMessage"] = "Vui lòng chọn chức vụ";
+                return View(user);
+            }
+
+            if (string.IsNullOrWhiteSpace(user.CaLamViec))
+            {
+                TempData["ErrorMessage"] = "Vui lòng chọn ca làm việc";
+                return View(user);
+            }
+
+            if (string.IsNullOrWhiteSpace(user.TenDangNhap))
+            {
+                TempData["ErrorMessage"] = "Vui lòng nhập tên đăng nhập";
+                return View(user);
+            }
+
+            if (user.TenDangNhap.Trim().Length < 3)
+            {
+                TempData["ErrorMessage"] = "Tên đăng nhập phải có ít nhất 3 ký tự";
+                return View(user);
+            }
+
+            if (user.TenDangNhap.Length > 50)
+            {
+                TempData["ErrorMessage"] = "Tên đăng nhập không được vượt quá 50 ký tự";
+                return View(user);
+            }
+
+            if (string.IsNullOrWhiteSpace(user.MatKhau))
+            {
+                TempData["ErrorMessage"] = "Vui lòng nhập mật khẩu";
+                return View(user);
+            }
+
+            if (user.MatKhau.Length < 6)
+            {
+                TempData["ErrorMessage"] = "Mật khẩu phải có ít nhất 6 ký tự";
+                return View(user);
+            }
+
+            if (!string.IsNullOrWhiteSpace(user.Sdt) && user.Sdt.Length != 10)
+            {
+                TempData["ErrorMessage"] = "Số điện thoại phải có đúng 10 chữ số";
+                return View(user);
+            }
+
+            if (!string.IsNullOrWhiteSpace(user.Email))
+            {
+                var emailRegex = new System.Text.RegularExpressions.Regex(@"^[^\s@]+@[^\s@]+\.[^\s@]+$");
+                if (!emailRegex.IsMatch(user.Email))
+                {
+                    TempData["ErrorMessage"] = "Email không đúng định dạng";
+                    return View(user);
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 var existingNV = _context.NguoiDungs.FirstOrDefault(n => n.MaNv == user.MaNv);
@@ -563,24 +620,6 @@ namespace pbl3_QLCF.Controllers
                     TempData["ErrorMessage"] = "Lỗi: Tên đăng nhập đã tồn tại";
                     return View(user);
                 }
-
-                if (string.IsNullOrWhiteSpace(user.MatKhau))
-                {
-                    TempData["ErrorMessage"] = "Vui lòng nhập mật khẩu";
-                    return View(user);
-                }
-
-                //if (user.MatKhau.Length < 6)
-                //{
-                //    TempData["ErrorMessage"] = "Mật khẩu phải có ít nhất 6 ký tự";
-                //    return View(user);
-                //}
-
-                //if (!IsStrongPassword(user.MatKhau))
-                //{
-                //    TempData["ErrorMessage"] = "Mật khẩu phải có ít nhất 1 chữ hoa, 1 chữ thường và 1 số";
-                //    return View(user);
-                //}
 
                 user.MatKhau = HashPassword(user.MatKhau);
 
@@ -598,8 +637,7 @@ namespace pbl3_QLCF.Controllers
                 }
                 catch (Exception ex)
                 {
-                    //Console.WriteLine($"Error adding employee: {ex.Message}");
-                    TempData["ErrorMessage"] = "Lỗi hệ thống khi thêm nhân viên";
+                    TempData["ErrorMessage"] = "Lỗi hệ thống khi thêm nhân viên: " + ex.Message;
                     return View(user);
                 }
             }
@@ -610,6 +648,7 @@ namespace pbl3_QLCF.Controllers
                     .Select(e => e.ErrorMessage);
                 TempData["ErrorMessage"] = "Vui lòng kiểm tra lại thông tin: " + string.Join(", ", errors);
             }
+
             return View(user);
         }
         [HttpGet]

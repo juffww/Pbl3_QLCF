@@ -707,7 +707,6 @@
                     }
 
                     const result = await response.json();
-                    // console.log('Server response:', result);
 
                     if (result.success) {
                         alert('Đổi mật khẩu thành công!');
@@ -715,7 +714,6 @@
                         location.reload();
                     } else {
                         if (result.errors) {
-                            // console.log('Errors received:', result.errors); 
 
                             clearErrors();
 
@@ -749,9 +747,7 @@
                 if (errorElement) {
                     errorElement.textContent = message;
                     errorElement.style.display = 'block'; 
-                    // console.log(`Error displayed for ${elementId}: ${message}`); 
                 } else {
-                    // console.error(`Error element not found: ${elementId}`);
                 }
             }
 

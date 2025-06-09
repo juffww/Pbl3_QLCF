@@ -2,47 +2,65 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace pbl3_QLCF.Data;
-
-public partial class NguoiDung
+namespace pbl3_QLCF.Data
 {
-    public string MaNv { get; set; } = null!;
+    public partial class NguoiDung
+    {
+        [Required(ErrorMessage = "Mã nhân viên là bắt buộc")]
+        [StringLength(20, ErrorMessage = "Mã nhân viên không được vượt quá 20 ký tự")]
+        [Display(Name = "Mã nhân viên")]
+        public string MaNv { get; set; } = null!;
 
-    public string HoTen { get; set; } = null!;
+        [Required(ErrorMessage = "Họ tên là bắt buộc")]
+        [StringLength(100, MinimumLength = 2, ErrorMessage = "Họ tên phải có từ 2 đến 100 ký tự")]
+        [Display(Name = "Họ tên")]
+        public string HoTen { get; set; } = null!;
 
-    public DateOnly? NgaySinh { get; set; }
+        [Required(ErrorMessage = "Ngày sinh là bắt buộc")]
+        [Display(Name = "Ngày sinh")]
+        public DateOnly? NgaySinh { get; set; }
 
-    public bool? GioiTinh { get; set; }
+        [Required(ErrorMessage = "Giới tính là bắt buộc")]
+        [Display(Name = "Giới tính")]
+        public bool GioiTinh { get; set; }
 
-    [Required(ErrorMessage = "Số điện thoại là bắt buộc")]
-    [RegularExpression(@"^(\+84|84|0[3|5|7|8|9])[0-9]{8,9}$", ErrorMessage = "Số điện thoại không hợp lệ")]
-    [Display(Name = "Số điện thoại")]
-    public string? Sdt { get; set; }
+        [Required(ErrorMessage = "Số điện thoại là bắt buộc")]
+        [RegularExpression(@"^[0-9]{10}$", ErrorMessage = "Số điện thoại phải có đúng 10 chữ số")]
+        [Display(Name = "Số điện thoại")]
+        public string Sdt { get; set; } = null!;
 
-    [Required(ErrorMessage = "Địa chỉ là bắt buộc")]
-    [StringLength(200, MinimumLength = 10, ErrorMessage = "Địa chỉ phải có từ 10 đến 200 ký tự")]
-    [Display(Name = "Địa chỉ")]
-    public string? DiaChi { get; set; }
+        [Required(ErrorMessage = "Địa chỉ là bắt buộc")]
+        [StringLength(200, MinimumLength = 10, ErrorMessage = "Địa chỉ phải có từ 10 đến 200 ký tự")]
+        [Display(Name = "Địa chỉ")]
+        public string DiaChi { get; set; } = null!;
 
-    [Required(ErrorMessage = "Email là bắt buộc")]
-    [EmailAddress(ErrorMessage = "Định dạng email không hợp lệ")]
-    [Display(Name = "Email")]
-    public string? Email { get; set; }
+        [Required(ErrorMessage = "Email là bắt buộc")]
+        [EmailAddress(ErrorMessage = "Định dạng email không hợp lệ")]
+        [Display(Name = "Email")]
+        public string Email { get; set; } = null!;
 
-    public string? ChucVu { get; set; }
+        [Required(ErrorMessage = "Chức vụ là bắt buộc")]
+        [Display(Name = "Chức vụ")]
+        public string ChucVu { get; set; } = null!;
 
-    [Required(ErrorMessage = "Tên đăng nhập là bắt buộc")]
-    [StringLength(50, MinimumLength = 3, ErrorMessage = "Tên đăng nhập phải có từ 3 đến 50 ký tự")]
-    [RegularExpression(@"^[a-zA-Z0-9_]+$", ErrorMessage = "Tên đăng nhập chỉ được chứa chữ cái, số và dấu gạch dưới")]
-    [Display(Name = "Tên đăng nhập")]
-    public string? TenDangNhap { get; set; }
+        [Required(ErrorMessage = "Tên đăng nhập là bắt buộc")]
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "Tên đăng nhập phải có từ 3 đến 50 ký tự")]
+        [Display(Name = "Tên đăng nhập")]
+        public string TenDangNhap { get; set; } = null!;
 
-    public string? MatKhau { get; set; }
+        [Required(ErrorMessage = "Mật khẩu là bắt buộc")]
+        [StringLength(100, MinimumLength = 6, ErrorMessage = "Mật khẩu phải có ít nhất 6 ký tự")]
+        [Display(Name = "Mật khẩu")]
+        public string MatKhau { get; set; } = null!;
 
-    public string? CaLamViec { get; set; }
+        [Required(ErrorMessage = "Ca làm việc là bắt buộc")]
+        [Display(Name = "Ca làm việc")]
+        public string CaLamViec { get; set; } = null!;
 
-    public string? TrangThai { get; set; }
+        [Required(ErrorMessage = "Trạng thái là bắt buộc")]
+        [Display(Name = "Trạng thái")]
+        public string TrangThai { get; set; } = null!;
 
-    public virtual ICollection<DonHang> DonHangs { get; set; } = new List<DonHang>();
-
+        public virtual ICollection<DonHang> DonHangs { get; set; } = new List<DonHang>();
+    }
 }

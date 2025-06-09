@@ -167,7 +167,7 @@
         <h1 class="page-title">Thêm Nhân Viên Mới</h1>
 
         <div class="card">
-            <form asp-action = "ThemNhanVien" method="post">
+            <form asp-action="ThemNhanVien" method="post">
                 <h3 class="section-title">Thông tin cá nhân</h3>
 
                 <div class="form-row">
@@ -188,14 +188,14 @@
                 <div class="form-row">
                     <div class="form-col">
                         <div class="form-group">
-                            <label asp-for="NgaySinh">Ngày Sinh</label>
-                            <input asp-for="NgaySinh" type="date" class="form-control">
+                            <label asp-for="NgaySinh" class="required">Ngày Sinh</label>
+                            <input asp-for="NgaySinh" type="date" class="form-control" required>
                         </div>
                     </div>
                     <div class="form-col">
                         <div class="form-group">
-                            <label asp-for="GioiTinh">Giới Tính</label>
-                            <select asp-for ="GioiTinh" class="form-control">
+                            <label asp-for="GioiTinh" class="required">Giới Tính</label>
+                            <select asp-for="GioiTinh" class="form-control" required>
                                 <option value="">-- Chọn giới tính --</option>
                                 <option value="true">Nam</option>
                                 <option value="false">Nữ</option>
@@ -207,10 +207,10 @@
                 <div class="form-row">
                     <div class="form-col">
                         <div class="form-group">
-                            <label asp-for="Sdt">Số Điện Thoại</label>
-                            <input asp-for="Sdt" type="tel" class="form-control" 
-                                   pattern="[0-9]{10}" 
-                                   maxlength="10" 
+                            <label asp-for="Sdt" class="required">Số Điện Thoại</label>
+                            <input asp-for="Sdt" type="tel" class="form-control" required
+                                   pattern="[0-9]{10}"
+                                   maxlength="10"
                                    title="Số điện thoại phải có đúng 10 chữ số"
                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                             <small class="form-text text-muted">Nhập đúng 10 chữ số</small>
@@ -218,8 +218,8 @@
                     </div>
                     <div class="form-col">
                         <div class="form-group">
-                            <label asp-for="Email">Email</label>
-                            <input asp-for="Email" type="email" class="form-control"
+                            <label asp-for="Email" class="required">Email</label>
+                            <input asp-for="Email" type="email" class="form-control" required
                                    pattern="[a-z0-9._%+-]+[a-z0-9.-]+\.[a-z]{2,}$"
                                    title="Vui lòng nhập email đúng định dạng (vd: example@domain.com)">
                             <small class="form-text text-muted">Ví dụ: example@domain.com</small>
@@ -228,8 +228,11 @@
                 </div>
 
                 <div class="form-group">
-                    <label asp-for="DiaChi">Địa Chỉ</label>
-                    <input asp-for="DiaChi" type="text" class="form-control">
+                    <label asp-for="DiaChi" class="required">Địa Chỉ</label>
+                    <input asp-for="DiaChi" type="text" class="form-control" required
+                           minlength="10" maxlength="200"
+                           title="Địa chỉ phải có từ 10 đến 200 ký tự">
+                    <small class="form-text text-muted">Từ 10 đến 200 ký tự</small>
                 </div>
 
                 <h3 class="section-title">Thông tin công việc</h3>
@@ -237,8 +240,8 @@
                 <div class="form-row">
                     <div class="form-col">
                         <div class="form-group">
-                            <label asp-for="ChucVu">Chức Vụ</label>
-                            <select asp-for="ChucVu" class="form-control">
+                            <label asp-for="ChucVu" class="required">Chức Vụ</label>
+                            <select asp-for="ChucVu" class="form-control" required>
                                 <option value="">-- Chọn chức vụ --</option>
                                 <option value="Quản lý">Quản lý</option>
                                 <option value="Nhân viên">Nhân viên</option>
@@ -247,8 +250,8 @@
                     </div>
                     <div class="form-col">
                         <div class="form-group">
-                            <label asp-for="CaLamViec">Ca Làm Việc</label>
-                            <select asp-for="CaLamViec" class="form-control">
+                            <label asp-for="CaLamViec" class="required">Ca Làm Việc</label>
+                            <select asp-for="CaLamViec" class="form-control" required>
                                 <option value="">-- Chọn ca làm việc --</option>
                                 <option value="Ca sáng">Ca sáng</option>
                                 <option value="Ca chiều">Ca chiều</option>
@@ -259,8 +262,9 @@
                 </div>
 
                 <div class="form-group">
-                    <label asp-for="TrangThai">Trạng Thái</label>
-                    <select asp-for="TrangThai" class="form-control">
+                    <label asp-for="TrangThai" class="required">Trạng Thái</label>
+                    <select asp-for="TrangThai" class="form-control" required>
+                        <option value="">-- Chọn trạng thái --</option>
                         <option value="Đang làm việc" selected>Đang làm việc</option>
                         <option value="Nghỉ việc">Nghỉ việc</option>
                     </select>
@@ -271,14 +275,20 @@
                 <div class="form-row">
                     <div class="form-col">
                         <div class="form-group">
-                            <label asp-for="TenDangNhap">Tên Đăng Nhập</label>
-                            <input asp-for="TenDangNhap" type="text" class="form-control">
+                            <label asp-for="TenDangNhap" class="required">Tên Đăng Nhập</label>
+                            <input asp-for="TenDangNhap" type="text" class="form-control" required
+                                   minlength="3" maxlength="50"
+                                   title="Tên đăng nhập từ 3-50 ký tự, cho phép chữ, số và ký hiệu đặc biệt">
+                            <small class="form-text text-muted">Từ 3-50 ký tự, cho phép tất cả ký hiệu đặc biệt</small>
                         </div>
                     </div>
                     <div class="form-col">
                         <div class="form-group">
-                            <label asp-for="MatKhau">Mật Khẩu</label>
-                            <input asp-for="MatKhau" type="password" class="form-control">
+                            <label asp-for="MatKhau" class="required">Mật Khẩu</label>
+                            <input asp-for="MatKhau" type="password" class="form-control" required
+                                   minlength="6"
+                                   title="Mật khẩu tối thiểu 6 ký tự">
+                            <small class="form-text text-muted">Tối thiểu 6 ký tự</small>
                         </div>
                     </div>
                 </div>
@@ -297,34 +307,48 @@
             color: #6c757d;
             margin-top: 0.25rem;
         }
+
         .text-muted {
             color: #6c757d !important;
         }
-        input:invalid {
+
+        .required::after {
+            content: " *";
+            color: red;
+        }
+
+        input:invalid, select:invalid {
             border-color: #dc3545;
         }
-        input:valid {
+
+        input:valid, select:valid {
             border-color: #28a745;
         }
     </style>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const phoneInput = document.querySelector('input[asp-for="Sdt"]');
             const emailInput = document.querySelector('input[asp-for="Email"]');
+            const usernameInput = document.querySelector('input[asp-for="TenDangNhap"]');
+            const passwordInput = document.querySelector('input[asp-for="MatKhau"]');
+            const addressInput = document.querySelector('input[asp-for="DiaChi"]');
+            const genderSelect = document.querySelector('select[asp-for="GioiTinh"]');
+            const chucVuSelect = document.querySelector('select[asp-for="ChucVu"]');
+            const caLamViecSelect = document.querySelector('select[asp-for="CaLamViec"]');
+            const trangThaiSelect = document.querySelector('select[asp-for="TrangThai"]');
             const form = document.querySelector('form');
 
             if (phoneInput) {
-                phoneInput.addEventListener('input', function(e) {
+                phoneInput.addEventListener('input', function (e) {
                     this.value = this.value.replace(/[^0-9]/g, '');
-                    
                     if (this.value.length > 10) {
                         this.value = this.value.slice(0, 10);
                     }
                 });
 
-                phoneInput.addEventListener('blur', function(e) {
-                    if (this.value && this.value.length !== 10) {
+                phoneInput.addEventListener('blur', function (e) {
+                    if (!this.value || this.value.length !== 10) {
                         this.setCustomValidity('Số điện thoại phải có đúng 10 chữ số');
                     } else {
                         this.setCustomValidity('');
@@ -333,29 +357,99 @@
             }
 
             if (emailInput) {
-                emailInput.addEventListener('blur', function(e) {
+                emailInput.addEventListener('blur', function (e) {
                     const emailRegex = /^[^\s]+[^\s]+\.[^\s]+$/;
-                    if (this.value && !emailRegex.test(this.value)) {
+                    if (!this.value || !emailRegex.test(this.value)) {
                         this.setCustomValidity('Vui lòng nhập email đúng định dạng');
                     } else {
                         this.setCustomValidity('');
                     }
                 });
             }
-            form.addEventListener('submit', function(e) {
+
+            if (addressInput) {
+                addressInput.addEventListener('blur', function (e) {
+                    const trimmedValue = this.value.trim();
+                    if (!trimmedValue || trimmedValue.length < 10) {
+                        this.setCustomValidity('Địa chỉ phải có ít nhất 10 ký tự');
+                    } else if (trimmedValue.length > 200) {
+                        this.setCustomValidity('Địa chỉ không được vượt quá 100 ký tự');
+                    } else {
+                        this.setCustomValidity('');
+                    }
+                });
+            }
+
+            if (usernameInput) {
+                usernameInput.addEventListener('blur', function (e) {
+                    const trimmedValue = this.value.trim();
+                    if (!trimmedValue || trimmedValue.length < 3) {
+                        this.setCustomValidity('Tên đăng nhập phải có ít nhất 3 ký tự');
+                    } else if (this.value.length > 50) {
+                        this.setCustomValidity('Tên đăng nhập không được vượt quá 50 ký tự');
+                    } else {
+                        this.setCustomValidity('');
+                    }
+                });
+            }
+
+            if (passwordInput) {
+                passwordInput.addEventListener('blur', function (e) {
+                    if (!this.value || this.value.length < 6) {
+                        this.setCustomValidity('Mật khẩu phải có ít nhất 6 ký tự');
+                    } else {
+                        this.setCustomValidity('');
+                    }
+                });
+            }
+
+            [genderSelect, chucVuSelect, caLamViecSelect, trangThaiSelect].forEach(select => {
+                if (select) {
+                    select.addEventListener('change', function (e) {
+                        if (!this.value) {
+                            this.setCustomValidity('Vui lòng chọn một tùy chọn');
+                        } else {
+                            this.setCustomValidity('');
+                        }
+                    });
+                }
+            });
+
+            form.addEventListener('submit', function (e) {
                 let isValid = true;
-                
-                if (phoneInput && phoneInput.value && phoneInput.value.length !== 10) {
+
+                const requiredInputs = form.querySelectorAll('input[required], select[required]');
+                requiredInputs.forEach(input => {
+                    if (!input.value || (input.type === 'text' && input.value.trim() === '')) {
+                        input.setCustomValidity('Trường này là bắt buộc');
+                        isValid = false;
+                    }
+                });
+
+                if (phoneInput && (!phoneInput.value || phoneInput.value.length !== 10)) {
                     phoneInput.setCustomValidity('Số điện thoại phải có đúng 10 chữ số');
                     isValid = false;
                 }
-                
-                const emailRegex = /^[^\s]+[^\s]+\.[^\s]+$/;
-                if (emailInput && emailInput.value && !emailRegex.test(emailInput.value)) {
+                if (emailInput && (!emailInput.value || !/^[^\s]+[^\s]+\.[^\s]+$/.test(emailInput.value))) {
                     emailInput.setCustomValidity('Vui lòng nhập email đúng định dạng');
                     isValid = false;
                 }
-                
+
+                if (addressInput && (!addressInput.value || addressInput.value.trim().length < 10)) {
+                    addressInput.setCustomValidity('Địa chỉ phải có ít nhất 10 ký tự');
+                    isValid = false;
+                }
+
+                if (usernameInput && (!usernameInput.value || usernameInput.value.trim().length < 3)) {
+                    usernameInput.setCustomValidity('Tên đăng nhập phải có ít nhất 3 ký tự');
+                    isValid = false;
+                }
+
+                if (passwordInput && (!passwordInput.value || passwordInput.value.length < 6)) {
+                    passwordInput.setCustomValidity('Mật khẩu phải có ít nhất 6 ký tự');
+                    isValid = false;
+                }
+
                 if (!isValid) {
                     e.preventDefault();
                     e.stopPropagation();

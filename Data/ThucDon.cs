@@ -24,6 +24,7 @@ public partial class ThucDon
     [Display(Name = "Loại")]
     public string? TenLoai { get; set; }
 
+    [Required(ErrorMessage = "Hình ảnh là bắt buộc")]
     [Url(ErrorMessage = "URL hình ảnh không hợp lệ")]
     [StringLength(255, ErrorMessage = "Đường dẫn hình ảnh quá dài")]
     [Display(Name = "Hình Ảnh")]

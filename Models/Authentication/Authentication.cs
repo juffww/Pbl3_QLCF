@@ -7,7 +7,6 @@ namespace pbl3_QLCF.Models.Authentication
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            //Kiểm tra Session, nếu chưa đăng nhập thì redirect về trang Login
             if (context.HttpContext.Session.GetString("TenDangNhap") == null)
             {
                 context.Result = new RedirectToRouteResult(
